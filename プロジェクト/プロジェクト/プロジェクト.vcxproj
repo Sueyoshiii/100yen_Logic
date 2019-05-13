@@ -93,10 +93,14 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\..\..\dx12Lib\Lib\Lib\MyLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <Manifest />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -106,10 +110,14 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\..\..\dx12Lib\Lib\Lib\MyLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <Manifest />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -121,12 +129,18 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\..\..\dx12Lib\Lib\Lib\MyLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <Manifest>
+      <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -138,12 +152,18 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\..\..\dx12Lib\Lib\Lib\MyLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <Manifest>
+      <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

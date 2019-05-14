@@ -27,7 +27,10 @@ private:
 	Game();
 	Game(const Game&) = delete;
 	void operator=(const Game&) = delete;
-
+	
+	// ライブラリ
 	std::shared_ptr<MyLib> lib;
+
+	// シーン
 	std::shared_ptr<Scene> scene;
 };

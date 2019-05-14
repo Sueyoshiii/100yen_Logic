@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "../Scene/Scene.h"
 #include "../Scene/Title.h"
+#include "../Scene/GameMain.h"
 
 Game::Game()
 {

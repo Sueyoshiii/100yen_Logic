@@ -15,9 +15,6 @@ Title::~Title()
 // •`‰æ
 void Title::Draw(void)
 {
-	lib.lock()->Clear();
-
-	lib.lock()->Execution();
 }
 
 // ˆ—

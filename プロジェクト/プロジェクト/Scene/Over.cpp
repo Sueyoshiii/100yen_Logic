@@ -15,9 +15,6 @@ Over::~Over()
 // •`‰æ
 void Over::Draw(void)
 {
-	lib.lock()->Clear();
-
-	lib.lock()->Execution();
 }
 
 // ˆ—

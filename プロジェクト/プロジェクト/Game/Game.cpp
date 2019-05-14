@@ -1,7 +1,8 @@
 #include "Game.h"
+#include "../Scene/Scene.h"
+#include "../Scene/Title.h"
 
-Game::Game() :
-	lib(std::make_shared<MyLib>(640))
+Game::Game()
 {
 }
 
@@ -18,33 +19,33 @@ Game& Game::Get()
 // ‰Šú‰»
 void Game::Init()
 {
+	lib = std::make_shared<MyLib>(640);
 	lib->ChangeTitle("LittleRed");
+
+	ChangeScene(new Title(lib));
 }
 
 // XV
 void Game::Update()
 {
-	Texture img("img/nino8.jpg");
 	while (lib->CheckMsg() && !(Input::Get().IsKey(Key::Escape)))
 	{
-		lib->Clear();
-		lib->Draw(img);
-		lib->Execution();
-		if (Input::Get().IsKey(Key::Num4))
-		{
-			img.pos.x--;
-		}
-		if (Input::Get().IsKey(Key::Num6))
-		{
-			img.pos.x++;
-		}
-		if (Input::Get().IsKey(Key::Num8))
-		{
-			img.pos.y--;
-		}
-		if (Input::Get().IsKey(Key::Num2))
-		{
-			img.pos.y++;
-		}
+		scene->UpData();
+
+		Draw();
 	}
+}
+
+void Game::Draw()
+{
+	lib->Clear();
+
+	scene->Draw();
+
+	lib->Execution();
+}
+
+void Game::ChangeScene(Scene* scene)
+{
+	this->scene.reset(scene);
 }

@@ -1,9 +1,10 @@
 #pragma once
 #include <MyLib.h>
 #include <memory>
+
 #pragma comment(lib, "Lib.lib")
 
-//class MyLib;
+class Scene;
 
 class Game
 {
@@ -16,10 +17,17 @@ public:
 
 	// 更新
 	void Update();
+
+	// 描画
+	void Draw();
+
+	// シーン切り替え
+	void ChangeScene(Scene* scene);
 private:
 	Game();
 	Game(const Game&) = delete;
 	void operator=(const Game&) = delete;
 
 	std::shared_ptr<MyLib> lib;
+	std::shared_ptr<Scene> scene;
 };

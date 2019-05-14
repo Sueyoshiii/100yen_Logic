@@ -15,9 +15,6 @@ Main::~Main()
 // •`‰æ
 void Main::Draw(void)
 {
-	lib.lock()->Clear();
-
-	lib.lock()->Execution();
 }
 
 // ˆ—

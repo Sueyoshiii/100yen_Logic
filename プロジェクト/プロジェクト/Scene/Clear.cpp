@@ -15,9 +15,6 @@ Clear::~Clear()
 // •`‰æ
 void Clear::Draw(void)
 {
-	lib.lock()->Clear();
-
-	lib.lock()->Execution();
 }
 
 // ˆ—

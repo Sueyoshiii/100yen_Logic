@@ -1,14 +1,17 @@
 #pragma once
 #include "Scene.h"
+#include <memory>
 
-class Main :
+class Player;
+
+class GameMain :
 	public Scene
 {
 public:
 	// コンストラクタ
-	Main(std::weak_ptr<MyLib>lib);
+	GameMain(std::weak_ptr<MyLib>lib);
 	// デストラクタ
-	~Main();
+	~GameMain();
 
 	// 描画
 	void Draw(void);
@@ -17,5 +20,6 @@ public:
 	void UpData(void);
 
 private:
-
+	// プレイヤー
+	std::shared_ptr<Player> pl;
 };

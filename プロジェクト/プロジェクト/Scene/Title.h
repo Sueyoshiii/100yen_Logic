@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include <MyLib.h>
 
 class Title :
 	public Scene

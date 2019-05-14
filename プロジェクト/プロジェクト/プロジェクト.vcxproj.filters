@@ -76,20 +76,38 @@
     </ClInclude>
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Scene\Clear.cpp" />
-    <ClCompile Include="Scene\Main.cpp" />
     <ClCompile Include="Scene\Over.cpp" />
     <ClCompile Include="Scene\Title.cpp" />
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="Character\Character.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\Player.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\Enemy.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>ソース</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\GameMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene\Clear.h" />
-    <ClInclude Include="Scene\Main.h" />
     <ClInclude Include="Scene\Over.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\Title.h" />
     <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Character\Character.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\Player.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\Enemy.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameMain.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ソース">
@@ -97,6 +115,9 @@
     </Filter>
     <Filter Include="ヘッダー">
       <UniqueIdentifier>{96c7d442-b1dc-4527-ac8e-4bfd61b910c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{f950184a-0ece-4f78-908c-e9f8587fbdbf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

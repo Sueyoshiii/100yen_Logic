@@ -167,6 +167,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Scene\Clear.cpp" />
+    <ClCompile Include="Scene\Main.cpp" />
+    <ClCompile Include="Scene\Over.cpp" />
+    <ClCompile Include="Scene\Title.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Scene\Clear.h" />
+    <ClInclude Include="Scene\Main.h" />
+    <ClInclude Include="Scene\Over.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\Title.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

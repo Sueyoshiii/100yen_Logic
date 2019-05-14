@@ -13,10 +13,54 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{2034489b-95e3-46fc-9a61-7c5c5c6c297b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Title">
+      <UniqueIdentifier>{996f04d7-c7f9-4f1a-b4c9-ae4e60e7dec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Main">
+      <UniqueIdentifier>{e6d9022a-11c6-4fd7-bede-63ab01bcabe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Over">
+      <UniqueIdentifier>{318ff28e-7aa0-422e-a185-989b9c51ab39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Clear">
+      <UniqueIdentifier>{dd0d7d4e-23cb-459e-aeb9-6698ab28894b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Title.cpp">
+      <Filter>Scene\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Main.cpp">
+      <Filter>Scene\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Over.cpp">
+      <Filter>Scene\Over</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Clear.cpp">
+      <Filter>Scene\Clear</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Title.h">
+      <Filter>Scene\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Main.h">
+      <Filter>Scene\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Over.h">
+      <Filter>Scene\Over</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Clear.h">
+      <Filter>Scene\Clear</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

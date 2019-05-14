@@ -16,5 +16,4 @@ public:
 	// •`‰æ
 	void Draw();
 private:
-	Texture em;
 };

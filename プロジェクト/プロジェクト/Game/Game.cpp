@@ -37,6 +37,7 @@ void Game::Update()
 	}
 }
 
+// •`‰æ
 void Game::Draw()
 {
 	lib->Clear();

@@ -3,7 +3,7 @@
 #include "../Game/Game.h"
 
 // コンストラクタ
-Title::Title(std::weak_ptr<MyLib>lib) :
+Title::Title(std::weak_ptr<MyLib>lib)
 {
 	this->lib = lib;
 }

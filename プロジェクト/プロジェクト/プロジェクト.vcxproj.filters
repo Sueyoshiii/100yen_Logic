@@ -18,6 +18,9 @@
       <Filter>ソース</Filter>
     </ClCompile>
     <ClCompile Include="Scene\GameMain.cpp" />
+    <ClCompile Include="Camera\Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene\Clear.h" />
@@ -35,6 +38,9 @@
       <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="Scene\GameMain.h" />
+    <ClInclude Include="Camera\Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ソース">
@@ -45,6 +51,9 @@
     </Filter>
     <Filter Include="Character">
       <UniqueIdentifier>{f950184a-0ece-4f78-908c-e9f8587fbdbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{411617a9-4781-4bf5-bb48-d9f188f3a775}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

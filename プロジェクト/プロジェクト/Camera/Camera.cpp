@@ -1,14 +1,9 @@
 #include "Camera.h"
+#include "../Stage/Stage.h"
 #include "../Character/Player.h"
 
 Camera::Camera()
 {
-	this->range = Rect(Vec2f(), 640 * 2, 640);
-}
-Camera::Camera(const Rect& range) :
-	range(range)
-{
-	this->range = Rect(Vec2f(), 640 * 2, 640);
 }
 
 Camera::~Camera()
@@ -20,14 +15,15 @@ void Camera::Update()
 {
 	Vec2f size = Vec2f(640, 640);
 	pos = pl.lock()->GetLocalPos();
-	//pos = pl.lock()->GetPos();
 
 	//カメラ座標の補正
-	if (pos.x - size.x / 2 < range.Left()) {
-		pos.x = range.Left() + size.x / 2;
+	float left = Stage::Get().GetRange().Left();
+	float right = Stage::Get().GetRange().Right();
+	if (pos.x - size.x / 2 < left) {
+		pos.x = left + size.x / 2;
 	}
-	else if (pos.x + size.x / 2 > range.Right()) {
-		pos.x = range.Right() - size.x / 2;
+	else if (pos.x + size.x / 2 > right) {
+		pos.x = right - size.x / 2;
 	}
 
 	if (pos.x < 0.0f)
@@ -36,23 +32,16 @@ void Camera::Update()
 	}
 }
 
+// 受け取った座標をカメラの範囲内に補正
 Vec2f Camera::Correction(const Vec2f& pos)
 {
-	Vec2f tmp = pos;
-	tmp.x -= this->pos.x - 640 / 2;
-
-	return tmp;
+	return Vec2f(pos.x - (this->pos.x - 640 / 2), pos.y);
 }
 
 // 座標取得
 Vec2f Camera::GetPos()const
 {
 	return pos;
-}
-
-Rect Camera::GetViewPort() const
-{
-	return range;
 }
 
 void Camera::SetFocus(std::weak_ptr<Player> pl)

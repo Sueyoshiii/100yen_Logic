@@ -1,9 +1,10 @@
 #include "Player.h"
 #include "../Camera/Camera.h"
+#include "../Stage/Stage.h"
 #include <iostream>
 #include <algorithm>
 
-const float Const::SPEED        = 2.0f;
+const float Const::SPEED        = 4.0f;
 const float Const::JUMP_POW     = -18.0f;
 const float Const::GR           = 0.98f;
 const float Const::GROUND       = 500.0f;
@@ -34,29 +35,23 @@ void Player::Update()
 	(this->*update)();
 
 	vel.y += Const::GR;
-	//tex.pos.y += vel.y;
-	//if (tex.pos.y > Const::GROUND)
-	//{
-	//	tex.pos.y = Const::GROUND;
-	//}
 	pos.y += vel.y;
-	if (pos.y > Const::GROUND)
-	{
-		pos.y = Const::GROUND;
-	}
+	pos.y = std::min(pos.y, Const::GROUND);
+
+	float left = Stage::Get().GetRange().Left();
+	float right = Stage::Get().GetRange().Right();
+	pos.x = std::min(std::max(pos.x, left), right - tex.size.x);
 }
 
 // •`‰æ
 void Player::Draw()
 {
-	float left = cam.lock()->GetViewPort().Left();
-	float right = cam.lock()->GetViewPort().Right();
+	float left = Stage::Get().GetRange().Left();
+	float right = Stage::Get().GetRange().Right();
 	pos.x = std::min(std::max(pos.x, left), right);
 	tex.pos = cam.lock()->Correction(pos);
-	//tex.pos.x = std::min(std::max(tex.pos.x, left), right);
-	//tex.pos = cam.lock()->Correction(tex.pos);
 	lib.lock()->Draw(tex, 1.0f, turnFlag);
-	std::cout << tex.pos.x << ", " << cam.lock()->GetPos().x << std::endl;
+	std::cout << pos.x << ", " << cam.lock()->GetPos().x << std::endl;
 }
 
 // ‘Ò‹@
@@ -81,13 +76,11 @@ void Player::WalkUpdate()
 	{
 		turnFlag = true;
 		pos.x -= vel.x;
-		//tex.pos.x -= Const::SPEED;
 	}
 	else if (In.IsKey(Key::Num6))
 	{
 		turnFlag = false;
 		pos.x += vel.x;
-		//tex.pos.x += Const::SPEED;
 	}
 	else {
 		update = &Player::NeutralUpdate;
@@ -107,13 +100,11 @@ void Player::JumpUpdate()
 	{
 		turnFlag = true;
 		pos.x -= vel.x;
-		//tex.pos.x -= vel.x;
 	}
 	else if (In.IsKey(Key::Num6))
 	{
 		turnFlag = false;
 		pos.x += vel.x;
-		//tex.pos.x += vel.x;
 	}
 
 	if (tex.pos.y >= Const::GROUND)

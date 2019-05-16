@@ -177,6 +177,7 @@
     <ClCompile Include="Scene\GameMain.cpp" />
     <ClCompile Include="Scene\Over.cpp" />
     <ClCompile Include="Scene\Title.cpp" />
+    <ClCompile Include="Stage\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround\BackGround.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Scene\Over.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\Title.h" />
+    <ClInclude Include="Stage\Stage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Game.h" />

@@ -166,6 +166,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BackGround\BackGround.cpp" />
+    <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Character\Character.cpp" />
     <ClCompile Include="Character\Enemy.cpp" />
     <ClCompile Include="Character\Player.cpp" />
@@ -175,8 +177,11 @@
     <ClCompile Include="Scene\GameMain.cpp" />
     <ClCompile Include="Scene\Over.cpp" />
     <ClCompile Include="Scene\Title.cpp" />
+    <ClCompile Include="Stage\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackGround\BackGround.h" />
+    <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Character\Character.h" />
     <ClInclude Include="Character\Enemy.h" />
     <ClInclude Include="Character\Player.h" />
@@ -185,6 +190,7 @@
     <ClInclude Include="Scene\Over.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\Title.h" />
+    <ClInclude Include="Stage\Stage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Game.h" />

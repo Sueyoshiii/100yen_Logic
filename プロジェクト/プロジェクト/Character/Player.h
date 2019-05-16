@@ -4,16 +4,23 @@
 #include <memory>
 #include <MyLib.h>
 
-const float GR = 0.7f;
-const float JUMP_POW = -20.0f;
-const float GROUND = 500.0f;
-const float SPEED = 2.0f;
+class Camera;
+
+// 定数
+typedef
+struct ConstParam
+{
+	static const float SPEED;		// 速度
+	static const float JUMP_POW;	// ジャンプ力
+	static const float GR;			// 重力
+	static const float GROUND;		// 地面
+}Const;
 
 class Player : 
 	public Character
 {
 public:
-	Player(std::weak_ptr<MyLib> lib);
+	Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam);
 	~Player();
 
 	// 更新
@@ -21,6 +28,8 @@ public:
 
 	// 描画
 	void Draw();
+
+	Vec2f GetLocalPos()const;
 private:
 	// 状態
 	void(Player::* update)();
@@ -32,9 +41,11 @@ private:
 	void JumpUpdate();
 	void Jump();
 
-	// 反転フラグ
-	bool turnFlag;
-
-	Vec2f vel;
+	// ジャンプフラグ
 	bool jumpFlag;
+
+	// 座標
+	Vec2f pos;
+
+	std::weak_ptr<Camera> cam;
 };

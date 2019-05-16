@@ -91,6 +91,13 @@
       <Filter>ソース</Filter>
     </ClCompile>
     <ClCompile Include="Scene\GameMain.cpp" />
+    <ClCompile Include="Camera\Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="BackGround\BackGround.cpp">
+      <Filter>BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scene\Clear.h" />
@@ -108,6 +115,15 @@
       <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="Scene\GameMain.h" />
+    <ClInclude Include="Camera\Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="BackGround\BackGround.h">
+      <Filter>BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage\Stage.h">
+      <Filter>Stage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ソース">
@@ -118,6 +134,15 @@
     </Filter>
     <Filter Include="Character">
       <UniqueIdentifier>{f950184a-0ece-4f78-908c-e9f8587fbdbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{411617a9-4781-4bf5-bb48-d9f188f3a775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BackGround">
+      <UniqueIdentifier>{5ae34dd1-d4ea-4161-b8d2-b00220103e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stage">
+      <UniqueIdentifier>{9ba6b68b-126d-4ea7-8ff5-0e330e1cd11d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

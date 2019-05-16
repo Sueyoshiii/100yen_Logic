@@ -11,7 +11,10 @@ enum class State
 {
 	Neutral,
 	Walk,
-	Jump
+	Jump,
+	Attack,
+	Damage,
+	Deth
 }ST;
 
 class Character
@@ -46,4 +49,10 @@ protected:
 
 	// ó‘Ô
 	ST state;
+
+	// ‘¬“x
+	Vec2f vel;
+
+	// ”½“]ƒtƒ‰ƒO
+	bool turnFlag;
 };

@@ -1,8 +1,16 @@
 #include "Player.h"
+#include "../Camera/Camera.h"
+#include "../Stage/Stage.h"
 #include <iostream>
+#include <algorithm>
 
-Player::Player(std::weak_ptr<MyLib> lib) :
-	turnFlag(false), jumpFlag(false)
+const float Const::SPEED        = 4.0f;
+const float Const::JUMP_POW     = -18.0f;
+const float Const::GR           = 0.98f;
+const float Const::GROUND       = 500.0f;
+
+Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
+	jumpFlag(false), cam(cam)
 {
 	this->lib = lib;
 
@@ -11,6 +19,10 @@ Player::Player(std::weak_ptr<MyLib> lib) :
 
 	update = &Player::NeutralUpdate;
 	ChangeState(ST::Neutral);
+
+	vel = Vec2f(Const::SPEED, 0.0f);
+
+	turnFlag = false;
 }
 
 Player::~Player()
@@ -22,18 +34,24 @@ void Player::Update()
 {
 	(this->*update)();
 
-	vel.y += GR * 1.2f;
-	tex.pos.y += vel.y;
-	if (tex.pos.y > GROUND)
-	{
-		tex.pos.y = GROUND;
-	}
+	vel.y += Const::GR;
+	pos.y += vel.y;
+	pos.y = std::min(pos.y, Const::GROUND);
+
+	float left = Stage::Get().GetRange().Left();
+	float right = Stage::Get().GetRange().Right();
+	pos.x = std::min(std::max(pos.x, left), right - tex.size.x);
 }
 
 // 描画
 void Player::Draw()
 {
+	float left = Stage::Get().GetRange().Left();
+	float right = Stage::Get().GetRange().Right();
+	pos.x = std::min(std::max(pos.x, left), right);
+	tex.pos = cam.lock()->Correction(pos);
 	lib.lock()->Draw(tex, 1.0f, turnFlag);
+	std::cout << pos.x << ", " << cam.lock()->GetPos().x << std::endl;
 }
 
 // 待機
@@ -49,7 +67,6 @@ void Player::NeutralUpdate()
 	{
 		Jump();
 	}
-	std::cout << "neutral" << std::endl;
 }
 
 // 歩行
@@ -58,12 +75,12 @@ void Player::WalkUpdate()
 	if (In.IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		tex.pos.x -= SPEED;
+		pos.x -= vel.x;
 	}
 	else if (In.IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		tex.pos.x += SPEED;
+		pos.x += vel.x;
 	}
 	else {
 		update = &Player::NeutralUpdate;
@@ -74,7 +91,6 @@ void Player::WalkUpdate()
 	{
 		Jump();
 	}
-	std::cout << "walk" << std::endl;
 }
 
 // ジャンプ
@@ -83,26 +99,30 @@ void Player::JumpUpdate()
 	if (In.IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		tex.pos.x -= SPEED;
+		pos.x -= vel.x;
 	}
 	else if (In.IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		tex.pos.x += SPEED;
+		pos.x += vel.x;
 	}
 
-	if (tex.pos.y >= GROUND)
+	if (tex.pos.y >= Const::GROUND)
 	{
 		jumpFlag = false;
-		update = &Player::NeutralUpdate;
+		update   = &Player::NeutralUpdate;
 		ChangeState(ST::Neutral);
 	}
-	std::cout << "jump" << std::endl;
 }
 void Player::Jump()
 {
 	jumpFlag = true;
-	vel.y = JUMP_POW;
-	update = &Player::JumpUpdate;
+	vel.y    = Const::JUMP_POW;
+	update   = &Player::JumpUpdate;
 	ChangeState(ST::Jump);
+}
+
+Vec2f Player::GetLocalPos() const
+{
+	return pos;
 }

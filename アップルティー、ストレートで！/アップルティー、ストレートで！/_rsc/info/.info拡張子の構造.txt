@@ -1,0 +1,28 @@
+struct Info{
+	//ステータスの総数
+	unsigned char stateNum;			//1バイト
+	
+	//ステータスごとに存在
+	{
+		//ステータスの文字数
+		unsigned char stateNameNum;	//1バイト
+		//ステータス名
+		char state[stateNameNum];	//1バイト*ステータスの文字数
+		//アニメーション時間
+		float animTime;			//4バイト
+		//アニメーションの総数
+		unsigned char animNum;		//1バイト
+		
+		//アニメーションごとに存在
+		{
+			//切り取り矩形X座標
+			int posX;		//2バイト
+			//切り取り矩形Y座標
+			int posY;		//2バイト
+			//切り取り矩形Xサイズ
+			int sizeX;		//2バイト
+			//切り取り矩形Yサイズ
+			int sizeY;		//2バイト
+		}
+	}	
+};

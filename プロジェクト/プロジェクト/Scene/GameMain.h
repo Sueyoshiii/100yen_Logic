@@ -4,6 +4,7 @@
 #include <MyLib.h>
 
 class Camera;
+class BackGround;
 class Player;
 
 class GameMain :
@@ -25,9 +26,9 @@ private:
 	// ƒJƒƒ‰
 	std::shared_ptr<Camera> cam;
 
+	// ”wŒi
+	std::shared_ptr<BackGround> bg;
+
 	// ƒvƒŒƒCƒ„[
 	std::shared_ptr<Player> pl;
-
-	// ‰¼”wŒi
-	Texture t;
 };

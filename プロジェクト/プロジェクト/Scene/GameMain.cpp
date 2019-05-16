@@ -1,13 +1,14 @@
 #include "GameMain.h"
 #include "../Camera/Camera.h"
+#include "../BackGround/BackGround.h"
 #include "../Character/Player.h"
 
 // コンストラクタ
-GameMain::GameMain(std::weak_ptr<MyLib> lib) :
-	t("img/brides.jpg")
+GameMain::GameMain(std::weak_ptr<MyLib> lib)
 {
 	this->lib = lib;
 	cam = std::make_shared<Camera>();
+	bg = std::make_shared <BackGround>(lib, cam);
 	pl = std::make_shared<Player>(lib, cam);
 	cam->SetFocus(pl);
 }
@@ -20,7 +21,7 @@ GameMain::~GameMain()
 // 描画
 void GameMain::Draw(void)
 {
-	lib.lock()->Draw(t);
+	bg->Draw();
 	pl->Draw();
 }
 
@@ -28,5 +29,6 @@ void GameMain::Draw(void)
 void GameMain::UpData(void)
 {
 	cam->Update();
+	bg->Update();
 	pl->Update();
 }

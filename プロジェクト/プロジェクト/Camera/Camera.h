@@ -14,7 +14,7 @@ struct Rect
 	float Top()const { return pos.y - h / 2.0f; };
 	float Bottom()const { return pos.y + h / 2.0f; };
 	float Left()const { return pos.x - w / 2.0f; };
-	float Right()const { return pos.x - w / 2.0f; };
+	float Right()const { return pos.x + w / 2.0f; };
 };
 
 class Camera

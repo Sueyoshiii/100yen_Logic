@@ -34,10 +34,15 @@ void Player::Update()
 	(this->*update)();
 
 	vel.y += Const::GR;
-	tex.pos.y += vel.y;
-	if (tex.pos.y > Const::GROUND)
+	//tex.pos.y += vel.y;
+	//if (tex.pos.y > Const::GROUND)
+	//{
+	//	tex.pos.y = Const::GROUND;
+	//}
+	pos.y += vel.y;
+	if (pos.y > Const::GROUND)
 	{
-		tex.pos.y = Const::GROUND;
+		pos.y = Const::GROUND;
 	}
 }
 
@@ -46,6 +51,8 @@ void Player::Draw()
 {
 	float left = cam.lock()->GetViewPort().Left();
 	float right = cam.lock()->GetViewPort().Right();
+	pos.x = std::min(std::max(pos.x, left), right);
+	tex.pos = cam.lock()->Correction(pos);
 	//tex.pos.x = std::min(std::max(tex.pos.x, left), right);
 	//tex.pos = cam.lock()->Correction(tex.pos);
 	lib.lock()->Draw(tex, 1.0f, turnFlag);
@@ -73,12 +80,14 @@ void Player::WalkUpdate()
 	if (In.IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		tex.pos.x -= Const::SPEED;
+		pos.x -= vel.x;
+		//tex.pos.x -= Const::SPEED;
 	}
 	else if (In.IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		tex.pos.x += Const::SPEED;
+		pos.x += vel.x;
+		//tex.pos.x += Const::SPEED;
 	}
 	else {
 		update = &Player::NeutralUpdate;
@@ -97,12 +106,14 @@ void Player::JumpUpdate()
 	if (In.IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		tex.pos.x -= vel.x;
+		pos.x -= vel.x;
+		//tex.pos.x -= vel.x;
 	}
 	else if (In.IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		tex.pos.x += vel.x;
+		pos.x += vel.x;
+		//tex.pos.x += vel.x;
 	}
 
 	if (tex.pos.y >= Const::GROUND)
@@ -118,4 +129,9 @@ void Player::Jump()
 	vel.y    = Const::JUMP_POW;
 	update   = &Player::JumpUpdate;
 	ChangeState(ST::Jump);
+}
+
+Vec2f Player::GetLocalPos() const
+{
+	return pos;
 }

@@ -166,6 +166,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BackGround\BackGround.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Character\Character.cpp" />
     <ClCompile Include="Character\Enemy.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackGround\BackGround.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Character\Character.h" />
     <ClInclude Include="Character\Enemy.h" />

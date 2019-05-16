@@ -19,7 +19,8 @@ Camera::~Camera()
 void Camera::Update()
 {
 	Vec2f size = Vec2f(640, 640);
-	pos = pl.lock()->GetPos();
+	pos = pl.lock()->GetLocalPos();
+	//pos = pl.lock()->GetPos();
 
 	//ƒJƒƒ‰À•W‚Ì•â³
 	if (pos.x - size.x / 2 < range.Left()) {
@@ -38,7 +39,7 @@ void Camera::Update()
 Vec2f Camera::Correction(const Vec2f& pos)
 {
 	Vec2f tmp = pos;
-	tmp.x -= this->pos.x - 640;
+	tmp.x -= this->pos.x - 640 / 2;
 
 	return tmp;
 }

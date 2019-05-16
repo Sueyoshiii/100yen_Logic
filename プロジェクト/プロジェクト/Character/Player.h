@@ -28,6 +28,8 @@ public:
 
 	// 描画
 	void Draw();
+
+	Vec2f GetLocalPos()const;
 private:
 	// 状態
 	void(Player::* update)();
@@ -41,6 +43,9 @@ private:
 
 	// ジャンプフラグ
 	bool jumpFlag;
+
+	// 座標
+	Vec2f pos;
 
 	std::weak_ptr<Camera> cam;
 };

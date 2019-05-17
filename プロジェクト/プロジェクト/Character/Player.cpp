@@ -14,8 +14,10 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 {
 	this->lib = lib;
 
-	tex.Load("img/nino8.jpg");
-	tex.size = Vec2f(50, 100);
+	tex.Load("img/player.png");
+	tex.size = 32*4;
+	tex.offsetPos = Vec2f(0.0f, 0.0f);
+	tex.divSize = Vec2f(32, 32);
 
 	update = &Player::NeutralUpdate;
 	ChangeState(ST::Neutral);
@@ -23,6 +25,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	vel = Vec2f(Const::SPEED, 0.0f);
 
 	turnFlag = false;
+	flame = 0;
 }
 
 Player::~Player()
@@ -50,6 +53,10 @@ void Player::Draw()
 	float right = Stage::Get().GetRange().Right();
 	pos.x = std::min(std::max(pos.x, left), right);
 	tex.pos = cam.lock()->Correction(pos);
+
+	flame = (++flame) % 6;
+	tex.offsetPos.x = tex.divSize.x * flame;
+
 	lib.lock()->Draw(tex, 1.0f, turnFlag);
 	std::cout << pos.x << ", " << cam.lock()->GetPos().x << std::endl;
 }

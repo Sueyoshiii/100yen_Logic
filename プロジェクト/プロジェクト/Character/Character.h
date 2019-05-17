@@ -55,4 +55,7 @@ protected:
 
 	// 反転フラグ
 	bool turnFlag;
+
+	// 経過フレーム
+	unsigned int flame;
 };

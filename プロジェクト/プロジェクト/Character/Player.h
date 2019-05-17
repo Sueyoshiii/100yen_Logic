@@ -10,6 +10,8 @@ class Camera;
 typedef
 struct ConstParam
 {
+	static const unsigned int DIV_SIZE;
+
 	static const float SPEED;		// 速度
 	static const float JUMP_POW;	// ジャンプ力
 	static const float GR;			// 重力

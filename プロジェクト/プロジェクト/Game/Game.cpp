@@ -23,7 +23,7 @@ void Game::Init()
 	lib = std::make_shared<MyLib>(640);
 	lib->ChangeTitle("LittleRed");
 
-	ChangeScene(new Title(lib));
+	ChangeScene(new GameMain(lib));
 }
 
 // XV

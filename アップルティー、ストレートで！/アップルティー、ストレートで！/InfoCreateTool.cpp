@@ -68,7 +68,7 @@ int main()
 			HitRect<Vec2f>tmp{};
 			bool click = false;
 			while (app.CheckMsg())
-			{
+			{.
 				app.Clear();
 				app.DrawTex(imag, 0.0f, rectSize, info.rect[i].anim.pos, info.rect[i].anim.size);
 				for (auto& h : hit)

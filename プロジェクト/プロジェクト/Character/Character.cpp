@@ -11,6 +11,7 @@ Character::~Character()
 // ó‘Ô‘JˆÚ
 void Character::ChangeState(const ST& state)
 {
+	flame = 0;
 	this->state = state;
 }
 

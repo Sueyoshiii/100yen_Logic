@@ -18,7 +18,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 
 	tex.Load("img/player.png");
 	tex.size      = Const::DIV_SIZE;
-	tex.offsetPos = Vec2f(0.0f, 64.0f*5);
+	tex.offsetPos = Vec2f(0.0f, 64.0f*8);
 	tex.divSize   = Const::DIV_SIZE;
 
 	update = &Player::NeutralUpdate;
@@ -57,7 +57,7 @@ void Player::Draw()
 	tex.pos = cam.lock()->Correction(pos);
 
 	static unsigned int cnt = 0;
-	flame = (++cnt) % 6 == 0 ? (++flame) % 6 : flame;
+	flame = (++cnt) % 10 == 0 ? (++flame) % 4 : flame;
 	tex.offsetPos.x = tex.divSize.x * flame;
 
 	lib.lock()->Draw(tex, 1.0f, turnFlag);

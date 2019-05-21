@@ -17,9 +17,9 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	this->lib = lib;
 
 	tex.Load("img/player.png");
-	tex.size = Const::DIV_SIZE;
-	tex.offsetPos = Vec2f(0.0f, 0.0f);
-	tex.divSize = Const::DIV_SIZE;
+	tex.size      = Const::DIV_SIZE;
+	tex.offsetPos = Vec2f(0.0f, 64.0f*5);
+	tex.divSize   = Const::DIV_SIZE;
 
 	update = &Player::NeutralUpdate;
 	ChangeState(ST::Neutral);
@@ -57,7 +57,7 @@ void Player::Draw()
 	tex.pos = cam.lock()->Correction(pos);
 
 	static unsigned int cnt = 0;
-	flame = (++cnt) % 8 == 0 ? (++flame) % 6 : flame;
+	flame = (++cnt) % 6 == 0 ? (++flame) % 6 : flame;
 	tex.offsetPos.x = tex.divSize.x * flame;
 
 	lib.lock()->Draw(tex, 1.0f, turnFlag);
@@ -69,7 +69,7 @@ void Player::NeutralUpdate()
 {
 	if (In.IsKey(Key::Num4) || In.IsKey(Key::Num6))
 	{
-		tex.offsetPos.y += Const::DIV_SIZE * 1;
+		//tex.offsetPos.y += Const::DIV_SIZE * 1;
 		update = &Player::WalkUpdate;
 		ChangeState(ST::Walk);
 	}

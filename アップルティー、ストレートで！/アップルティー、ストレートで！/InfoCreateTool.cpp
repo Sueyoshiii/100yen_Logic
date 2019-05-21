@@ -23,7 +23,12 @@ int main()
 	printf("画像の切り取りサイズY：");
 	scanf_s("%d", &winSize.y);
 	fflush(stdin);
+	float large = 0.0f;
+	printf("画像の拡大率：");
+	scanf_s("%f", &large);
+	fflush(stdin);
 	Vec2f rectSize = { (float)winSize.x, (float)winSize.y };
+	winSize *= large;
 	
 	//ウィンドウの生成
 	Application app(winSize);
@@ -68,9 +73,9 @@ int main()
 			HitRect<Vec2f>tmp{};
 			bool click = false;
 			while (app.CheckMsg())
-			{.
+			{
 				app.Clear();
-				app.DrawTex(imag, 0.0f, rectSize, info.rect[i].anim.pos, info.rect[i].anim.size);
+				app.DrawTex(imag, 0.0f, rectSize * large, info.rect[i].anim.pos, info.rect[i].anim.size);
 				for (auto& h : hit)
 				{
 					Color color{};
@@ -143,7 +148,7 @@ int main()
 							pos.y = 0.0f;
 						}
 
-						tmp.rect.size = pos - tmp.rect.pos;
+						tmp.rect.size = (pos - tmp.rect.pos);
 					}
 				}
 				else
@@ -172,6 +177,10 @@ int main()
 
 				if (Input::Get().InputKey(INPUT_CTRL) && Input::Get().Triger(INPUT_S))
 				{
+					for (auto& i : hit)
+					{
+						i.rect.size /= large;
+					}
 					info.rect[i].hit = hit;
 					printf("%d個の矩形情報を保存しました\n", static_cast<int>(hit.size()));
 					break;

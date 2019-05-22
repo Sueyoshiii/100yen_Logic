@@ -6,10 +6,10 @@
 
 const unsigned int Const::DIV_SIZE = 64;
 
-const float Const::SPEED        = 4.0f;
-const float Const::JUMP_POW     = -18.0f;
-const float Const::GR           = 0.98f;
-const float Const::GROUND       = 500.0f;
+const float Const::SPEED    = 4.0f;
+const float Const::JUMP_POW = -18.0f;
+const float Const::GR       = 0.98f;
+const float Const::GROUND   = 500.0f;
 
 Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	jumpFlag(false), cam(cam)
@@ -22,7 +22,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	tex.divSize   = Const::DIV_SIZE;
 
 	update = &Player::NeutralUpdate;
-	ChangeState(ST::Neutral);
+	ChangeState("Neutral");
 
 	vel = Vec2f(Const::SPEED, 0.0f);
 
@@ -71,7 +71,7 @@ void Player::NeutralUpdate()
 	{
 		//tex.offsetPos.y += Const::DIV_SIZE * 1;
 		update = &Player::WalkUpdate;
-		ChangeState(ST::Walk);
+		ChangeState("Walk");
 	}
 
 	if (!jumpFlag && In.IsTrigger(Key::Space))
@@ -95,7 +95,7 @@ void Player::WalkUpdate()
 	}
 	else {
 		update = &Player::NeutralUpdate;
-		ChangeState(ST::Neutral);
+		ChangeState("Neutral");
 	}
 
 	if (!jumpFlag && In.IsTrigger(Key::Space))
@@ -122,7 +122,7 @@ void Player::JumpUpdate()
 	{
 		jumpFlag = false;
 		update   = &Player::NeutralUpdate;
-		ChangeState(ST::Neutral);
+		ChangeState("Neutral");
 	}
 }
 void Player::Jump()
@@ -130,7 +130,7 @@ void Player::Jump()
 	jumpFlag = true;
 	vel.y    = Const::JUMP_POW;
 	update   = &Player::JumpUpdate;
-	ChangeState(ST::Jump);
+	ChangeState("Jump");
 }
 
 Vec2f Player::GetLocalPos() const

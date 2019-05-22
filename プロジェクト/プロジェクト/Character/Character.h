@@ -2,6 +2,7 @@
 #include <MyLib.h>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 #define In Input::Get()
 
@@ -17,7 +18,7 @@ enum class State
 	Jump,
 	Dash,
 	Damage,
-	Deth
+	Death
 }ST;
 
 class Character
@@ -33,7 +34,7 @@ public:
 	virtual void Draw() = 0;
 
 	// 状態遷移
-	void ChangeState(const ST& state);
+	void ChangeState(const std::string& state);
 
 	// 座標取得
 	Vec2f GetPos()const;
@@ -41,6 +42,7 @@ public:
 	// サイズ取得
 	Vec2f GetSize()const;
 protected:
+	void LoadData(const std::string& filePath);
 
 	///*もしMyLibクラスの弱参照をメンバとして持たせるなら、
 	///*MyLibChildクラス等のインターフェースクラスを用いたほうが後々楽
@@ -51,7 +53,7 @@ protected:
 	Texture tex;
 
 	// 状態
-	ST state;
+	std::string state;
 
 	// 速度
 	Vec2f vel;
@@ -61,4 +63,7 @@ protected:
 
 	// 経過フレーム
 	unsigned int flame;
+private:
+	std::string ConvertToString(const ST state);
+	std::unordered_map<ST, std::string> stMap;
 };

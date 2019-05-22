@@ -16,12 +16,14 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 {
 	this->lib = lib;
 
+	Info::Get().Load("data/player.info");
+	info = Info::Get().GetData("data/chara/player.info");
 	tex.Load("img/player.png");
 	tex.size      = Const::DIV_SIZE;
 	tex.offsetPos = Vec2f(0.0f, 64.0f*8);
 	tex.divSize   = Const::DIV_SIZE;
 
-	update = &Player::NeutralUpdate;
+	InitFunc();
 	ChangeState("Neutral");
 
 	vel = Vec2f(Const::SPEED, 0.0f);
@@ -37,7 +39,7 @@ Player::~Player()
 // XV
 void Player::Update()
 {
-	(this->*update)();
+	func[state]();
 
 	vel.y += Const::GR;
 	pos.y += vel.y;
@@ -51,7 +53,7 @@ void Player::Update()
 // •`‰æ
 void Player::Draw()
 {
-	float left = Stage::Get().GetRange().Left();
+	float left  = Stage::Get().GetRange().Left();
 	float right = Stage::Get().GetRange().Right();
 	pos.x = std::min(std::max(pos.x, left), right);
 	tex.pos = cam.lock()->Correction(pos);
@@ -70,7 +72,6 @@ void Player::NeutralUpdate()
 	if (In.IsKey(Key::Num4) || In.IsKey(Key::Num6))
 	{
 		//tex.offsetPos.y += Const::DIV_SIZE * 1;
-		update = &Player::WalkUpdate;
 		ChangeState("Walk");
 	}
 
@@ -94,7 +95,6 @@ void Player::WalkUpdate()
 		pos.x += vel.x;
 	}
 	else {
-		update = &Player::NeutralUpdate;
 		ChangeState("Neutral");
 	}
 
@@ -121,7 +121,6 @@ void Player::JumpUpdate()
 	if (tex.pos.y >= Const::GROUND)
 	{
 		jumpFlag = false;
-		update   = &Player::NeutralUpdate;
 		ChangeState("Neutral");
 	}
 }
@@ -129,8 +128,14 @@ void Player::Jump()
 {
 	jumpFlag = true;
 	vel.y    = Const::JUMP_POW;
-	update   = &Player::JumpUpdate;
 	ChangeState("Jump");
+}
+
+void Player::InitFunc()
+{
+	func["Neutral"] = std::bind(&Player::NeutralUpdate, this);
+	func["Walk"] = std::bind(&Player::WalkUpdate, this);
+	func["Jump"] = std::bind(&Player::JumpUpdate, this);
 }
 
 Vec2f Player::GetLocalPos() const

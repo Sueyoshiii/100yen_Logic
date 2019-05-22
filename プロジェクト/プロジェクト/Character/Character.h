@@ -1,8 +1,10 @@
 #pragma once
+#include "../Info/Info.h"
 #include <MyLib.h>
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <functional>
 
 #define In Input::Get()
 
@@ -42,6 +44,7 @@ public:
 	// サイズ取得
 	Vec2f GetSize()const;
 protected:
+	// キャラクターデータ読み込み
 	void LoadData(const std::string& filePath);
 
 	///*もしMyLibクラスの弱参照をメンバとして持たせるなら、
@@ -63,6 +66,9 @@ protected:
 
 	// 経過フレーム
 	unsigned int flame;
+
+	// 状態の関数ポインタ
+	std::unordered_map<std::string, std::function<void(void)>> func;
 private:
 	std::string ConvertToString(const ST state);
 	std::unordered_map<ST, std::string> stMap;

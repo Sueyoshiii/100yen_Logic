@@ -2,7 +2,7 @@
 
 Stage::Stage()
 {
-	range = Rect(Vec2f(0, 0), 640 * 10, 640);
+	range = Stage::Rect(Vec2f(0, 0), 640 * 10, 640);
 }
 
 Stage::~Stage()

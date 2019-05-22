@@ -3,18 +3,6 @@
 
 class Camera;
 
-struct Rect
-{
-	Vec2f pos;
-	float w, h;
-	Rect() : pos(Vec2f()), w(0.0f), h(0.0f) {};
-	Rect(const Vec2f& pos, const float w, const float h) :
-		pos(pos), w(w), h(h) {};
-	float Top()const { return pos.y - h / 2.0f; };
-	float Bottom()const { return pos.y + h / 2.0f; };
-	float Left()const { return pos.x - w / 2.0f; };
-	float Right()const { return pos.x + w / 2.0f; };
-};
 
 struct StageRange
 {
@@ -32,6 +20,18 @@ public:
 
 class Stage
 {
+	struct Rect
+	{
+		Vec2f pos;
+		float w, h;
+		Rect() : pos(Vec2f()), w(0.0f), h(0.0f) {};
+		Rect(const Vec2f& pos, const float w, const float h) :
+			pos(pos), w(w), h(h) {};
+		float Top()const { return pos.y - h / 2.0f; };
+		float Bottom()const { return pos.y + h / 2.0f; };
+		float Left()const { return pos.x - w / 2.0f; };
+		float Right()const { return pos.x + w / 2.0f; };
+	};
 public:
 	~Stage();
 	static Stage& Get();

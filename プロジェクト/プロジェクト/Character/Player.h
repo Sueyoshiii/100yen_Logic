@@ -1,8 +1,5 @@
 #pragma once
 #include "Character.h"
-#include <string>
-#include <memory>
-#include <MyLib.h>
 
 class Camera;
 
@@ -33,8 +30,8 @@ public:
 
 	Vec2f GetLocalPos()const;
 private:
-	// ó‘Ô
-	void(Player::* update)();
+	// ó‘Ô‰Šú‰»
+	void InitFunc();
 	// ‘Ò‹@
 	void NeutralUpdate();
 	// •às
@@ -50,4 +47,5 @@ private:
 	Vec2f pos;
 
 	std::weak_ptr<Camera> cam;
+	std::weak_ptr<std::unordered_map<std::string, Data>> info;
 };

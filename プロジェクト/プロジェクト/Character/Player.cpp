@@ -4,32 +4,28 @@
 #include <iostream>
 #include <algorithm>
 
-const unsigned int Const::DIV_SIZE = 64;
-
 const float Const::SPEED    = 4.0f;
 const float Const::DUSH_POW = 10.0f;
 const float Const::JUMP_POW = -18.0f;
 const float Const::GR       = 0.98f;
 const float Const::GROUND   = 500.0f;
 
+// コンストラクタ
 Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	jumpFlag(false), dushFlag(false), cam(cam)
 {
 	this->lib = lib;
 
-	Info::Get().Load("data/chara/player.info");
-	info = Info::Get().GetData("data/chara/player.info");
-
-	tex.Load("img/player.png");
-	tex.size     = info.lock()->at(state).rect[index].anim.size;
-	tex.divSize  = info.lock()->at(state).rect[index].anim.size;
+	LoadData("data/chara/player.info");
+	LoadImage("img/player.png");
 
 	InitFunc();
-	ChangeState("Neutral");
+	ChangeState(ST::Neutral);
 
 	vel = Vec2f(Const::SPEED, 0.0f);
 }
 
+// デストラクタ
 Player::~Player()
 {
 }
@@ -39,52 +35,33 @@ void Player::Update()
 {
 	func[state]();
 
-	vel.y += Const::GR;
-	pos.y += vel.y;
-	pos.y = std::min(pos.y, Const::GROUND);
-
-	float left = Stage::Get().GetRange().Left();
+	float left  = Stage::Get().GetRange().Left();
 	float right = Stage::Get().GetRange().Right();
-	pos.x = std::min(std::max(pos.x, left), right - tex.size.x);
+	localPos.x = std::min(std::max(localPos.x, left), right - tex.size.x);
+
+	vel.y += Const::GR;
+	localPos.y += vel.y;
+	localPos.y = std::min(localPos.y, Const::GROUND);
+
+	tex.pos = cam.lock()->Correction(localPos);
 }
 
 // 描画
 void Player::Draw()
 {
-	float left  = Stage::Get().GetRange().Left();
-	float right = Stage::Get().GetRange().Right();
-	pos.x = std::min(std::max(pos.x, left), right);
-	tex.pos = cam.lock()->Correction(pos);
+	AnimationUpdate();
 
-	unsigned int animTime = unsigned int(info.lock()->at(state).animTime);
-	unsigned int animNum  = unsigned int(info.lock()->at(state).rect.size());
-
-	if (animTime > 0)
-	{
-		frame = (++animCnt) % animTime == 0 ? (++frame) % animNum : frame;
-	}
-	if (frame >= animTime)
-	{
-		index = (index + 1) >= info.lock()->at(state).rect.size() ? 0 : ++index;
-		frame = 0;
-	}
-
-	tex.offsetPos = {
-		tex.offsetPos.x = tex.divSize.x * frame,
-		info.lock()->at(state).rect[index].anim.pos.y
-	};
-
-	lib.lock()->Draw(tex, 1.0f, turnFlag);
-	std::cout << pos.x << ", " << cam.lock()->GetPos().x << std::endl;
+	DrawImage();
+	DrawRect();
 }
 
 // 待機
 void Player::NeutralUpdate()
 {
-	if (pos.y < Const::GROUND)
+	if (localPos.y < Const::GROUND)
 	{
 		jumpFlag = true;
-		ChangeState("Jump");
+		ChangeState(ST::Jump);
 	}
 
 	if (In.IsKey(Key::Num4) || In.IsKey(Key::Num6))
@@ -109,26 +86,31 @@ void Player::WalkUpdate()
 	if (In.IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		pos.x -= vel.x;
+		localPos.x -= vel.x;
 	}
 	else if (In.IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		pos.x += vel.x;
+		localPos.x += vel.x;
 	}
 	else {
-		ChangeState("Neutral");
+		ChangeState(ST::Neutral);
 	}
 
 	if (!jumpFlag && In.IsTrigger(Key::Space))
 	{
 		Jump();
 	}
+
+	if (!dushFlag && In.IsTrigger(Key::X))
+	{
+		Dush();
+	}
 }
 void Player::Walk()
 {
 	vel.x = Const::SPEED;
-	ChangeState("Walk");
+	ChangeState(ST::Walk);
 }
 
 // ジャンプ
@@ -137,56 +119,91 @@ void Player::JumpUpdate()
 	if (In.IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		pos.x -= vel.x;
+		localPos.x -= vel.x;
 	}
 	else if (In.IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		pos.x += vel.x;
+		localPos.x += vel.x;
+	}
+
+	if (!dushFlag && In.IsTrigger(Key::X))
+	{
+		Dush();
 	}
 
 	if (tex.pos.y >= Const::GROUND)
 	{
 		jumpFlag = false;
-		ChangeState("Neutral");
+		ChangeState(ST::Neutral);
 	}
 }
 void Player::Jump()
 {
 	jumpFlag = true;
 	vel.y    = Const::JUMP_POW;
-	ChangeState("Jump");
+	ChangeState(ST::Jump);
 }
 
 // ダッシュ
 void Player::DushUpdate()
 {
-	pos.x += vel.x;
+	localPos.x += vel.x;
 	if (CheckAnimEnd())
 	{
 		dushFlag = false;
-		ChangeState("Neutral");
+		ChangeState(ST::Neutral);
 	}
 }
 void Player::Dush()
 {
 	dushFlag = true;
 	vel.x = turnFlag ? -Const::DUSH_POW : Const::DUSH_POW;
-	ChangeState("Dash");
+	ChangeState(ST::Dash);
 }
 
-// 状態初期化
+// 攻撃1
+void Player::Attack1Update()
+{
+}
+
+// 攻撃2
+void Player::Attack2Update()
+{
+}
+
+// 攻撃3
+void Player::Attack3Update()
+{
+}
+
+// ダメージ
+void Player::DamageUpdate()
+{
+}
+
+// 死亡
+void Player::DeathUpdate()
+{
+}
+
+// 状態と関数をバインド
 void Player::InitFunc()
 {
 	func.clear();
 
-	func["Neutral"] = std::bind(&Player::NeutralUpdate, this);
-	func["Walk"]    = std::bind(&Player::WalkUpdate, this);
-	func["Jump"]    = std::bind(&Player::JumpUpdate, this);
-	func["Dash"]    = std::bind(&Player::DushUpdate, this);
+	func[ST::Neutral] = std::bind(&Player::NeutralUpdate, this);
+	func[ST::Walk]    = std::bind(&Player::WalkUpdate, this);
+	func[ST::Jump]    = std::bind(&Player::JumpUpdate, this);
+	func[ST::Dash]    = std::bind(&Player::DushUpdate, this);
+	func[ST::Attack1] = std::bind(&Player::Attack1Update, this);
+	func[ST::Attack2] = std::bind(&Player::Attack2Update, this);
+	func[ST::Attack3] = std::bind(&Player::Attack3Update, this);
+	func[ST::Damage]  = std::bind(&Player::DamageUpdate, this);
+	func[ST::Death]   = std::bind(&Player::DeathUpdate, this);
 }
 
 Vec2f Player::GetLocalPos() const
 {
-	return pos;
+	return localPos;
 }

@@ -14,11 +14,11 @@ enum class State
 {
 	Neutral,
 	Walk,
+	Jump,
+	Dash,
 	Attack1,
 	Attack2,
 	Attack3,
-	Jump,
-	Dash,
 	Damage,
 	Death
 }ST;
@@ -27,8 +27,6 @@ enum class State
 typedef
 struct ConstParam
 {
-	static const unsigned int DIV_SIZE;
-
 	static const float SPEED;		// 速度
 	static const float DUSH_POW;	// ダッシュ力
 	static const float JUMP_POW;	// ジャンプ力
@@ -42,6 +40,7 @@ public:
 	Character();
 	~Character();
 
+protected:
 	// 更新
 	virtual void Update() = 0;
 
@@ -49,16 +48,28 @@ public:
 	virtual void Draw() = 0;
 
 	// 状態遷移
-	void ChangeState(const std::string& state);
+	void ChangeState(const ST state);
 
 	// 座標取得
 	Vec2f GetPos()const;
 
 	// サイズ取得
 	Vec2f GetSize()const;
-protected:
+
 	// キャラクターデータ読み込み
 	void LoadData(const std::string& filePath);
+
+	// キャラクター画像読み込み
+	void LoadImage(const std::string& filePath);
+
+	// 画像描画
+	void DrawImage();
+
+	// 衝突矩形描画
+	void DrawRect();
+
+	// アニメーション更新
+	void AnimationUpdate();
 
 	// アニメーションの終了を調べる
 	bool CheckAnimEnd();
@@ -72,7 +83,13 @@ protected:
 	Texture tex;
 
 	// 状態
-	std::string state;
+	ST state;
+
+	// 状態コンテナ
+	std::unordered_map<ST, std::string> stMap;
+
+	// ローカル座標
+	Vec2f localPos;
 
 	// 速度
 	Vec2f vel;
@@ -90,11 +107,13 @@ protected:
 	unsigned int index;
 
 	// 状態の関数ポインタ
-	std::unordered_map<std::string, std::function<void(void)>> func;
+	std::unordered_map<ST, std::function<void(void)>> func;
 
 	// データ
 	std::weak_ptr<std::unordered_map<std::string, Data>> info;
 private:
-	std::string ConvertToString(const ST state);
-	std::unordered_map<ST, std::string> stMap;
+	// 状態初期化
+	void InitState();
+
+	Primitive box;
 };

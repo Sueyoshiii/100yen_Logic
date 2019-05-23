@@ -1,6 +1,7 @@
 #include "Character.h"
 
-Character::Character()
+Character::Character() :
+	state("Neutral"), vel(Vec2f()), turnFlag(false), frame(0), animCnt(0), index(0)
 {
 }
 
@@ -15,7 +16,9 @@ void Character::ChangeState(const std::string& state)
 	{
 		return;
 	}
-	flame = 0;
+	frame   = 0;
+	animCnt = 0;
+	index   = 0;
 	this->state = state;
 }
 
@@ -23,6 +26,17 @@ void Character::ChangeState(const std::string& state)
 void Character::LoadData(const std::string& filePath)
 {
 	Info::Get().Load(filePath);
+}
+
+// アニメーションの終了を調べる
+bool Character::CheckAnimEnd()
+{
+	if (frame >= info.lock()->at(state).rect.size() - 1)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 // 座標取得

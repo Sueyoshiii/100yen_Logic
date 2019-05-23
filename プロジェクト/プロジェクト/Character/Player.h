@@ -3,17 +3,6 @@
 
 class Camera;
 
-// 定数
-typedef
-struct ConstParam
-{
-	static const unsigned int DIV_SIZE;
-
-	static const float SPEED;		// 速度
-	static const float JUMP_POW;	// ジャンプ力
-	static const float GR;			// 重力
-	static const float GROUND;		// 地面
-}Const;
 
 class Player : 
 	public Character
@@ -36,16 +25,22 @@ private:
 	void NeutralUpdate();
 	// 歩行
 	void WalkUpdate();
+	void Walk();
 	// ジャンプ
 	void JumpUpdate();
 	void Jump();
+	// ダッシュ
+	void DushUpdate();
+	void Dush();
 
 	// ジャンプフラグ
 	bool jumpFlag;
+
+	// ダッシュフラグ
+	bool dushFlag;
 
 	// 座標
 	Vec2f pos;
 
 	std::weak_ptr<Camera> cam;
-	std::weak_ptr<std::unordered_map<std::string, Data>> info;
 };

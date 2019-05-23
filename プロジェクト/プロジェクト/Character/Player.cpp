@@ -7,29 +7,27 @@
 const unsigned int Const::DIV_SIZE = 64;
 
 const float Const::SPEED    = 4.0f;
+const float Const::DUSH_POW = 10.0f;
 const float Const::JUMP_POW = -18.0f;
 const float Const::GR       = 0.98f;
 const float Const::GROUND   = 500.0f;
 
 Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
-	jumpFlag(false), cam(cam)
+	jumpFlag(false), dushFlag(false), cam(cam)
 {
 	this->lib = lib;
 
-	Info::Get().Load("data/player.info");
+	Info::Get().Load("data/chara/player.info");
 	info = Info::Get().GetData("data/chara/player.info");
+
 	tex.Load("img/player.png");
-	tex.size      = Const::DIV_SIZE;
-	tex.offsetPos = Vec2f(0.0f, 64.0f*8);
-	tex.divSize   = Const::DIV_SIZE;
+	tex.size     = info.lock()->at(state).rect[index].anim.size;
+	tex.divSize  = info.lock()->at(state).rect[index].anim.size;
 
 	InitFunc();
 	ChangeState("Neutral");
 
 	vel = Vec2f(Const::SPEED, 0.0f);
-
-	turnFlag = false;
-	flame = 0;
 }
 
 Player::~Player()
@@ -58,9 +56,23 @@ void Player::Draw()
 	pos.x = std::min(std::max(pos.x, left), right);
 	tex.pos = cam.lock()->Correction(pos);
 
-	static unsigned int cnt = 0;
-	flame = (++cnt) % 10 == 0 ? (++flame) % 4 : flame;
-	tex.offsetPos.x = tex.divSize.x * flame;
+	unsigned int animTime = unsigned int(info.lock()->at(state).animTime);
+	unsigned int animNum  = unsigned int(info.lock()->at(state).rect.size());
+
+	if (animTime > 0)
+	{
+		frame = (++animCnt) % animTime == 0 ? (++frame) % animNum : frame;
+	}
+	if (frame >= animTime)
+	{
+		index = (index + 1) >= info.lock()->at(state).rect.size() ? 0 : ++index;
+		frame = 0;
+	}
+
+	tex.offsetPos = {
+		tex.offsetPos.x = tex.divSize.x * frame,
+		info.lock()->at(state).rect[index].anim.pos.y
+	};
 
 	lib.lock()->Draw(tex, 1.0f, turnFlag);
 	std::cout << pos.x << ", " << cam.lock()->GetPos().x << std::endl;
@@ -69,15 +81,25 @@ void Player::Draw()
 // 待機
 void Player::NeutralUpdate()
 {
+	if (pos.y < Const::GROUND)
+	{
+		jumpFlag = true;
+		ChangeState("Jump");
+	}
+
 	if (In.IsKey(Key::Num4) || In.IsKey(Key::Num6))
 	{
-		//tex.offsetPos.y += Const::DIV_SIZE * 1;
-		ChangeState("Walk");
+		Walk();
 	}
 
 	if (!jumpFlag && In.IsTrigger(Key::Space))
 	{
 		Jump();
+	}
+
+	if (!dushFlag && In.IsTrigger(Key::X))
+	{
+		Dush();
 	}
 }
 
@@ -102,6 +124,11 @@ void Player::WalkUpdate()
 	{
 		Jump();
 	}
+}
+void Player::Walk()
+{
+	vel.x = Const::SPEED;
+	ChangeState("Walk");
 }
 
 // ジャンプ
@@ -131,11 +158,32 @@ void Player::Jump()
 	ChangeState("Jump");
 }
 
+// ダッシュ
+void Player::DushUpdate()
+{
+	pos.x += vel.x;
+	if (CheckAnimEnd())
+	{
+		dushFlag = false;
+		ChangeState("Neutral");
+	}
+}
+void Player::Dush()
+{
+	dushFlag = true;
+	vel.x = turnFlag ? -Const::DUSH_POW : Const::DUSH_POW;
+	ChangeState("Dash");
+}
+
+// 状態初期化
 void Player::InitFunc()
 {
+	func.clear();
+
 	func["Neutral"] = std::bind(&Player::NeutralUpdate, this);
-	func["Walk"] = std::bind(&Player::WalkUpdate, this);
-	func["Jump"] = std::bind(&Player::JumpUpdate, this);
+	func["Walk"]    = std::bind(&Player::WalkUpdate, this);
+	func["Jump"]    = std::bind(&Player::JumpUpdate, this);
+	func["Dash"]    = std::bind(&Player::DushUpdate, this);
 }
 
 Vec2f Player::GetLocalPos() const

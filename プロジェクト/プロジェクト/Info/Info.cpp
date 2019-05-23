@@ -31,10 +31,10 @@ int Info::Load(const std::string& filePath)
 	data[filePath] = std::make_shared<std::unordered_map<std::string, Data>>();
 
 	// ステータス数取得
-	unsigned int stateNum = 0;
+	unsigned char stateNum = 0;
 	fread(&stateNum, sizeof(stateNum), 1, file);
 
-	for (unsigned int i = 0; i < stateNum; ++i)
+	for (unsigned char i = 0; i < stateNum; ++i)
 	{
 		// ステータス名の文字数取得
 		unsigned char nameNum = 0;
@@ -53,7 +53,7 @@ int Info::Load(const std::string& filePath)
 		data[filePath]->at(state).animTime = frame;
 
 		// アニメーション数取得
-		unsigned int animNum = 0;
+		unsigned char animNum = 0;
 		fread(&animNum, sizeof(animNum), 1, file);
 
 		// アニメーション矩形取得
@@ -62,11 +62,11 @@ int Info::Load(const std::string& filePath)
 		for (auto& a : data[filePath]->at(state).rect)
 		{
 			fread(&anim, sizeof(anim), 1, file);
-			a.anim.pos  = Vec2f(anim.pos.x, anim.pos.y);
-			a.anim.size = Vec2f(anim.size.x, anim.size.y);
+			a.anim.pos  = Vec2f(float(anim.pos.x), float(anim.pos.y));
+			a.anim.size = Vec2f(float(anim.size.x), float(anim.size.y));
 
 			// 衝突矩形数取得
-			unsigned int rectNum = 0;
+			unsigned char rectNum = 0;
 			fread(&rectNum, sizeof(rectNum), 1, file);
 			a.hit.resize(rectNum);
 
@@ -76,13 +76,13 @@ int Info::Load(const std::string& filePath)
 			{
 				fread(&hit, sizeof(hit), 1, file);
 				r.type      = hit.type;
-				r.rect.pos  = Vec2f(hit.rect.pos.x, hit.rect.pos.y);
-				r.rect.size = Vec2f(hit.rect.size.x, hit.rect.size.y);
+				r.rect.pos  = Vec2f(float(hit.rect.pos.x), float(hit.rect.pos.y));
+				r.rect.size = Vec2f(float(hit.rect.size.x), float(hit.rect.size.y));
 			}
 		}
-
-		fclose(file);
 	}
+
+	fclose(file);
 
 	return 0;
 }

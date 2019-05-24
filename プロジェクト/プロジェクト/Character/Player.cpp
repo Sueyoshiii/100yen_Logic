@@ -3,12 +3,12 @@
 #include "../Stage/Stage.h"
 #include <iostream>
 
-const float Const::SPEED					= 4.0f;
-const float Const::DUSH_POW = 10.0f;
-const float Const::JUMP_POW = -18.0f;
+const float Const::SPEED				  = 4.0f;
+const float Const::DUSH_POW				  = 10.0f;
+const float Const::JUMP_POW				  = -18.0f;
 const unsigned int Const::ATTACK_INTERVAL = 60;
-const float Const::GR       = 0.98f;
-const float Const::GROUND   = 500.0f;
+const float Const::GR					  = 0.98f;
+const float Const::GROUND				  = 500.0f;
 
 // コンストラクタ
 Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
@@ -16,7 +16,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 {
 	this->lib = lib;
 
-	LoadData("data/chara/player.info");
+	LoadData("data/player.info");
 	LoadImage("img/player.png");
 
 	InitFunc();
@@ -36,13 +36,10 @@ void Player::Update()
 	// 状態関数
 	func[state]();
 
-	// ステージ内に座標を補正
 	CorrectPosInStage();
 
-	// 落下
 	FallUpdate();
 
-	// カメラ範囲内に座標を補正
 	tex.pos = cam.lock()->Correction(localPos);
 }
 
@@ -97,6 +94,9 @@ void Player::WalkUpdate()
 	Jump();
 
 	Dash();
+
+	Attack1();
+	NextAttack();
 }
 void Player::Walk()
 {
@@ -188,8 +188,17 @@ void Player::Attack2Update()
 // 攻撃3
 void Player::Attack3Update()
 {
-	if (CheckAnimEnd())
+	static unsigned int cnt = 0;
+	if (!CheckAnimEnd())
 	{
+		return;
+	}
+	frame = info.lock()->at(stMap[state]).rect.size() - 1;
+	stopFlag = true;
+	if ((++cnt) > 15)
+	{
+		cnt = 0;
+		stopFlag = false;
 		AttackFlag = false;
 		oldState = state;
 		ChangeState(ST::Neutral);

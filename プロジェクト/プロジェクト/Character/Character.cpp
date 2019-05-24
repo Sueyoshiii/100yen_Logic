@@ -1,7 +1,8 @@
 #include "Character.h"
 
 Character::Character() :
-	state(ST::Neutral), oldState(state), localPos(Vec2f()), vel(Vec2f()), turnFlag(false), frame(0), animCnt(0), index(0)
+	state(ST::Neutral), oldState(state), localPos(Vec2f()), vel(Vec2f()),
+	turnFlag(false), frame(0), animCnt(0), index(0), stopFlag(false)
 {
 	box = Primitive(PrimitiveType::box);
 	InitState();
@@ -76,13 +77,15 @@ void Character::DrawRect()
 		Vec2f size;
 		if (turnFlag)
 		{
-			pos  = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-i.rect.pos.x, i.rect.pos.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-			size = Vec2f(-i.rect.size.x, i.rect.size.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			//pos  = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-i.rect.pos.x, i.rect.pos.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			//size = Vec2f(-i.rect.size.x, i.rect.size.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			pos  = Vec2f(tex.pos.x - i.rect.pos.x, tex.pos.y + i.rect.pos.y);
+			size = i.rect.size;
 		}
 		else
 		{
-			pos  = tex.pos + i.rect.pos * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-			size = i.rect.size * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			pos = tex.pos + i.rect.pos;
+			size = i.rect.size;
 		}
 
 		float r = 0.0f;
@@ -96,12 +99,12 @@ void Character::DrawRect()
 			g = 1.0f;
 		}
 
-		box.pos[0] = Vec3f(pos);
+		box.pos[0] = Vec3f(Vec2f(pos));
 		box.pos[1] = Vec3f(Vec2f(pos.x + size.x, pos.y));
 		box.pos[2] = Vec3f(Vec2f(pos.x, pos.y + size.y));
-		box.pos[3] = Vec3f(Vec2f(pos.x + size.x, pos.y + size.y));
+		box.pos[3] = Vec3f(Vec2f(pos + size));
 
-		lib.lock()->Draw(box, Vec3f(r, g, 0.0f), 0.5f);
+		lib.lock()->Draw(box, Vec3f(r, g, 0.0f), 1.0f);
 	}
 }
 
@@ -109,7 +112,12 @@ void Character::DrawRect()
 void Character::AnimationUpdate()
 {
 	unsigned int animTime = unsigned int(info.lock()->at(stMap[state]).animTime);
-	unsigned int animNum = unsigned int(info.lock()->at(stMap[state]).rect.size());
+	unsigned int animNum  = unsigned int(info.lock()->at(stMap[state]).rect.size());
+
+	if (stopFlag)
+	{
+		return;
+	}
 
 	if (animTime > 0)
 	{

@@ -129,9 +129,13 @@ protected:
 
 	// データ
 	std::weak_ptr<std::unordered_map<std::string, Data>> info;
+
+	// アニメーション止める
+	bool stopFlag;
 private:
 	// 状態初期化
 	void InitState();
 
+	// 矩形
 	Primitive box;
 };

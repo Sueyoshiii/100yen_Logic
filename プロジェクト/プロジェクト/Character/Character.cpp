@@ -1,7 +1,7 @@
 #include "Character.h"
 
 Character::Character() :
-	state(ST::Neutral), localPos(Vec2f()), vel(Vec2f()), turnFlag(false), frame(0), animCnt(0), index(0)
+	state(ST::Neutral), oldState(state), localPos(Vec2f()), vel(Vec2f()), turnFlag(false), frame(0), animCnt(0), index(0)
 {
 	box = Primitive(PrimitiveType::box);
 	InitState();
@@ -9,6 +9,23 @@ Character::Character() :
 
 Character::~Character()
 {
+}
+
+// ステージ内に座標を補正
+void Character::CorrectPosInStage()
+{
+	float left  = Stage::Get().GetRange().Left();
+	float right = Stage::Get().GetRange().Right();
+
+	localPos.x = std::min(std::max(localPos.x, left), right - tex.size.x);
+}
+
+// 落下
+void Character::FallUpdate()
+{
+	vel.y += Const::GR;
+	localPos.y += vel.y;
+	localPos.y = std::min(localPos.y, Const::GROUND);
 }
 
 // 状態遷移
@@ -84,7 +101,7 @@ void Character::DrawRect()
 		box.pos[2] = Vec3f(Vec2f(pos.x, pos.y + size.y));
 		box.pos[3] = Vec3f(Vec2f(pos.x + size.x, pos.y + size.y));
 
-		lib.lock()->Draw(box, Vec3f(r, g, 0.0f), 1.0f);
+		lib.lock()->Draw(box, Vec3f(r, g, 0.0f), 0.5f);
 	}
 }
 

@@ -30,14 +30,17 @@ private:
 	void JumpUpdate();
 	void Jump();
 	// ダッシュ
-	void DushUpdate();
-	void Dush();
+	void DashUpdate();
+	void Dash();
 	// 攻撃1
 	void Attack1Update();
+	void Attack1();
 	// 攻撃2
 	void Attack2Update();
 	// 攻撃3
 	void Attack3Update();
+	// 次の攻撃へ移る
+	void NextAttack();
 	// ダメージ
 	void DamageUpdate();
 	// 死亡
@@ -47,7 +50,10 @@ private:
 	bool jumpFlag;
 
 	// ダッシュフラグ
-	bool dushFlag;
+	bool dashFlag;
+
+	// 攻撃フラグ
+	bool AttackFlag;
 
 	std::weak_ptr<Camera> cam;
 };

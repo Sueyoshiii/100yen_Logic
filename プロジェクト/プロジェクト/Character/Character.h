@@ -1,10 +1,12 @@
 #pragma once
 #include "../Info/Info.h"
+#include "../Stage/Stage.h"
 #include <MyLib.h>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <functional>
+#include <algorithm>
 
 #define In Input::Get()
 
@@ -27,11 +29,18 @@ enum class State
 typedef
 struct ConstParam
 {
-	static const float SPEED;		// 速度
-	static const float DUSH_POW;	// ダッシュ力
-	static const float JUMP_POW;	// ジャンプ力
-	static const float GR;			// 重力
-	static const float GROUND;		// 地面
+	// 速度
+	static const float SPEED;
+	// ダッシュ力
+	static const float DUSH_POW;
+	// ジャンプ力
+	static const float JUMP_POW;
+	// 攻撃間隔
+	static const unsigned int ATTACK_INTERVAL;
+	// 重力
+	static const float GR;
+	// 地面
+	static const float GROUND;
 }Const;
 
 class Character
@@ -46,6 +55,12 @@ protected:
 
 	// 描画
 	virtual void Draw() = 0;
+
+	// ステージ内に座標を補正
+	void CorrectPosInStage();
+
+	// 落下
+	void FallUpdate();
 
 	// 状態遷移
 	void ChangeState(const ST state);
@@ -84,6 +99,9 @@ protected:
 
 	// 状態
 	ST state;
+
+	// 1つ前の状態
+	ST oldState;
 
 	// 状態コンテナ
 	std::unordered_map<ST, std::string> stMap;

@@ -6,6 +6,7 @@
 class Camera;
 class BackGround;
 class Player;
+class Wolf;
 
 class GameMain :
 	public Scene
@@ -31,4 +32,6 @@ private:
 
 	// ƒvƒŒƒCƒ„[
 	std::shared_ptr<Player> pl;
+
+	std::shared_ptr<Wolf> wolf;
 };

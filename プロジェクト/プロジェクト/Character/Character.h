@@ -2,6 +2,7 @@
 #include "../Typedef.h"
 #include "../Info/Info.h"
 #include "../Stage/Stage.h"
+#include "../Camera/Camera.h"
 #include <MyLib.h>
 #include <memory>
 #include <string>
@@ -97,6 +98,9 @@ protected:
 	///*MyLibChildクラス等のインターフェースクラスを用いたほうが後々楽
 	// ライブラリ
 	std::weak_ptr<MyLib> lib;
+
+	// カメラ弱参照
+	std::weak_ptr<Camera> cam;
 
 	// キャラハンドル
 	Texture tex;

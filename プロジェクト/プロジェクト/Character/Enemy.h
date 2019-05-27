@@ -13,6 +13,8 @@ protected:
 	// Õ“Ë”»’è
 	void CheckHit();
 
+	virtual void InitFunc() = 0;
+
 	std::weak_ptr<Player> pl;
 private:
 };

@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "../Camera/Camera.h"
 #include "../Stage/Stage.h"
 #include <iostream>
 
@@ -12,9 +11,10 @@ const float Const::GROUND				  = 500.0f;
 
 // コンストラクタ
 Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
-	jumpFlag(false), dashFlag(false), AttackFlag(false), cam(cam)
+	jumpFlag(false), dashFlag(false), AttackFlag(false)
 {
 	this->lib = lib;
+	this->cam = cam;
 
 	LoadData("data/player.info");
 	LoadImage("img/player.png");

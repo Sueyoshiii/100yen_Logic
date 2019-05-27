@@ -54,6 +54,4 @@ private:
 
 	// UŒ‚ƒtƒ‰ƒO
 	bool AttackFlag;
-
-	std::weak_ptr<Camera> cam;
 };

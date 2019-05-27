@@ -1,19 +1,18 @@
 #pragma once
 #include "Character.h"
-#include <memory>
-#include <MyLib.h>
+
+class Player;
 
 class Enemy : 
 	public Character
 {
 public:
-	Enemy(std::weak_ptr<MyLib> lib);
+	Enemy();
 	~Enemy();
+protected:
+	// Õ“Ë”»’è
+	void CheckHit();
 
-	// XV
-	void Update();
-
-	// •`‰æ
-	void Draw();
+	std::weak_ptr<Player> pl;
 private:
 };

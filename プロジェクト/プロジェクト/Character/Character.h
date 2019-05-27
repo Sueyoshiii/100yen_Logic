@@ -1,9 +1,11 @@
 #pragma once
+#include "../Typedef.h"
 #include "../Info/Info.h"
 #include "../Stage/Stage.h"
 #include <MyLib.h>
 #include <memory>
 #include <string>
+#include <vector>
 #include <unordered_map>
 #include <functional>
 #include <algorithm>
@@ -49,6 +51,11 @@ public:
 	Character();
 	~Character();
 
+	// 状態遷移
+	void ChangeState(const ST state);
+
+	// 衝突矩形を取得
+	std::vector<HitRect<Vec2f>> GetRect();
 protected:
 	// 更新
 	virtual void Update() = 0;
@@ -61,9 +68,6 @@ protected:
 
 	// 落下
 	void FallUpdate();
-
-	// 状態遷移
-	void ChangeState(const ST state);
 
 	// 座標取得
 	Vec2f GetPos()const;
@@ -132,10 +136,13 @@ protected:
 
 	// アニメーション止める
 	bool stopFlag;
+
+	// 体力
+	int hp;
 private:
 	// 状態初期化
 	void InitState();
 
 	// 矩形
-	Primitive box;
+	std::unordered_map<ST, std::vector<std::vector<Primitive>>> box;
 };

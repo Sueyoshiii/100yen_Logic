@@ -3,9 +3,6 @@
   <ItemGroup>
     <ClCompile Include="BackGround\BackGround.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
-    <ClCompile Include="Character\Character.cpp" />
-    <ClCompile Include="Character\Enemy.cpp" />
-    <ClCompile Include="Character\Player.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scene\Clear.cpp" />
@@ -16,13 +13,22 @@
     <ClCompile Include="Info\Info.cpp">
       <Filter>Info</Filter>
     </ClCompile>
+    <ClCompile Include="Character\Character.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\Player.cpp">
+      <Filter>Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\Enemy.cpp">
+      <Filter>Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\Wolf.cpp">
+      <Filter>Character\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround\BackGround.h" />
     <ClInclude Include="Camera\Camera.h" />
-    <ClInclude Include="Character\Character.h" />
-    <ClInclude Include="Character\Enemy.h" />
-    <ClInclude Include="Character\Player.h" />
     <ClInclude Include="Scene\Clear.h" />
     <ClInclude Include="Scene\GameMain.h" />
     <ClInclude Include="Scene\Over.h" />
@@ -34,10 +40,31 @@
       <Filter>Info</Filter>
     </ClInclude>
     <ClInclude Include="Typedef.h" />
+    <ClInclude Include="Character\Character.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\Player.h">
+      <Filter>Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\Enemy.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\Wolf.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Info">
       <UniqueIdentifier>{201df90b-5412-417e-99ad-d9a3a461bac0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{6c4e4242-bc70-490a-a92e-fd11b1dbe063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Player">
+      <UniqueIdentifier>{3021f550-6ca1-434a-bf58-e5300f77cdbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Enemy">
+      <UniqueIdentifier>{efe0159b-7fc0-4484-b357-c0523b993127}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

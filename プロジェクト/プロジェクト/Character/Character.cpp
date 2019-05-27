@@ -1,13 +1,14 @@
 #include "Character.h"
 
+// コンストラクタ
 Character::Character() :
 	state(ST::Neutral), oldState(state), localPos(Vec2f()), vel(Vec2f()),
 	turnFlag(false), frame(0), animCnt(0), index(0), stopFlag(false)
 {
-	box = Primitive(PrimitiveType::box);
 	InitState();
 }
 
+// デストラクタ
 Character::~Character()
 {
 }
@@ -40,6 +41,16 @@ void Character::ChangeState(const ST state)
 	animCnt = 0;
 	index   = 0;
 	this->state = state;
+
+	if (box.find(this->state) == box.end())
+	{
+		box[this->state].resize(info.lock()->at(stMap[state]).rect.size());
+		for (unsigned int i = 0; i < box[this->state].size(); ++i)
+		{
+			box[this->state][i].resize(info.lock()->at(stMap[state]).rect[i].hit.size());
+			std::fill(box[this->state][i].begin(), box[this->state][i].end(), Primitive(PrimitiveType::box));
+		}
+	}
 }
 
 // キャラクターデータ読み込み
@@ -71,26 +82,32 @@ void Character::DrawImage()
 // 衝突矩形描画
 void Character::DrawRect()
 {
-	for (auto& i : info.lock()->at(stMap[state]).rect[index].hit)
+	if (state == ST::Attack3) {
+		int a = 0;
+	}
+	for (unsigned int i = 0; i < info.lock()->at(stMap[state]).rect[index].hit.size(); ++i)
 	{
+		auto& hit = info.lock()->at(stMap[state]).rect[index].hit[i];
 		Vec2f pos;
 		Vec2f size;
 		if (turnFlag)
 		{
-			//pos  = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-i.rect.pos.x, i.rect.pos.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-			//size = Vec2f(-i.rect.size.x, i.rect.size.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-			pos  = Vec2f(tex.pos.x - i.rect.pos.x, tex.pos.y + i.rect.pos.y);
-			size = i.rect.size;
+			pos  = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-hit.rect.pos.x, hit.rect.pos.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			size = Vec2f(-hit.rect.size.x, hit.rect.size.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			//pos = Vec2f(tex.pos.x - hit.rect.pos.x, tex.pos.y + hit.rect.pos.y);
+			//size = hit.rect.size;
 		}
 		else
 		{
-			pos = tex.pos + i.rect.pos;
-			size = i.rect.size;
+			pos  = tex.pos + hit.rect.pos * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			size = hit.rect.size * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			//pos = tex.pos + hit.rect.pos;
+			//size = hit.rect.size;
 		}
 
 		float r = 0.0f;
 		float g = 0.0f;
-		if (i.type == HitType::Attack)
+		if (hit.type == HitType::Attack)
 		{
 			r = 1.0f;
 		}
@@ -99,12 +116,12 @@ void Character::DrawRect()
 			g = 1.0f;
 		}
 
-		box.pos[0] = Vec3f(Vec2f(pos));
-		box.pos[1] = Vec3f(Vec2f(pos.x + size.x, pos.y));
-		box.pos[2] = Vec3f(Vec2f(pos.x, pos.y + size.y));
-		box.pos[3] = Vec3f(Vec2f(pos + size));
+		box[state][index][i].pos[0] = Vec3f(Vec2f(pos));
+		box[state][index][i].pos[1] = Vec3f(Vec2f(pos.x + size.x, pos.y));
+		box[state][index][i].pos[2] = Vec3f(Vec2f(pos.x, pos.y + size.y));
+		box[state][index][i].pos[3] = Vec3f(Vec2f(pos + size));
 
-		lib.lock()->Draw(box, Vec3f(r, g, 0.0f), 1.0f);
+		lib.lock()->Draw(box[state][index][i], Vec3f(r, g, 0.0f), 1.0f);
 	}
 }
 
@@ -169,6 +186,27 @@ void Character::InitState()
 	stMap[ST::Attack2] = "Attack2";
 	stMap[ST::Attack3] = "Attack3";
 	stMap[ST::Damage]  = "Damage";
-	stMap[ST::Death]   = "Deth";
+	stMap[ST::Death]   = "Death";
+}
+
+// 衝突矩形を取得
+std::vector<HitRect<Vec2f>> Character::GetRect()
+{
+	auto hit = info.lock()->at(stMap[state]).rect[index].hit;
+	std::for_each(hit.begin(), hit.end(), [&](HitRect<Vec2f> & rect)->void 
+		{
+			if (turnFlag)
+			{
+				rect.rect.pos = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-rect.rect.pos.x, rect.rect.pos.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+				rect.rect.size = Vec2f(-rect.rect.size.x, rect.rect.size.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			}
+			else
+			{
+				rect.rect.pos = tex.pos + rect.rect.pos * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+				rect.rect.size = rect.rect.size * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			}
+		});
+
+	return hit;
 }
 

@@ -171,6 +171,7 @@
     <ClCompile Include="Character\Character.cpp" />
     <ClCompile Include="Character\Enemy.cpp" />
     <ClCompile Include="Character\Player.cpp" />
+    <ClCompile Include="Character\Wolf.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Info\Info.cpp" />
     <ClCompile Include="main.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Character\Character.h" />
     <ClInclude Include="Character\Enemy.h" />
     <ClInclude Include="Character\Player.h" />
+    <ClInclude Include="Character\Wolf.h" />
     <ClInclude Include="Info\Info.h" />
     <ClInclude Include="Scene\Clear.h" />
     <ClInclude Include="Scene\GameMain.h" />

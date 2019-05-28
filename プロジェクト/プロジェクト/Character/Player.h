@@ -54,4 +54,7 @@ private:
 
 	// 攻撃フラグ
 	bool AttackFlag;
+
+	// 攻撃カウント
+	unsigned int attackCnt;
 };

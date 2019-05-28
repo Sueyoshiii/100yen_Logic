@@ -11,12 +11,12 @@ const float Const::GROUND				  = 500.0f;
 
 // コンストラクタ
 Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
-	jumpFlag(false), dashFlag(false), AttackFlag(false)
+	jumpFlag(false), dashFlag(false), AttackFlag(false), attackCnt(0)
 {
 	this->lib = lib;
 	this->cam = cam;
 
-	LoadData("data/player.info");
+	LoadData("data/chara/プレイヤー矩形新作/player.info");
 	LoadImage("img/player.png");
 
 	InitFunc();
@@ -73,7 +73,7 @@ void Player::NeutralUpdate()
 	Dash();
 
 	Attack1();
-	NextAttack();
+	//NextAttack();
 }
 
 // 歩行
@@ -165,8 +165,20 @@ void Player::Attack1Update()
 {
 	if (CheckAnimEnd())
 	{
-		oldState = state;
-		ChangeState(ST::Neutral);
+		stopFlag = true;
+		if (In.IsTrigger(Key::Z))
+		{
+			attackCnt = 0;
+			stopFlag = false;
+			ChangeState(ST::Attack2);
+		}
+		if ((++attackCnt) > 3)
+		{
+			attackCnt = 0;
+			AttackFlag = false;
+			oldState = state;
+			ChangeState(ST::Neutral);
+		}
 	}
 }
 void Player::Attack1()

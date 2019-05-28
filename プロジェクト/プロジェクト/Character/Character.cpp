@@ -148,7 +148,6 @@ void Character::AnimationUpdate()
 	if (frame >= animTime)
 	{
 		index = (index + 1) >= info.lock()->at(stMap[state]).rect.size() ? 0 : ++index;
-		frame = 0;
 	}
 }
 

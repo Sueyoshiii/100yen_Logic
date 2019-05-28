@@ -40,19 +40,21 @@ void Enemy::CheckHit()
 			//if (std::fabs(plCenter.x - emCenter.x) < p.rect.size.x / 2.0f + e.rect.size.x / 2.0f &&
 			//	std::fabs(plCenter.y - emCenter.y) < p.rect.size.y / 2.0f + e.rect.size.y / 2.0f)
 			{
+				Vec2f dir = pl.lock()->GetPos() - GetPos();
 				if (p.type == HitType::Attack)
 				{
 					// Enemyにダメージ
+					KnockBack(dir);
 					//ChangeState(ST::Damage);
 					std::cout << "Hit!" << std::endl;
 
 					/// 攻撃されたらPlayerの方を向いてもいいかも？
-					/// あとノックバックも入れないと
 				}
 				else
 				{
 					// Playerにダメージ
-					//pl.lock()->ChangeState(ST::Damage);
+					pl.lock()->KnockBack(dir);
+					pl.lock()->ChangeState(ST::Damage);
 					std::cout << "Damage!" << std::endl;
 				}
 			}

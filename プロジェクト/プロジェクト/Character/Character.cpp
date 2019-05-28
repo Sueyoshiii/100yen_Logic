@@ -42,6 +42,11 @@ void Character::ChangeState(const ST state)
 	index   = 0;
 	this->state = state;
 
+	if (this->state == ST::Damage)
+	{
+		--hp;
+	}
+
 	if (box.find(this->state) == box.end())
 	{
 		box[this->state].resize(info.lock()->at(stMap[state]).rect.size());
@@ -158,16 +163,17 @@ bool Character::CheckAnimEnd()
 	return false;
 }
 
-// 座標取得
-Vec2f Character::GetPos() const
+// ローカル座標の更新
+void Character::UpdateLocalPos()
 {
-	return tex.pos;
+	tex.pos = cam.lock()->Correction(localPos);
 }
 
-// サイズ取得
-Vec2f Character::GetSize() const
+// ノックバック
+void Character::KnockBack(const Vec2f& vec)
 {
-	return tex.size;
+	float v = vec.x != 0.0f ? vec.x / std::fabs(vec.x) : -1.0f;
+	vel = Vec2f(Const::SPEED / 2.0f * v, Const::JUMP_POW / 2.0f);
 }
 
 // ステータス初期化
@@ -187,6 +193,18 @@ void Character::InitState()
 	stMap[ST::Attack3] = "Attack3";
 	stMap[ST::Damage]  = "Damage";
 	stMap[ST::Death]   = "Death";
+}
+
+// 座標取得
+Vec2f Character::GetPos() const
+{
+	return tex.pos;
+}
+
+// サイズ取得
+Vec2f Character::GetSize() const
+{
+	return tex.size;
 }
 
 // 衝突矩形を取得

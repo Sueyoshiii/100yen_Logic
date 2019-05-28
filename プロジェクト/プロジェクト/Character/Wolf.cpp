@@ -1,9 +1,10 @@
 #include "Wolf.h"
 
-Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
+// コンストラクタ
+Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam, const Vec2f& pos)
 {
 	this->lib = lib;
-	this->pl = pl;
+	this->pl  = pl;
 	this->cam = cam;
 
 	LoadData("data/enemy_1.info");
@@ -16,42 +17,53 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 
 	turnFlag = true;
 
-	localPos = Vec2f(100, 0);
+	localPos = pos;
 }
 
+// デストラクタ
 Wolf::~Wolf()
 {
 }
 
+// 更新
 void Wolf::Update()
 {
 	func[state]();
 
 	FallUpdate();
 
-	tex.pos = cam.lock()->Correction(localPos);
+	UpdateLocalPos();
 
 	CheckHit();
 }
 
+// 描画
 void Wolf::Draw()
 {
 	AnimationUpdate();
 
 	DrawImage();
 
-#ifdef _DEBUG
-	DrawRect();
-#endif
+//#ifdef _DEBUG
+//	DrawRect();
+//#endif
 }
 
+// 状態初期化
 void Wolf::InitFunc()
 {
 	func.clear();
 	
 	func[ST::Neutral] = std::bind(&Wolf::NeutralUpdate, this);
+	func[ST::Walk]    = std::bind(&Wolf::WalkUpdate, this);
 }
 
+// 待機
 void Wolf::NeutralUpdate()
+{
+}
+
+// 歩き
+void Wolf::WalkUpdate()
 {
 }

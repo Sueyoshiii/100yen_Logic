@@ -52,29 +52,32 @@ public:
 	Character();
 	~Character();
 
-	// 状態遷移
-	void ChangeState(const ST state);
-
-	// 衝突矩形を取得
-	std::vector<HitRect<Vec2f>> GetRect();
-protected:
 	// 更新
 	virtual void Update() = 0;
 
 	// 描画
 	virtual void Draw() = 0;
 
-	// ステージ内に座標を補正
-	void CorrectPosInStage();
+	// 状態遷移
+	void ChangeState(const ST state);
 
-	// 落下
-	void FallUpdate();
+	// ノックバック
+	void KnockBack(const Vec2f& vec);
+
+	// 衝突矩形を取得
+	std::vector<HitRect<Vec2f>> GetRect();
 
 	// 座標取得
 	Vec2f GetPos()const;
 
 	// サイズ取得
 	Vec2f GetSize()const;
+protected:
+	// ステージ内に座標を補正
+	void CorrectPosInStage();
+
+	// 落下
+	void FallUpdate();
 
 	// キャラクターデータ読み込み
 	void LoadData(const std::string& filePath);
@@ -93,6 +96,9 @@ protected:
 
 	// アニメーションの終了を調べる
 	bool CheckAnimEnd();
+
+	// ローカル座標の更新
+	void UpdateLocalPos();
 
 	///*もしMyLibクラスの弱参照をメンバとして持たせるなら、
 	///*MyLibChildクラス等のインターフェースクラスを用いたほうが後々楽

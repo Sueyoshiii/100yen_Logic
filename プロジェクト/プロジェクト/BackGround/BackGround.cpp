@@ -8,7 +8,7 @@ BackGround::BackGround(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	tex.resize(2);
 	for (auto& i : tex)
 	{
-		i.Load("img/brides.jpg");
+		i.Load("img/haikei.png");
 	}
 	//(*tex.begin()) = Texture("img/brides.jpg");
 	

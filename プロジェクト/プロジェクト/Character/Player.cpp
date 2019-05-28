@@ -23,6 +23,8 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	ChangeState(ST::Neutral);
 
 	vel = Vec2f(Const::SPEED, 0.0f);
+
+	hp = 3;
 }
 
 // デストラクタ
@@ -40,7 +42,7 @@ void Player::Update()
 
 	FallUpdate();
 
-	tex.pos = cam.lock()->Correction(localPos);
+	UpdateLocalPos();
 }
 
 // 描画
@@ -50,9 +52,9 @@ void Player::Draw()
 
 	DrawImage();
 
-#ifdef _DEBUG
-	DrawRect();
-#endif
+//#ifdef _DEBUG
+//	DrawRect();
+//#endif
 }
 
 // 待機
@@ -236,11 +238,41 @@ void Player::NextAttack()
 // ダメージ
 void Player::DamageUpdate()
 {
+	static unsigned int cnt = 0;
+	if (tex.pos.y < Const::GROUND)
+	{
+		localPos.x += vel.x;
+	}
+
+	if ((++cnt) > 60)
+	{
+		cnt = 0;
+		jumpFlag = false;
+		dashFlag = false;
+		if (hp >= 0)
+		{
+			ChangeState(ST::Neutral);
+		}
+		else
+		{
+			ChangeState(ST::Death);
+		}
+	}
 }
 
 // 死亡
 void Player::DeathUpdate()
 {
+	if (CheckAnimEnd())
+	{
+		stopFlag = true;
+		if (In.IsTrigger(Key::A))
+		{
+			stopFlag = false;
+			hp = 3;
+			ChangeState(ST::Neutral);
+		}
+	}
 }
 
 // 状態と関数をバインド

@@ -25,6 +25,7 @@
     <ClCompile Include="Character\Wolf.cpp">
       <Filter>Character\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Character\EnemyManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround\BackGround.h" />
@@ -50,6 +51,9 @@
       <Filter>Character\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Character\Wolf.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\EnemyManager.h">
       <Filter>Character\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

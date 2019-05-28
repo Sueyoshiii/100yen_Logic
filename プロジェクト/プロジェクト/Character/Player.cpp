@@ -52,9 +52,9 @@ void Player::Draw()
 
 	DrawImage();
 
-//#ifdef _DEBUG
-//	DrawRect();
-//#endif
+#ifdef _DEBUG
+	DrawRect();
+#endif
 }
 
 // ‘Ò‹@
@@ -99,7 +99,7 @@ void Player::WalkUpdate()
 	Dash();
 
 	Attack1();
-	NextAttack();
+	//NextAttack();
 }
 void Player::Walk()
 {
@@ -172,11 +172,11 @@ void Player::Attack1Update()
 			stopFlag = false;
 			ChangeState(ST::Attack2);
 		}
-		if ((++attackCnt) > 3)
+		if ((++attackCnt) > 20)
 		{
 			attackCnt = 0;
 			AttackFlag = false;
-			oldState = state;
+			stopFlag = false;
 			ChangeState(ST::Neutral);
 		}
 	}
@@ -195,28 +195,39 @@ void Player::Attack2Update()
 {
 	if (CheckAnimEnd())
 	{
-		oldState = state;
-		ChangeState(ST::Neutral);
+		stopFlag = true;
+		if (In.IsTrigger(Key::Z))
+		{
+			attackCnt = 0;
+			stopFlag = false;
+			ChangeState(ST::Attack3);
+		}
+		if ((++attackCnt) > 20)
+		{
+			stopFlag = false;
+			attackCnt = 0;
+			AttackFlag = false;
+			oldState = state;
+			ChangeState(ST::Neutral);
+		}
 	}
 }
 
 // UŒ‚3
 void Player::Attack3Update()
 {
-	static unsigned int cnt = 0;
-	if (!CheckAnimEnd())
+	if (CheckAnimEnd())
 	{
-		return;
-	}
-	frame = info.lock()->at(stMap[state]).rect.size() - 1;
-	stopFlag = true;
-	if ((++cnt) > 15)
-	{
-		cnt = 0;
-		stopFlag = false;
-		AttackFlag = false;
-		oldState = state;
-		ChangeState(ST::Neutral);
+		frame = info.lock()->at(stMap[state]).rect.size() - 1;
+		stopFlag = true;
+		if ((++attackCnt) > 15)
+		{
+			attackCnt = 0;
+			stopFlag = false;
+			AttackFlag = false;
+			oldState = state;
+			ChangeState(ST::Neutral);
+		}
 	}
 }
 

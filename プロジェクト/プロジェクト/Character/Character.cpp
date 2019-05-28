@@ -126,7 +126,7 @@ void Character::DrawRect()
 		box[state][index][i].pos[2] = Vec3f(Vec2f(pos.x, pos.y + size.y));
 		box[state][index][i].pos[3] = Vec3f(Vec2f(pos + size));
 
-		lib.lock()->Draw(box[state][index][i], Vec3f(r, g, 0.0f), 1.0f);
+		lib.lock()->Draw(box[state][index][i], Vec3f(r, g, 0.0f), 0.5f);
 	}
 }
 

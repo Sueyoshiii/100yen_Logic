@@ -33,5 +33,7 @@ private:
 	// プレイヤー
 	std::shared_ptr<Player> pl;
 
+	// 狼
+	// 最終的には敵は一括管理
 	std::shared_ptr<Wolf> wolf;
 };

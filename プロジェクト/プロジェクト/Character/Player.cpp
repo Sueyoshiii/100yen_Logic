@@ -87,7 +87,8 @@ void Player::WalkUpdate()
 		turnFlag = false;
 		localPos.x += vel.x;
 	}
-	else {
+	else
+	{
 		ChangeState(ST::Neutral);
 	}
 

@@ -179,6 +179,7 @@ int main()
 				{
 					for (auto& i : hit)
 					{
+						i.rect.pos /= large;
 						i.rect.size /= large;
 					}
 					info.rect[i].hit = hit;

@@ -43,19 +43,24 @@ void Enemy::CheckHit()
 				Vec2f dir = pl.lock()->GetPos() - GetPos();
 				if (p.type == HitType::Attack)
 				{
-					// Enemyにダメージ
+					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
 					KnockBack(dir);
 					//ChangeState(ST::Damage);
-					std::cout << "Hit!" << std::endl;
-
-					/// 攻撃されたらPlayerの方を向いてもいいかも？
 				}
 				else
 				{
-					// Playerにダメージ
+					bool nextTurn = turnFlag;
+					if (dir.x < 0)
+					{
+						nextTurn = false;
+					}
+					else if (dir.x > 0)
+					{
+						nextTurn = true;
+					}
+					pl.lock()->SetTurnFlag(nextTurn);
 					pl.lock()->KnockBack(dir);
 					pl.lock()->ChangeState(ST::Damage);
-					std::cout << "Damage!" << std::endl;
 				}
 			}
 		}

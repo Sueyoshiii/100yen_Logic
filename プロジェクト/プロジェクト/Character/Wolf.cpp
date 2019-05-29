@@ -13,7 +13,10 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	InitFunc();
 	ChangeState(ST::Neutral);
 
-	vel = Vec2f(Const::SPEED, 0.0f);
+	speed = 3.0f;
+	dushPow = 10.0f;
+	jumpPow = -10.0f;
+	vel = Vec2f(speed, 0.0f);
 
 	turnFlag = true;
 

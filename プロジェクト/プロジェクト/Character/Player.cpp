@@ -2,16 +2,9 @@
 #include "../Stage/Stage.h"
 #include <iostream>
 
-const float Const::SPEED				  = 4.0f;
-const float Const::DUSH_POW				  = 10.0f;
-const float Const::JUMP_POW				  = -18.0f;
-const unsigned int Const::ATTACK_INTERVAL = 60;
-const float Const::GR					  = 0.98f;
-const float Const::GROUND				  = 500.0f;
-
 // コンストラクタ
 Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
-	jumpFlag(false), dashFlag(false), AttackFlag(false), attackCnt(0)
+	jumpFlag(false), dashFlag(false), attackFlag(false), attackCnt(0)
 {
 	this->lib = lib;
 	this->cam = cam;
@@ -22,7 +15,10 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	InitFunc();
 	ChangeState(ST::Neutral);
 
-	vel = Vec2f(Const::SPEED, 0.0f);
+	speed = 4.0f;
+	dushPow = 10.0f;
+	jumpPow = -18.0f;
+	vel = Vec2f(speed, 0.0f);
 
 	hp = 3;
 }
@@ -73,7 +69,6 @@ void Player::NeutralUpdate()
 	Dash();
 
 	Attack1();
-	//NextAttack();
 }
 
 // 歩行
@@ -99,13 +94,12 @@ void Player::WalkUpdate()
 	Dash();
 
 	Attack1();
-	//NextAttack();
 }
 void Player::Walk()
 {
 	if (In.IsKey(Key::Num4) || In.IsKey(Key::Num6))
 	{
-		vel.x = Const::SPEED;
+		vel.x = speed;
 		ChangeState(ST::Walk);
 	}
 }
@@ -135,7 +129,7 @@ void Player::Jump()
 	if (!jumpFlag && In.IsTrigger(Key::Space))
 	{
 		jumpFlag = true;
-		vel.y = Const::JUMP_POW;
+		vel.y = jumpPow;
 		ChangeState(ST::Jump);
 	}
 }
@@ -155,7 +149,7 @@ void Player::Dash()
 	if (!dashFlag && In.IsTrigger(Key::X))
 	{
 		dashFlag = true;
-		vel.x = turnFlag ? -Const::DUSH_POW : Const::DUSH_POW;
+		vel.x = turnFlag ? -dushPow : dushPow;
 		ChangeState(ST::Dash);
 	}
 }
@@ -163,29 +157,14 @@ void Player::Dash()
 // 攻撃1
 void Player::Attack1Update()
 {
-	if (CheckAnimEnd())
-	{
-		stopFlag = true;
-		if (In.IsTrigger(Key::Z))
-		{
-			attackCnt = 0;
-			stopFlag = false;
-			ChangeState(ST::Attack2);
-		}
-		if ((++attackCnt) > 20)
-		{
-			attackCnt = 0;
-			AttackFlag = false;
-			stopFlag = false;
-			ChangeState(ST::Neutral);
-		}
-	}
+	NextAttack(20);
 }
 void Player::Attack1()
 {
-	if (!AttackFlag && In.IsTrigger(Key::Z))
+	if (!attackFlag && In.IsTrigger(Key::Z))
 	{
-		AttackFlag = true;
+		attackFlag = true;
+		attackCnt  = 0;
 		ChangeState(ST::Attack1);
 	}
 }
@@ -193,69 +172,38 @@ void Player::Attack1()
 // 攻撃2
 void Player::Attack2Update()
 {
-	if (CheckAnimEnd())
-	{
-		stopFlag = true;
-		if (In.IsTrigger(Key::Z))
-		{
-			attackCnt = 0;
-			stopFlag = false;
-			ChangeState(ST::Attack3);
-		}
-		if ((++attackCnt) > 20)
-		{
-			stopFlag = false;
-			attackCnt = 0;
-			AttackFlag = false;
-			oldState = state;
-			ChangeState(ST::Neutral);
-		}
-	}
+	NextAttack(20);
 }
 
 // 攻撃3
 void Player::Attack3Update()
 {
-	if (CheckAnimEnd())
-	{
-		frame = info.lock()->at(stMap[state]).rect.size() - 1;
-		stopFlag = true;
-		if ((++attackCnt) > 15)
-		{
-			attackCnt = 0;
-			stopFlag = false;
-			AttackFlag = false;
-			oldState = state;
-			ChangeState(ST::Neutral);
-		}
-	}
+	NextAttack(25);
 }
 
 // 次の攻撃へ移る
-void Player::NextAttack()
+void Player::NextAttack(const unsigned int attackInterval)
 {
-	static unsigned int cnt = 0;
-
-	if (!AttackFlag)
+	if (CheckAnimEnd())
 	{
-		return;
-	}
-
-	if (cnt > Const::ATTACK_INTERVAL)
-	{
-		oldState = state;
-		cnt = 0;
-		AttackFlag = false;
-	}
-	else
-	{
-		if (In.IsTrigger(Key::Z))
+		stopFlag = true;
+		if (state != ST::Attack3)
 		{
-			ChangeState(ST(int(oldState) + 1));
+			if (In.IsTrigger(Key::Z))
+			{
+				attackCnt = 0;
+				stopFlag = false;
+				ChangeState(ST(int(state) + 1));
+			}
+		}
+		if ((++attackCnt) > attackInterval)
+		{
+			attackCnt = 0;
+			attackFlag = false;
+			stopFlag = false;
+			ChangeState(ST::Neutral);
 		}
 	}
-
-	++cnt;
 }
 
 // ダメージ
@@ -272,6 +220,7 @@ void Player::DamageUpdate()
 		cnt = 0;
 		jumpFlag = false;
 		dashFlag = false;
+		attackFlag = 0;
 		if (hp >= 0)
 		{
 			ChangeState(ST::Neutral);

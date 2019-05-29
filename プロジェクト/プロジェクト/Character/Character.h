@@ -32,14 +32,6 @@ enum class State
 typedef
 struct ConstParam
 {
-	// 速度
-	static const float SPEED;
-	// ダッシュ力
-	static const float DUSH_POW;
-	// ジャンプ力
-	static const float JUMP_POW;
-	// 攻撃間隔
-	static const unsigned int ATTACK_INTERVAL;
 	// 重力
 	static const float GR;
 	// 地面
@@ -72,6 +64,12 @@ public:
 
 	// サイズ取得
 	Vec2f GetSize()const;
+
+	// 反転フラグ取得
+	bool GetTurnFlag()const;
+
+	// 反転フラグセット
+	void SetTurnFlag(const bool flag);
 protected:
 	// ステージ内に座標を補正
 	void CorrectPosInStage();
@@ -130,7 +128,7 @@ protected:
 	bool turnFlag;
 
 	// 経過フレーム
-	unsigned int frame;
+	float frame;
 
 	// アニメーションカウント
 	unsigned int animCnt;
@@ -149,6 +147,15 @@ protected:
 
 	// 体力
 	int hp;
+
+	// 移動速度
+	float speed;
+
+	// ダッシュ力
+	float dushPow;
+
+	// ジャンプ力
+	float jumpPow;
 private:
 	// 状態初期化
 	void InitState();

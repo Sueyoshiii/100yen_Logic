@@ -15,9 +15,11 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	InitFunc();
 	ChangeState(ST::Neutral);
 
-	speed   = 4.0f;
-	dushPow = 6.0f;
-	jumpPow = -18.0f;
+	tex.size *= 2.5f;
+
+	speed   = 5.0f;
+	dushPow = 13.0f;
+	jumpPow = -40.0f;
 	vel     = Vec2f(speed, 0.0f);
 
 	hp = 3;

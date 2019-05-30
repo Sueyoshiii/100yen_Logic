@@ -1,7 +1,8 @@
 #include "Enemy.h"
 #include <iostream>
 
-Enemy::Enemy()
+Enemy::Enemy() :
+	viewBox(Primitive(PrimitiveType::box))
 {
 }
 
@@ -68,4 +69,21 @@ void Enemy::CheckHit()
 			}
 		}
 	}
+}
+
+// Ž‹ŠE•`‰æ
+void Enemy::DrawViewRange()
+{
+	Vec2f pos;
+	Vec2f size;
+
+	pos = Vec2f(tex.pos.x + tex.size.x / 2, tex.pos.y);
+	size = viewRange;
+
+	viewBox.pos[0] = Vec3f(Vec2f(pos));
+	viewBox.pos[1] = Vec3f(Vec2f(pos.x + size.x, pos.y));
+	viewBox.pos[2] = Vec3f(Vec2f(pos.x, pos.y + size.y));
+	viewBox.pos[3] = Vec3f(Vec2f(pos + size));
+
+	lib.lock()->Draw(viewBox, Vec3f(1.0f, 1.0f, 0.0f), 0.5f);
 }

@@ -2,7 +2,8 @@
 #include "../Stage/Stage.h"
 #include "../Character/Player.h"
 
-Camera::Camera()
+Camera::Camera(std::weak_ptr<MyLib> lib) :
+	lib(lib), size(Vec2f(float(lib.lock()->GetWinSize().x), float(lib.lock()->GetWinSize().y)))
 {
 }
 
@@ -13,7 +14,6 @@ Camera::~Camera()
 // 更新
 void Camera::Update()
 {
-	Vec2f size = Vec2f(640, 640);
 	pos = pl.lock()->GetLocalPos();
 
 	//カメラ座標の補正
@@ -35,7 +35,7 @@ void Camera::Update()
 // 受け取った座標をカメラの範囲内に補正
 Vec2f Camera::Correction(const Vec2f& pos)
 {
-	return Vec2f(pos.x - (this->pos.x - 640 / 2), pos.y);
+	return Vec2f(pos.x - (this->pos.x - size.x / 2), pos.y);
 }
 
 // 座標取得

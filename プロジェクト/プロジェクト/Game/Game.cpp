@@ -2,6 +2,7 @@
 #include "../Scene/Scene.h"
 #include "../Scene/Title.h"
 #include "../Scene/GameMain.h"
+#include <Windows.h>
 
 Game::Game()
 {
@@ -20,7 +21,9 @@ Game& Game::Get()
 // èâä˙âª
 void Game::Init()
 {
-	lib = std::make_shared<MyLib>(640);
+	Vec2 screenSize = Vec2(1280, 720);
+	//Vec2 screenSize = Vec2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+	lib = std::make_shared<MyLib>(screenSize);
 	lib->ChangeTitle("LittleRed");
 
 	ChangeScene(new GameMain(lib));

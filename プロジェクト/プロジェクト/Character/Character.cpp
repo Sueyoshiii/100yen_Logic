@@ -1,7 +1,7 @@
 #include "Character.h"
 
-const float Const::GR = 0.98f;
-const float Const::GROUND = 500.0f;
+const float Const::GR = 1.5f;
+const float Const::GROUND = 1000.0f;
 
 // コンストラクタ
 Character::Character() :

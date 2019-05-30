@@ -19,9 +19,18 @@ protected:
 	// Õ“Ë”»’è
 	void CheckHit();
 
+	// ‹ŠE•`‰æ
+	void DrawViewRange();
+
 	// ó‘Ô‰Šú‰»
 	virtual void InitFunc() = 0;
 
 	// ƒvƒŒƒCƒ„[
 	std::weak_ptr<Player> pl;
+
+	// ‹ŠE
+	Vec2f viewRange;
+
+	// ‹ŠE”ÍˆÍ
+	Primitive viewBox;
 };

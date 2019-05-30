@@ -7,7 +7,7 @@ class Player;
 class Camera
 {
 public:
-	Camera();
+	Camera(std::weak_ptr<MyLib> lib);
 	~Camera();
 
 	// XV
@@ -23,5 +23,7 @@ public:
 	void SetFocus(std::weak_ptr<Player> pl);
 private:
 	Vec2f pos;
+	Vec2f size;
+	std::weak_ptr<MyLib> lib;
 	std::weak_ptr<Player> pl;
 };

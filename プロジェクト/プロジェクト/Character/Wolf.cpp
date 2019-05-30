@@ -13,6 +13,8 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	InitFunc();
 	ChangeState(ST::Neutral);
 
+	tex.size *= 2.5f;
+
 	speed   = 2.0f;
 	dushPow = 10.0f;
 	jumpPow = -18.0f;
@@ -20,11 +22,13 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 
 	hp = 2;
 
-	turnFlag = true;
+	turnFlag = false;
 
 	localPos = pos;
 
 	knockBackRange = 4.0f;
+
+	viewRange = Vec2f(200.0f, 80.0f);
 }
 
 // デストラクタ
@@ -53,6 +57,7 @@ void Wolf::Draw()
 
 #ifdef _DEBUG
 	DrawRect();
+	DrawViewRange();
 #endif
 }
 

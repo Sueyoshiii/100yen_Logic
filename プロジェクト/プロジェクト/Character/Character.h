@@ -32,6 +32,14 @@ enum class State
 typedef
 struct ConstParam
 {
+	// 速度
+	static const float SPEED;
+	// ダッシュ力
+	static const float DUSH_POW;
+	// ジャンプ力
+	static const float JUMP_POW;
+	// 攻撃間隔
+	static const unsigned int ATTACK_INTERVAL;
 	// 重力
 	static const float GR;
 	// 地面
@@ -44,41 +52,29 @@ public:
 	Character();
 	~Character();
 
+	// 状態遷移
+	void ChangeState(const ST state);
+
+	// 衝突矩形を取得
+	std::vector<HitRect<Vec2f>> GetRect();
+protected:
 	// 更新
 	virtual void Update() = 0;
 
 	// 描画
 	virtual void Draw() = 0;
 
-	// 状態遷移
-	void ChangeState(const ST state);
+	// ステージ内に座標を補正
+	void CorrectPosInStage();
 
-	// ノックバック
-	void KnockBack(const Vec2f& vec);
-
-	// 衝突矩形を取得
-	std::vector<HitRect<Vec2f>> GetRect();
+	// 落下
+	void FallUpdate();
 
 	// 座標取得
 	Vec2f GetPos()const;
 
 	// サイズ取得
 	Vec2f GetSize()const;
-
-	// 反転フラグ取得
-	bool GetTurnFlag()const;
-
-	// 無敵フラグ取得
-	bool GetInvincibleFlag()const;
-
-	// 反転フラグセット
-	void SetTurnFlag(const bool flag);
-protected:
-	// ステージ内に座標を補正
-	void CorrectPosInStage();
-
-	// 落下
-	void FallUpdate();
 
 	// キャラクターデータ読み込み
 	void LoadData(const std::string& filePath);
@@ -97,12 +93,6 @@ protected:
 
 	// アニメーションの終了を調べる
 	bool CheckAnimEnd();
-
-	// ローカル座標の更新
-	void UpdateLocalPos();
-
-	// 無敵処理
-	void InvicibleUpdate();
 
 	///*もしMyLibクラスの弱参照をメンバとして持たせるなら、
 	///*MyLibChildクラス等のインターフェースクラスを用いたほうが後々楽
@@ -130,14 +120,11 @@ protected:
 	// 速度
 	Vec2f vel;
 
-	// アルファ値
-	float alpha;
-
 	// 反転フラグ
 	bool turnFlag;
 
 	// 経過フレーム
-	float frame;
+	unsigned int frame;
 
 	// アニメーションカウント
 	unsigned int animCnt;
@@ -156,21 +143,6 @@ protected:
 
 	// 体力
 	int hp;
-
-	// 移動速度
-	float speed;
-
-	// ダッシュ力
-	float dushPow;
-
-	// ジャンプ力
-	float jumpPow;
-
-	// 無敵フラグ
-	bool invincibleFlag;
-
-	// ノックバック距離
-	float knockBackRange;
 private:
 	// 状態初期化
 	void InitState();

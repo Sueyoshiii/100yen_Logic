@@ -3,6 +3,7 @@
 
 class Camera;
 
+
 class Player : 
 	public Character
 {
@@ -16,7 +17,6 @@ public:
 	// 描画
 	void Draw();
 
-	// ローカル座標取得
 	Vec2f GetLocalPos()const;
 private:
 	// 状態と関数をバインド
@@ -40,7 +40,7 @@ private:
 	// 攻撃3
 	void Attack3Update();
 	// 次の攻撃へ移る
-	void NextAttack(const unsigned int attackInterval);
+	void NextAttack();
 	// ダメージ
 	void DamageUpdate();
 	// 死亡
@@ -53,8 +53,5 @@ private:
 	bool dashFlag;
 
 	// 攻撃フラグ
-	bool attackFlag;
-
-	// 攻撃カウント
-	unsigned int attackCnt;
+	bool AttackFlag;
 };

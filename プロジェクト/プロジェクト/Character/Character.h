@@ -169,7 +169,8 @@ protected:
 	// 無敵フラグ
 	bool invincibleFlag;
 
-	float bAlpha;
+	// ノックバック距離
+	float knockBackRange;
 private:
 	// 状態初期化
 	void InitState();

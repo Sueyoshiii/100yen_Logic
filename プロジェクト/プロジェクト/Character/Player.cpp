@@ -9,18 +9,20 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	this->lib = lib;
 	this->cam = cam;
 
-	LoadData("data/chara/プレイヤー矩形新作/player.info");
+	LoadData("data/chara/player.info");
 	LoadImage("img/player.png");
 
 	InitFunc();
 	ChangeState(ST::Neutral);
 
 	speed   = 4.0f;
-	dushPow = 10.0f;
+	dushPow = 6.0f;
 	jumpPow = -18.0f;
 	vel     = Vec2f(speed, 0.0f);
 
 	hp = 3;
+
+	knockBackRange = 4.0f;
 }
 
 // デストラクタ
@@ -50,9 +52,9 @@ void Player::Draw()
 
 	DrawImage();
 
-//#ifdef _DEBUG
-//	DrawRect();
-//#endif
+#ifdef _DEBUG
+	DrawRect();
+#endif
 }
 
 // 待機
@@ -159,7 +161,7 @@ void Player::Dash()
 // 攻撃1
 void Player::Attack1Update()
 {
-	NextAttack(20);
+	NextAttack(15);
 }
 void Player::Attack1()
 {
@@ -174,7 +176,7 @@ void Player::Attack1()
 // 攻撃2
 void Player::Attack2Update()
 {
-	NextAttack(20);
+	NextAttack(15);
 }
 
 // 攻撃3
@@ -208,7 +210,7 @@ void Player::NextAttack(const unsigned int attackInterval)
 	}
 }
 
-// ダメージ
+// 被ダメージ
 void Player::DamageUpdate()
 {
 	static unsigned int cnt = 0;

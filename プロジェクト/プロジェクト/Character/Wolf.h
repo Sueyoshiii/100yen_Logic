@@ -20,4 +20,12 @@ private:
 	void NeutralUpdate();
 	// •à‚«
 	void WalkUpdate();
+	void Walk();
+	// UŒ‚
+	void AttackUpdate();
+	void Attack();
+	// ”íƒ_ƒ[ƒW
+	void DamageUpdate();
+	// €–S
+	void DeathUpdate();
 };

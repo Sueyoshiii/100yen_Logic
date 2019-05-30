@@ -1,5 +1,4 @@
 #include "Enemy.h"
-#include "Player.h"
 #include <iostream>
 
 Enemy::Enemy()
@@ -13,12 +12,6 @@ Enemy::~Enemy()
 // Õ“Ë”»’è
 void Enemy::CheckHit()
 {
-	// ‚Ç‚¿‚ç‚©‚ª–³“G‚È‚çˆ—‚µ‚È‚¢
-	if (pl.lock()->GetInvincibleFlag() || invincibleFlag)
-	{
-		return;
-	}
-
 	for (auto& p : pl.lock()->GetRect())
 	{
 		for (auto& e : GetRect())
@@ -34,7 +27,7 @@ void Enemy::CheckHit()
 			Vec2f plCenter = p.rect.pos + p.rect.size / 2.0f;
 			Vec2f emCenter = e.rect.pos + e.rect.size / 2.0f;
 
-			float dis1 = std::hypot(plCenter.x - emCenter.x, plCenter.y - emCenter.y);
+			float dis1  = std::hypot(plCenter.x - emCenter.x, plCenter.y - emCenter.y);
 			float angle = std::atan2(plCenter.x - emCenter.x, plCenter.y - emCenter.y);
 
 			Vec2f pSize = { std::abs(p.rect.size.x), p.rect.size.y };
@@ -50,11 +43,15 @@ void Enemy::CheckHit()
 				if (p.type == HitType::Attack)
 				{
 					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
-					KnockBack(dir);
-					//ChangeState(ST::Damage);
+					KnockBack(-dir);
+					ChangeState(ST::Damage);
 				}
 				else
 				{
+					if (pl.lock()->GetInvincibleFlag())
+					{
+						return;
+					}
 					bool nextTurn = turnFlag;
 					if (dir.x < 0)
 					{

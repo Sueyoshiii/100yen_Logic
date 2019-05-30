@@ -7,10 +7,10 @@ const float Const::GROUND = 500.0f;
 Character::Character() :
 	state(ST::Neutral), oldState(state), localPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
 	turnFlag(false), frame(0), animCnt(0), index(0), stopFlag(false),
-	speed(1.0f), dushPow(1.0f), jumpPow(1.0f), invincibleFlag(false)
+	speed(1.0f), dushPow(1.0f), jumpPow(1.0f), invincibleFlag(false),
+	knockBackRange(0.0f)
 {
 	InitState();
-	bAlpha = 0.5f;
 }
 
 // デストラクタ
@@ -123,7 +123,7 @@ void Character::DrawRect()
 		box[state][index][id].pos[2] = Vec3f(Vec2f(pos.x, pos.y + size.y));
 		box[state][index][id].pos[3] = Vec3f(Vec2f(pos + size));
 
-		lib.lock()->Draw(box[state][index][id], color, bAlpha);
+		lib.lock()->Draw(box[state][index][id], color, 0.5f);
 
 		++id;
 	}
@@ -168,7 +168,7 @@ void Character::InvicibleUpdate()
 	static unsigned int invincibleCnt = 0;
 	if (invincibleFlag)
 	{
-		if (invincibleCnt > 60)
+		if (invincibleCnt > 240)
 		{
 			alpha = 1.0f;
 			invincibleCnt = 0;
@@ -186,7 +186,7 @@ void Character::InvicibleUpdate()
 void Character::KnockBack(const Vec2f& vec)
 {
 	float v = vec.x != 0.0f ? vec.x / std::fabs(vec.x) : -1.0f;
-	vel = Vec2f(speed / 2.0f * v, jumpPow / 2.0f);
+	vel = Vec2f(knockBackRange / 2.0f * v, jumpPow / 2.0f);
 }
 
 // ステータス初期化

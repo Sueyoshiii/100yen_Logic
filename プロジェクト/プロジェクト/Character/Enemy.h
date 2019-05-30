@@ -1,7 +1,6 @@
 #pragma once
 #include "Character.h"
-
-class Player;
+#include "Player.h"
 
 // “G‚³‚ñ’B
 typedef

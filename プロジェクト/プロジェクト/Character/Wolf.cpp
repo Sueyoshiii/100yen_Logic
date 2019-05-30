@@ -7,13 +7,13 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	this->pl  = pl;
 	this->cam = cam;
 
-	LoadData("data/enemy_1.info");
+	LoadData("data/chara/enemy_1.info");
 	LoadImage("img/Enemy_1.png");
 
 	InitFunc();
 	ChangeState(ST::Neutral);
 
-	speed   = 4.0f;
+	speed   = 2.0f;
 	dushPow = 10.0f;
 	jumpPow = -18.0f;
 	vel     = Vec2f(speed, 0.0f);
@@ -23,6 +23,8 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	turnFlag = true;
 
 	localPos = pos;
+
+	knockBackRange = 4.0f;
 }
 
 // デストラクタ
@@ -54,15 +56,6 @@ void Wolf::Draw()
 #endif
 }
 
-// 状態初期化
-void Wolf::InitFunc()
-{
-	func.clear();
-	
-	func[ST::Neutral] = std::bind(&Wolf::NeutralUpdate, this);
-	func[ST::Walk]    = std::bind(&Wolf::WalkUpdate, this);
-}
-
 // 待機
 void Wolf::NeutralUpdate()
 {
@@ -71,4 +64,67 @@ void Wolf::NeutralUpdate()
 // 歩き
 void Wolf::WalkUpdate()
 {
+}
+void Wolf::Walk()
+{
+}
+
+// 攻撃
+void Wolf::AttackUpdate()
+{
+}
+void Wolf::Attack()
+{
+}
+
+// 被ダメージ
+void Wolf::DamageUpdate()
+{
+	static unsigned int cnt = 0;
+	if (tex.pos.y < Const::GROUND)
+	{
+		localPos.x += vel.x;
+	}
+	else
+	{
+		if ((++cnt) > 40)
+		{
+			cnt = 0;
+			if (hp >= 0)
+			{
+				ChangeState(ST::Neutral);
+			}
+			else
+			{
+				ChangeState(ST::Death);
+			}
+		}
+	}
+}
+
+// 死亡
+void Wolf::DeathUpdate()
+{
+	if (CheckAnimEnd())
+	{
+		stopFlag = true;
+		if (In.IsTrigger(Key::S))
+		{
+			stopFlag = false;
+			hp = 3;
+			ChangeState(ST::Neutral);
+		}
+	}
+}
+
+// 状態初期化
+void Wolf::InitFunc()
+{
+	func.clear();
+
+	func[ST::Neutral] = std::bind(&Wolf::NeutralUpdate, this);
+	func[ST::Walk]    = std::bind(&Wolf::WalkUpdate, this);
+	func[ST::Attack1] = std::bind(&Wolf::AttackUpdate, this);
+	func[ST::Damage]  = std::bind(&Wolf::DamageUpdate, this);
+	func[ST::Death]   = std::bind(&Wolf::DeathUpdate, this);
 }

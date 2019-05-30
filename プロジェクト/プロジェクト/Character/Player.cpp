@@ -2,27 +2,27 @@
 #include "../Stage/Stage.h"
 #include <iostream>
 
-const float Const::SPEED				  = 4.0f;
-const float Const::DUSH_POW				  = 10.0f;
-const float Const::JUMP_POW				  = -18.0f;
-const unsigned int Const::ATTACK_INTERVAL = 60;
-const float Const::GR					  = 0.98f;
-const float Const::GROUND				  = 500.0f;
-
 // コンストラクタ
 Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
-	jumpFlag(false), dashFlag(false), AttackFlag(false)
+	jumpFlag(false), dashFlag(false), attackFlag(false), attackCnt(0)
 {
 	this->lib = lib;
 	this->cam = cam;
 
-	LoadData("data/player.info");
+	LoadData("data/chara/player.info");
 	LoadImage("img/player.png");
 
 	InitFunc();
 	ChangeState(ST::Neutral);
 
-	vel = Vec2f(Const::SPEED, 0.0f);
+	speed   = 4.0f;
+	dushPow = 6.0f;
+	jumpPow = -18.0f;
+	vel     = Vec2f(speed, 0.0f);
+
+	hp = 3;
+
+	knockBackRange = 4.0f;
 }
 
 // デストラクタ
@@ -40,7 +40,9 @@ void Player::Update()
 
 	FallUpdate();
 
-	tex.pos = cam.lock()->Correction(localPos);
+	UpdateLocalPos();
+
+	InvicibleUpdate();
 }
 
 // 描画
@@ -71,7 +73,6 @@ void Player::NeutralUpdate()
 	Dash();
 
 	Attack1();
-	NextAttack();
 }
 
 // 歩行
@@ -97,13 +98,12 @@ void Player::WalkUpdate()
 	Dash();
 
 	Attack1();
-	NextAttack();
 }
 void Player::Walk()
 {
 	if (In.IsKey(Key::Num4) || In.IsKey(Key::Num6))
 	{
-		vel.x = Const::SPEED;
+		vel.x = speed;
 		ChangeState(ST::Walk);
 	}
 }
@@ -133,7 +133,7 @@ void Player::Jump()
 	if (!jumpFlag && In.IsTrigger(Key::Space))
 	{
 		jumpFlag = true;
-		vel.y = Const::JUMP_POW;
+		vel.y = jumpPow;
 		ChangeState(ST::Jump);
 	}
 }
@@ -153,7 +153,7 @@ void Player::Dash()
 	if (!dashFlag && In.IsTrigger(Key::X))
 	{
 		dashFlag = true;
-		vel.x = turnFlag ? -Const::DUSH_POW : Const::DUSH_POW;
+		vel.x = turnFlag ? -dushPow : dushPow;
 		ChangeState(ST::Dash);
 	}
 }
@@ -161,17 +161,14 @@ void Player::Dash()
 // 攻撃1
 void Player::Attack1Update()
 {
-	if (CheckAnimEnd())
-	{
-		oldState = state;
-		ChangeState(ST::Neutral);
-	}
+	NextAttack(15);
 }
 void Player::Attack1()
 {
-	if (!AttackFlag && In.IsTrigger(Key::Z))
+	if (!attackFlag && In.IsTrigger(Key::Z))
 	{
-		AttackFlag = true;
+		attackFlag = true;
+		attackCnt  = 0;
 		ChangeState(ST::Attack1);
 	}
 }
@@ -179,68 +176,83 @@ void Player::Attack1()
 // 攻撃2
 void Player::Attack2Update()
 {
-	if (CheckAnimEnd())
-	{
-		oldState = state;
-		ChangeState(ST::Neutral);
-	}
+	NextAttack(15);
 }
 
 // 攻撃3
 void Player::Attack3Update()
 {
-	static unsigned int cnt = 0;
-	if (!CheckAnimEnd())
-	{
-		return;
-	}
-	frame = info.lock()->at(stMap[state]).rect.size() - 1;
-	stopFlag = true;
-	if ((++cnt) > 15)
-	{
-		cnt = 0;
-		stopFlag = false;
-		AttackFlag = false;
-		oldState = state;
-		ChangeState(ST::Neutral);
-	}
+	NextAttack(25);
 }
 
 // 次の攻撃へ移る
-void Player::NextAttack()
+void Player::NextAttack(const unsigned int attackInterval)
+{
+	if (CheckAnimEnd())
+	{
+		stopFlag = true;
+		if (state != ST::Attack3)
+		{
+			if (In.IsTrigger(Key::Z))
+			{
+				attackCnt = 0;
+				stopFlag = false;
+				ChangeState(ST(int(state) + 1));
+			}
+		}
+		if ((++attackCnt) > attackInterval)
+		{
+			attackCnt = 0;
+			attackFlag = false;
+			stopFlag = false;
+			ChangeState(ST::Neutral);
+		}
+	}
+}
+
+// 被ダメージ
+void Player::DamageUpdate()
 {
 	static unsigned int cnt = 0;
-
-	if (!AttackFlag)
+	if (tex.pos.y < Const::GROUND)
 	{
-		return;
-	}
-
-	if (cnt > Const::ATTACK_INTERVAL)
-	{
-		oldState = state;
-		cnt = 0;
-		AttackFlag = false;
+		localPos.x += vel.x;
 	}
 	else
 	{
-		if (In.IsTrigger(Key::Z))
+		if ((++cnt) > 40)
 		{
-			ChangeState(ST(int(oldState) + 1));
+			cnt = 0;
+			jumpFlag = false;
+			dashFlag = false;
+			attackFlag = 0;
+			if (hp >= 0)
+			{
+				invincibleFlag = true;
+				ChangeState(ST::Neutral);
+			}
+			else
+			{
+				ChangeState(ST::Death);
+			}
 		}
 	}
 
-	++cnt;
-}
-
-// ダメージ
-void Player::DamageUpdate()
-{
 }
 
 // 死亡
 void Player::DeathUpdate()
 {
+	if (CheckAnimEnd())
+	{
+		stopFlag = true;
+		if (In.IsTrigger(Key::A))
+		{
+			stopFlag = false;
+			hp = 3;
+			ChangeState(ST::Neutral);
+		}
+	}
 }
 
 // 状態と関数をバインド
@@ -259,6 +271,7 @@ void Player::InitFunc()
 	func[ST::Death]   = std::bind(&Player::DeathUpdate, this);
 }
 
+// ローカル座標取得
 Vec2f Player::GetLocalPos() const
 {
 	return localPos;

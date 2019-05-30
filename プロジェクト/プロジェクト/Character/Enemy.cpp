@@ -13,6 +13,12 @@ Enemy::~Enemy()
 // Õ“Ë”»’è
 void Enemy::CheckHit()
 {
+	// ‚Ç‚¿‚ç‚©‚ª–³“G‚È‚çˆ—‚µ‚È‚¢
+	if (pl.lock()->GetInvincibleFlag() || invincibleFlag)
+	{
+		return;
+	}
+
 	for (auto& p : pl.lock()->GetRect())
 	{
 		for (auto& e : GetRect())

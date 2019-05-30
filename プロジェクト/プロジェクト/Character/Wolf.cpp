@@ -13,10 +13,12 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	InitFunc();
 	ChangeState(ST::Neutral);
 
-	speed = 3.0f;
+	speed   = 4.0f;
 	dushPow = 10.0f;
-	jumpPow = -10.0f;
-	vel = Vec2f(speed, 0.0f);
+	jumpPow = -18.0f;
+	vel     = Vec2f(speed, 0.0f);
+
+	hp = 2;
 
 	turnFlag = true;
 
@@ -47,9 +49,9 @@ void Wolf::Draw()
 
 	DrawImage();
 
-//#ifdef _DEBUG
-//	DrawRect();
-//#endif
+#ifdef _DEBUG
+	DrawRect();
+#endif
 }
 
 // ó‘Ô‰Šú‰»

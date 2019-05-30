@@ -15,10 +15,10 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	InitFunc();
 	ChangeState(ST::Neutral);
 
-	speed = 4.0f;
+	speed   = 4.0f;
 	dushPow = 10.0f;
 	jumpPow = -18.0f;
-	vel = Vec2f(speed, 0.0f);
+	vel     = Vec2f(speed, 0.0f);
 
 	hp = 3;
 }
@@ -39,6 +39,8 @@ void Player::Update()
 	FallUpdate();
 
 	UpdateLocalPos();
+
+	InvicibleUpdate();
 }
 
 // 描画
@@ -48,9 +50,9 @@ void Player::Draw()
 
 	DrawImage();
 
-#ifdef _DEBUG
-	DrawRect();
-#endif
+//#ifdef _DEBUG
+//	DrawRect();
+//#endif
 }
 
 // 待機
@@ -214,22 +216,26 @@ void Player::DamageUpdate()
 	{
 		localPos.x += vel.x;
 	}
-
-	if ((++cnt) > 60)
+	else
 	{
-		cnt = 0;
-		jumpFlag = false;
-		dashFlag = false;
-		attackFlag = 0;
-		if (hp >= 0)
+		if ((++cnt) > 40)
 		{
-			ChangeState(ST::Neutral);
-		}
-		else
-		{
-			ChangeState(ST::Death);
+			cnt = 0;
+			jumpFlag = false;
+			dashFlag = false;
+			attackFlag = 0;
+			if (hp >= 0)
+			{
+				invincibleFlag = true;
+				ChangeState(ST::Neutral);
+			}
+			else
+			{
+				ChangeState(ST::Death);
+			}
 		}
 	}
+
 }
 
 // 死亡
@@ -263,6 +269,7 @@ void Player::InitFunc()
 	func[ST::Death]   = std::bind(&Player::DeathUpdate, this);
 }
 
+// ローカル座標取得
 Vec2f Player::GetLocalPos() const
 {
 	return localPos;

@@ -68,6 +68,9 @@ public:
 	// 反転フラグ取得
 	bool GetTurnFlag()const;
 
+	// 無敵フラグ取得
+	bool GetInvincibleFlag()const;
+
 	// 反転フラグセット
 	void SetTurnFlag(const bool flag);
 protected:
@@ -98,6 +101,9 @@ protected:
 	// ローカル座標の更新
 	void UpdateLocalPos();
 
+	// 無敵処理
+	void InvicibleUpdate();
+
 	///*もしMyLibクラスの弱参照をメンバとして持たせるなら、
 	///*MyLibChildクラス等のインターフェースクラスを用いたほうが後々楽
 	// ライブラリ
@@ -123,6 +129,9 @@ protected:
 
 	// 速度
 	Vec2f vel;
+
+	// アルファ値
+	float alpha;
 
 	// 反転フラグ
 	bool turnFlag;
@@ -156,6 +165,11 @@ protected:
 
 	// ジャンプ力
 	float jumpPow;
+
+	// 無敵フラグ
+	bool invincibleFlag;
+
+	float bAlpha;
 private:
 	// 状態初期化
 	void InitState();

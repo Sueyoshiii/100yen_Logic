@@ -5,11 +5,12 @@ const float Const::GROUND = 500.0f;
 
 // コンストラクタ
 Character::Character() :
-	state(ST::Neutral), oldState(state), localPos(Vec2f()), vel(Vec2f()),
+	state(ST::Neutral), oldState(state), localPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
 	turnFlag(false), frame(0), animCnt(0), index(0), stopFlag(false),
-	speed(1.0f), dushPow(1.0f), jumpPow(1.0f)
+	speed(1.0f), dushPow(1.0f), jumpPow(1.0f), invincibleFlag(false)
 {
 	InitState();
+	bAlpha = 0.5f;
 }
 
 // デストラクタ
@@ -84,27 +85,28 @@ void Character::DrawImage()
 		tex.offsetPos.x = tex.divSize.x * index,
 		info.lock()->at(stMap[state]).rect[index].anim.pos.y
 	};
-
-	lib.lock()->Draw(tex, 1.0f, turnFlag);
+	lib.lock()->Draw(tex, alpha, turnFlag);
 }
 
 // 衝突矩形描画
 void Character::DrawRect()
 {
-	if (state == ST::Attack3) {
-		int a = 0;
-	}
-	auto s = info.lock()->at(stMap[ST::Attack3]).rect[3].hit.size();
 	unsigned int id = 0;
 	for (auto& i : info.lock()->at(stMap[state]).rect[index].hit)
 	{
-		Vec2f pos  = tex.pos + i.rect.pos * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-		Vec2f size = i.rect.size * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-
-		box[state][index][id].pos[0] = Vec3f(Vec2f(pos));
-		box[state][index][id].pos[1] = Vec3f(Vec2f(pos.x + size.x, pos.y));
-		box[state][index][id].pos[2] = Vec3f(Vec2f(pos.x, pos.y + size.y));
-		box[state][index][id].pos[3] = Vec3f(Vec2f(pos + size));
+		Vec2f pos;
+		Vec2f size;
+		Vec2f animSize = info.lock()->at(stMap[state]).rect[index].anim.size;
+		if (turnFlag)
+		{
+			pos  = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-i.rect.pos.x, i.rect.pos.y) * tex.size / animSize;
+			size = Vec2f(-i.rect.size.x, i.rect.size.y) * tex.size / animSize;
+		}
+		else
+		{
+			pos  = tex.pos + i.rect.pos * tex.size / animSize;
+			size = i.rect.size * tex.size / animSize;
+		}
 
 		Vec3f color = 0.0f;
 		if (i.type == HitType::Damage)
@@ -115,48 +117,16 @@ void Character::DrawRect()
 		{
 			color.x = 1.0f;
 		}
-		lib.lock()->Draw(box[state][index][id], color, 0.5f);
+
+		box[state][index][id].pos[0] = Vec3f(Vec2f(pos));
+		box[state][index][id].pos[1] = Vec3f(Vec2f(pos.x + size.x, pos.y));
+		box[state][index][id].pos[2] = Vec3f(Vec2f(pos.x, pos.y + size.y));
+		box[state][index][id].pos[3] = Vec3f(Vec2f(pos + size));
+
+		lib.lock()->Draw(box[state][index][id], color, bAlpha);
+
 		++id;
 	}
-
-	//for (unsigned int i = 0; i < info.lock()->at(stMap[state]).rect[index].hit.size(); ++i)
-	//{
-	//	auto& hit = info.lock()->at(stMap[state]).rect[index].hit[i];
-	//	Vec2f pos;
-	//	Vec2f size;
-	//	if (turnFlag)
-	//	{
-	//		pos  = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-hit.rect.pos.x, hit.rect.pos.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-	//		size = Vec2f(-hit.rect.size.x, hit.rect.size.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-	//		//pos = Vec2f(tex.pos.x - hit.rect.pos.x, tex.pos.y + hit.rect.pos.y);
-	//		//size = hit.rect.size;
-	//	}
-	//	else
-	//	{
-	//		pos  = tex.pos + hit.rect.pos * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-	//		size = hit.rect.size * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-	//		//pos = tex.pos + hit.rect.pos;
-	//		//size = hit.rect.size;
-	//	}
-
-	//	float r = 0.0f;
-	//	float g = 0.0f;
-	//	if (hit.type == HitType::Attack)
-	//	{
-	//		r = 1.0f;
-	//	}
-	//	else
-	//	{
-	//		g = 1.0f;
-	//	}
-
-	//	box[state][index][i].pos[0] = Vec3f(Vec2f(pos));
-	//	box[state][index][i].pos[1] = Vec3f(Vec2f(pos.x + size.x, pos.y));
-	//	box[state][index][i].pos[2] = Vec3f(Vec2f(pos.x, pos.y + size.y));
-	//	box[state][index][i].pos[3] = Vec3f(Vec2f(pos + size));
-
-	//	lib.lock()->Draw(box[state][index][i], Vec3f(r, g, 0.0f), 0.5f);
-	//}
 }
 
 // アニメーション更新
@@ -192,6 +162,26 @@ void Character::UpdateLocalPos()
 	tex.pos = cam.lock()->Correction(localPos);
 }
 
+// 無敵処理
+void Character::InvicibleUpdate()
+{
+	static unsigned int invincibleCnt = 0;
+	if (invincibleFlag)
+	{
+		if (invincibleCnt > 60)
+		{
+			alpha = 1.0f;
+			invincibleCnt = 0;
+			invincibleFlag = false;
+		}
+		else
+		{
+			++invincibleCnt;
+			alpha = (alpha > 0.0f) ? alpha -= 0.1f : 1.0f;
+		}
+	}
+}
+
 // ノックバック
 void Character::KnockBack(const Vec2f& vec)
 {
@@ -224,15 +214,16 @@ std::vector<HitRect<Vec2f>> Character::GetRect()
 	auto hit = info.lock()->at(stMap[state]).rect[index].hit;
 	std::for_each(hit.begin(), hit.end(), [&](HitRect<Vec2f> & rect)->void
 	{
+		Vec2f animSize = info.lock()->at(stMap[state]).rect[index].anim.size;
 		if (turnFlag)
 		{
-			rect.rect.pos = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-rect.rect.pos.x, rect.rect.pos.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-			rect.rect.size = Vec2f(-rect.rect.size.x, rect.rect.size.y) * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			rect.rect.pos = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-rect.rect.pos.x, rect.rect.pos.y) * tex.size / animSize;
+			rect.rect.size = Vec2f(-rect.rect.size.x, rect.rect.size.y) * tex.size / animSize;
 		}
 		else
 		{
-			rect.rect.pos = tex.pos + rect.rect.pos * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
-			rect.rect.size = rect.rect.size * tex.size / info.lock()->at(stMap[state]).rect[index].anim.size;
+			rect.rect.pos = tex.pos + rect.rect.pos * tex.size / animSize;
+			rect.rect.size = rect.rect.size * tex.size / animSize;
 		}
 	});
 
@@ -255,6 +246,12 @@ Vec2f Character::GetSize() const
 bool Character::GetTurnFlag() const
 {
 	return turnFlag;
+}
+
+// 無敵フラグ取得
+bool Character::GetInvincibleFlag() const
+{
+	return invincibleFlag;
 }
 
 // 反転フラグセット

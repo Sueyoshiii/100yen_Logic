@@ -1,11 +1,11 @@
 #include "Character.h"
 
-const float Const::GR = 1.5f;
+const float Const::GR = 1.9f;
 const float Const::GROUND = 1000.0f;
 
 // コンストラクタ
 Character::Character() :
-	state(ST::Neutral), oldState(state), localPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
+	state(ST::Neutral), oldState(state), worldPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
 	turnFlag(false), frame(0), animCnt(0), index(0), stopFlag(false),
 	speed(1.0f), dushPow(1.0f), jumpPow(1.0f), invincibleFlag(false),
 	knockBackRange(0.0f)
@@ -24,15 +24,15 @@ void Character::CorrectPosInStage()
 	float left  = Stage::Get().GetRange().Left();
 	float right = Stage::Get().GetRange().Right();
 
-	localPos.x = std::min(std::max(localPos.x, left), right - tex.size.x);
+	worldPos.x = std::min(std::max(worldPos.x, left), right - tex.size.x);
 }
 
 // 落下
 void Character::FallUpdate()
 {
 	vel.y += Const::GR;
-	localPos.y += vel.y;
-	localPos.y = std::min(localPos.y, Const::GROUND);
+	worldPos.y += vel.y;
+	worldPos.y = std::min(worldPos.y, Const::GROUND);
 }
 
 // 状態遷移
@@ -159,7 +159,7 @@ bool Character::CheckAnimEnd()
 // ローカル座標の更新
 void Character::UpdateLocalPos()
 {
-	tex.pos = cam.lock()->Correction(localPos);
+	tex.pos = cam.lock()->Correction(worldPos);
 }
 
 // 無敵処理

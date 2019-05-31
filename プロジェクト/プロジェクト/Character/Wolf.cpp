@@ -13,7 +13,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	InitFunc();
 	ChangeState(ST::Neutral);
 
-	tex.size *= 2.5f;
+	tex.size *= 2.0f;
 
 	speed   = 2.0f;
 	dushPow = 10.0f;
@@ -22,9 +22,10 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 
 	hp = 2;
 
-	turnFlag = false;
+	turnFlag = true;
 
-	localPos = pos;
+	tex.pos = pos;
+	worldPos = cam.lock()->Correction(tex.pos);
 
 	knockBackRange = 4.0f;
 
@@ -46,6 +47,7 @@ void Wolf::Update()
 	UpdateLocalPos();
 
 	CheckHit();
+	CheckView();
 }
 
 // •`‰æ
@@ -69,9 +71,12 @@ void Wolf::NeutralUpdate()
 // •à‚«
 void Wolf::WalkUpdate()
 {
+	worldPos.x += vel.x;
 }
 void Wolf::Walk()
 {
+	vel.x = pl.lock()->GetPos().x < tex.pos.x ? -speed : speed;
+	ChangeState(ST::Walk);
 }
 
 // UŒ‚
@@ -88,7 +93,7 @@ void Wolf::DamageUpdate()
 	static unsigned int cnt = 0;
 	if (tex.pos.y < Const::GROUND)
 	{
-		localPos.x += vel.x;
+		worldPos.x += vel.x;
 	}
 	else
 	{

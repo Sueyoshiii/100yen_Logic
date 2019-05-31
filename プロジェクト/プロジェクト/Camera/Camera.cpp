@@ -14,10 +14,10 @@ Camera::~Camera()
 // 更新
 void Camera::Update()
 {
-	pos = pl.lock()->GetLocalPos();
+	pos = pl.lock()->GetWorldPos();
 
 	//カメラ座標の補正
-	float left = Stage::Get().GetRange().Left();
+	float left  = Stage::Get().GetRange().Left();
 	float right = Stage::Get().GetRange().Right();
 	if (pos.x - size.x / 2 < left) {
 		pos.x = left + size.x / 2;

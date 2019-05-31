@@ -124,8 +124,8 @@ protected:
 	// 状態コンテナ
 	std::unordered_map<ST, std::string> stMap;
 
-	// ローカル座標
-	Vec2f localPos;
+	// ワールド座標
+	Vec2f worldPos;
 
 	// 速度
 	Vec2f vel;

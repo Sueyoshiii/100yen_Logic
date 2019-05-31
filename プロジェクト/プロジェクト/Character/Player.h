@@ -16,8 +16,8 @@ public:
 	// 描画
 	void Draw();
 
-	// ローカル座標取得
-	Vec2f GetLocalPos()const;
+	// ワールド座標取得
+	Vec2f GetWorldPos()const;
 private:
 	// 状態と関数をバインド
 	void InitFunc();

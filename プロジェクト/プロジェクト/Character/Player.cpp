@@ -15,7 +15,10 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	InitFunc();
 	ChangeState(ST::Neutral);
 
-	tex.size *= 2.5f;
+	tex.size *= 2.0f;
+
+	tex.pos = Vec2f(0.0f, 0.0f);
+	worldPos = cam.lock()->Correction(tex.pos);
 
 	speed   = 5.0f;
 	dushPow = 13.0f;
@@ -62,7 +65,7 @@ void Player::Draw()
 // 待機
 void Player::NeutralUpdate()
 {
-	if (localPos.y < Const::GROUND)
+	if (worldPos.y < Const::GROUND)
 	{
 		jumpFlag = true;
 		ChangeState(ST::Jump);
@@ -83,12 +86,12 @@ void Player::WalkUpdate()
 	if (In.IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		localPos.x -= vel.x;
+		worldPos.x -= vel.x;
 	}
 	else if (In.IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		localPos.x += vel.x;
+		worldPos.x += vel.x;
 	}
 	else
 	{
@@ -116,12 +119,12 @@ void Player::JumpUpdate()
 	if (In.IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		localPos.x -= vel.x;
+		worldPos.x -= vel.x;
 	}
 	else if (In.IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		localPos.x += vel.x;
+		worldPos.x += vel.x;
 	}
 
 	if (tex.pos.y >= Const::GROUND)
@@ -143,7 +146,7 @@ void Player::Jump()
 // ダッシュ
 void Player::DashUpdate()
 {
-	localPos.x += vel.x;
+	worldPos.x += vel.x;
 	if (CheckAnimEnd())
 	{
 		dashFlag = false;
@@ -218,7 +221,7 @@ void Player::DamageUpdate()
 	static unsigned int cnt = 0;
 	if (tex.pos.y < Const::GROUND)
 	{
-		localPos.x += vel.x;
+		worldPos.x += vel.x;
 	}
 	else
 	{
@@ -274,7 +277,7 @@ void Player::InitFunc()
 }
 
 // ローカル座標取得
-Vec2f Player::GetLocalPos() const
+Vec2f Player::GetWorldPos() const
 {
-	return localPos;
+	return worldPos;
 }

@@ -72,34 +72,39 @@ void Enemy::CheckHit()
 }
 
 // Ž‹ŠE”»’è
-void Enemy::CheckView()
+bool Enemy::CheckView()
 {
-	auto a = tex.pos;
-	for (auto& p : pl.lock()->GetRect())
+	auto p = pl.lock();
+
+	float length = turnFlag ? -lib.lock()->GetWinSize().x / 2.0f : lib.lock()->GetWinSize().x / 2.0f;
+
+	seg = Segment();
+	seg.begin = tex.pos + tex.size / 2.0f;
+	seg.end   = Vec2f(seg.begin.x + (length), seg.begin.y);
+	seg.vec   = seg.end - seg.begin;
+
+	pSeg[0] = Segment(p->GetPos(), Vec2f(p->GetPos().x + p->GetSize().x, p->GetPos().y));
+	pSeg[1] = Segment(Vec2f(p->GetPos().x + p->GetSize().x, p->GetPos().y), p->GetPos() + p->GetSize());
+	pSeg[2] = Segment(p->GetPos() + p->GetSize(), Vec2f(p->GetPos().x, p->GetPos().y + p->GetSize().y));
+	pSeg[3] = Segment(Vec2f(p->GetPos().x, p->GetPos().y + p->GetSize().y), p->GetPos());
+
+	for (auto& s : pSeg)
 	{
-		if (p.type == HitType::Attack)
+		if (CheckColSegments(s, seg))
 		{
-			continue;
-		}
-
-		float length = turnFlag ? -(lib.lock()->GetWinSize().x / 2.0f) : lib.lock()->GetWinSize().x / 2.0f;
-		seg = Segment(tex.pos + tex.size / 2.0f, Vec2f(seg.begin.x + length, seg.begin.y));
-
-		Segment pSeg[4];
-		pSeg[0] = Segment(p.rect.pos, Vec2f(p.rect.pos.x + p.rect.size.x, p.rect.pos.y));
-		pSeg[1] = Segment(Vec2f(p.rect.pos.x + p.rect.size.x, p.rect.pos.y), p.rect.pos + p.rect.size);
-		pSeg[2] = Segment(p.rect.pos + p.rect.size, Vec2f(p.rect.pos.x, p.rect.pos.y + p.rect.size.y));
-		pSeg[3] = Segment(Vec2f(p.rect.pos.x, p.rect.pos.y + p.rect.size.y), p.rect.pos);
-
-		for (unsigned int i = 0; i < _countof(pSeg); ++i)
-		{
-			if (CheckColSegments(pSeg[i], seg))
-			{
-				std::cout << "Hit" << std::endl;
-			}
+			return true;
 		}
 	}
 
+	return false;
+	//for (unsigned int i = 0; i < pSeg.size(); ++i)
+	//{
+	//	if (CheckColSegments(pSeg[i], seg))
+	//	{
+	//		Walk();
+	//		break;
+	//	}
+	//}
 }
 
 // ü•ª“¯Žm‚ÌÕ“Ë”»’è

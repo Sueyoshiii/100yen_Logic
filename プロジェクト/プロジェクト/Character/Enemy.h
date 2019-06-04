@@ -1,6 +1,7 @@
 #pragma once
 #include "Character.h"
 #include "Player.h"
+#include <array>
 
 // “G‚³‚ñ’B‚Ì‚¨–¼‘O
 typedef
@@ -39,7 +40,7 @@ protected:
 	void CheckHit();
 
 	// ‹ŠE”»’è
-	void CheckView();
+	bool CheckView();
 
 	// ü•ª“¯m‚ÌÕ“Ë”»’è
 	bool CheckColSegments(const Segment& seg1, const Segment& seg2);
@@ -65,4 +66,10 @@ protected:
 
 	// ‹ŠEü•ª
 	Segment seg;
+
+	// Player‚Ì‹éŒ`ü•ª
+	std::array<Segment, 4> pSeg;
+
+	// Player‚Ì‘OÀ•W
+	Vec2f oldPlPos;
 };

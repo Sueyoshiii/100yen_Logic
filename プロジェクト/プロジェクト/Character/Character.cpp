@@ -82,7 +82,7 @@ void Character::LoadImage(const std::string& filePath)
 void Character::DrawImage()
 {
 	tex.offsetPos = {
-		tex.offsetPos.x = tex.divSize.x * index,
+		tex.divSize.x * index,
 		info.lock()->at(stMap[state]).rect[index].anim.pos.y
 	};
 	lib.lock()->Draw(tex, alpha, turnFlag);

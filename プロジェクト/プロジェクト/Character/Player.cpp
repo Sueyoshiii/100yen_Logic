@@ -127,7 +127,7 @@ void Player::JumpUpdate()
 		worldPos.x += vel.x;
 	}
 
-	if (tex.pos.y >= Const::GROUND)
+	if (worldPos.y >= Const::GROUND)
 	{
 		jumpFlag = false;
 		ChangeState(ST::Neutral);

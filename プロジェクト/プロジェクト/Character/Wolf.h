@@ -18,6 +18,10 @@ private:
 	void InitFunc();
 	// 待機
 	void NeutralUpdate();
+	// 徘徊
+	void Loitering();
+	// 発見
+	void Alert();
 	// 歩き
 	void WalkUpdate();
 	void Walk();
@@ -28,4 +32,10 @@ private:
 	void DamageUpdate();
 	// 死亡
 	void DeathUpdate();
+
+	// 支点
+	Vec2f fulcrum;
+
+	// クールタイム
+	unsigned int coolTime;
 };

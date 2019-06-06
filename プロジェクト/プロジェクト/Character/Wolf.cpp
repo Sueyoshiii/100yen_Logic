@@ -11,21 +11,22 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	LoadImage("img/Enemy_1.png");
 
 	InitFunc();
-	ChangeState(ST::Neutral);
+	ChangeState(ST::Walk);
 
 	tex.size *= 2.0f;
 
 	speed   = 2.0f;
 	dushPow = 10.0f;
-	jumpPow = -18.0f;
+	jumpPow = -30.0f;
 	vel     = Vec2f(speed, 0.0f);
 
 	hp = 2;
 
-	turnFlag = true;
+	turnFlag = false;
 
 	tex.pos = pos;
 	worldPos = cam.lock()->Correction(tex.pos);
+	fulcrum = worldPos;
 
 	knockBackRange = 4.0f;
 
@@ -46,7 +47,7 @@ void Wolf::Update()
 
 	UpdateLocalPos();
 
-	CheckHit();
+	//CheckHit();
 }
 
 // •`‰æ
@@ -65,20 +66,47 @@ void Wolf::Draw()
 // ‘Ò‹@
 void Wolf::NeutralUpdate()
 {
-	// Ž‹ŠE“à‚É‘¨‚¦‚½‚çˆÚ“®
-	if (CheckView())
+	static unsigned int cnt = 0;
+	if (oldState == ST::Walk || oldState == ST::Attack1)
 	{
-		Walk();
+		if (!CheckAnimEnd())
+		{
+			return;
+		}
+
+		if (cnt >= 2)
+		{
+			cnt = 0;
+			turnFlag = !turnFlag;
+			vel.x = -vel.x;
+			Walk();
+		}
+		++cnt;
 	}
 }
+// œpœj
+void Wolf::Loitering()
+{
+	worldPos.x += vel.x;
 
-// •à‚«
-void Wolf::WalkUpdate()
+	float size = tex.size.x * 2.0f;
+	if (fulcrum.x - size >= worldPos.x ||
+		worldPos.x >= fulcrum.x + size)
+	{
+		oldState = state;
+		ChangeState(ST::Neutral);
+	}
+}
+// ”­Œ©
+// UŒ‚”ÍˆÍ‚Ü‚ÅˆÚ“®
+// ”­Œ©‚µ‚½Û‚ÌƒAƒNƒVƒ‡ƒ“‚Ù‚µ‚¢
+// ¬ƒWƒƒƒ“ƒv‚·‚é‚Æ‚©
+void Wolf::Alert()
 {
 	static unsigned int cnt = 0;
-	if ((++cnt) % 50 == 0)
+	if ((++cnt) % 10 == 0)
 	{
-		if (pl.lock()->GetPos().x < tex.pos.x)
+		if (worldPos.x > pl.lock()->GetWorldPos().x)
 		{
 			turnFlag = true;
 			vel.x = -speed;
@@ -89,16 +117,35 @@ void Wolf::WalkUpdate()
 			vel.x = speed;
 		}
 	}
-	worldPos.x += vel.x;
 
-	static unsigned int trackingCnt = 0;
-	if (++trackingCnt % (60 * 2) == 0)
+	float dis = fabs(worldPos.x - pl.lock()->GetWorldPos().x);
+	if (0.0f < dis && dis < 150)
 	{
-		// ‰½•b‚©‚Éˆê“xA’ÇÕŒp‘±‚©”Û‚©”»’f
-		if (!CheckView())
-		{
-			ChangeState(ST::Neutral);
-		}
+		Attack();
+	}
+	else
+	{
+		worldPos.x += vel.x;
+	}
+}
+
+// •à‚«
+void Wolf::WalkUpdate()
+{
+	// Ž‹ŠE‚É‘¨‚¦‚é‚Ü‚Åœpœj
+	static bool discovery = false;
+	if (CheckView())
+	{
+		discovery = true;
+	}
+
+	if (discovery)
+	{
+		Alert();
+	}
+	else
+	{
+		Loitering();
 	}
 }
 void Wolf::Walk()
@@ -109,21 +156,35 @@ void Wolf::Walk()
 // UŒ‚
 void Wolf::AttackUpdate()
 {
-	// –Ú•W’n“_‚ÖƒWƒƒƒ“ƒvUŒ‚‚·‚é‚ñ‚â‚æ[
-	static unsigned int cnt = 0;
 	if (CheckAnimEnd())
 	{
 		stopFlag = true;
-		if ((++cnt) > 10)
+		if ((++coolTime) > 60)
 		{
-			cnt = 0;
 			stopFlag = false;
 			ChangeState(ST::Neutral);
 		}
 	}
+	else
+	{
+		vel.x = worldPos.x > pl.lock()->GetWorldPos().x ? -speed*2 : speed*2;
+		worldPos.x += vel.x;
+	}
+
+	/*
+	
+	…•½•ûŒü
+		‘¬“xFvX = v0cosƒÆ
+		•ÏˆÊFx  = v0cosƒÆ*t
+	‰”’¼•ûŒü
+		‘¬“xFvY = v0sinƒÆ-gt
+		•ÏˆÊFy  = v0sinƒÆ*t-1/2gt^2
+
+	*/
 }
 void Wolf::Attack()
 {
+	coolTime = 0;
 	vel.y = jumpPow;
 	oldPlPos = pl.lock()->GetWorldPos();
 	ChangeState(ST::Attack1);

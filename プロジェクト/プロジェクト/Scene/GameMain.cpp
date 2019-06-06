@@ -17,7 +17,7 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 	cam->SetFocus(pl);
 
 	// “G‚³‚ñ’B
-	Enem.Summons(EM::Wolf, Vec2f(1500.0f, 0.0f), lib, pl, cam);
+	Enem.Summons(EM::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
 	//Enem.Summons(EM::Wolf, Vec2f(260.0f, 0.0f), lib, pl, cam);
 }
 

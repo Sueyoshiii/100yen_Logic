@@ -97,14 +97,6 @@ bool Enemy::CheckView()
 	}
 
 	return false;
-	//for (unsigned int i = 0; i < pSeg.size(); ++i)
-	//{
-	//	if (CheckColSegments(pSeg[i], seg))
-	//	{
-	//		Walk();
-	//		break;
-	//	}
-	//}
 }
 
 // ü•ª“¯Žm‚ÌÕ“Ë”»’è

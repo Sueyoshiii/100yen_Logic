@@ -87,6 +87,7 @@ int Info::Load(const std::string& filePath)
 	return 0;
 }
 
+// ƒf[ƒ^æ“¾
 std::shared_ptr<std::unordered_map<std::string, Data>> Info::GetData(const std::string& filePath)
 {
 	return data[filePath];

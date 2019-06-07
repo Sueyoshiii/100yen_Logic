@@ -18,7 +18,7 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 
 	// 敵さん達
 	Enem.Summons(EM::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
-	//Enem.Summons(EM::Wolf, Vec2f(260.0f, 0.0f), lib, pl, cam);
+	Enem.Summons(EM::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
 }
 
 // デストラクタ

@@ -1,15 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="BackGround\BackGround.cpp" />
-    <ClCompile Include="Camera\Camera.cpp" />
-    <ClCompile Include="Game\Game.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Scene\Clear.cpp" />
-    <ClCompile Include="Scene\GameMain.cpp" />
-    <ClCompile Include="Scene\Over.cpp" />
-    <ClCompile Include="Scene\Title.cpp" />
-    <ClCompile Include="Stage\Stage.cpp" />
     <ClCompile Include="Info\Info.cpp">
       <Filter>Info</Filter>
     </ClCompile>
@@ -25,22 +16,44 @@
     <ClCompile Include="Character\Wolf.cpp">
       <Filter>Character\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Character\EnemyManager.cpp" />
+    <ClCompile Include="Scene\GameMain.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Over.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Title.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Clear.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\EnemyManager.cpp">
+      <Filter>Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage\Stage.cpp">
+      <Filter>Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="BackGround\BackGround.cpp">
+      <Filter>Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Json\JsonLoader.cpp">
+      <Filter>Json</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BackGround\BackGround.h" />
-    <ClInclude Include="Camera\Camera.h" />
-    <ClInclude Include="Scene\Clear.h" />
-    <ClInclude Include="Scene\GameMain.h" />
-    <ClInclude Include="Scene\Over.h" />
-    <ClInclude Include="Scene\Scene.h" />
-    <ClInclude Include="Scene\Title.h" />
-    <ClInclude Include="Stage\Stage.h" />
-    <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Info\Info.h">
       <Filter>Info</Filter>
     </ClInclude>
-    <ClInclude Include="Typedef.h" />
     <ClInclude Include="Character\Character.h">
       <Filter>Character</Filter>
     </ClInclude>
@@ -56,6 +69,39 @@
     <ClInclude Include="Character\EnemyManager.h">
       <Filter>Character\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\GameMain.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Over.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Title.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Clear.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage\Stage.h">
+      <Filter>Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="BackGround\BackGround.h">
+      <Filter>Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Typedef.h">
+      <Filter>ヘッダー</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\JsonLoader.h">
+      <Filter>Json</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Info">
@@ -69,6 +115,27 @@
     </Filter>
     <Filter Include="Character\Enemy">
       <UniqueIdentifier>{efe0159b-7fc0-4484-b357-c0523b993127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{017f5fa1-2b04-480a-8264-99b93d419798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{4334f46e-dcc3-458b-958a-ee5d1e6f846b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stage">
+      <UniqueIdentifier>{49e1e878-b236-4e12-bb00-40d7870214cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース">
+      <UniqueIdentifier>{85c26e22-79cd-46f6-9268-af2fb500ea58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー">
+      <UniqueIdentifier>{d3a84276-c45a-40ed-98d3-b9eb772b2361}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{ca051913-b4c4-4266-96c7-cfaea97e6f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json">
+      <UniqueIdentifier>{cdd487a7-849c-4ea1-a60a-007962ca918e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

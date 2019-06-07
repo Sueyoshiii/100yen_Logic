@@ -175,6 +175,7 @@
     <ClCompile Include="Character\Wolf.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Info\Info.cpp" />
+    <ClCompile Include="Json\JsonLoader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scene\Clear.cpp" />
     <ClCompile Include="Scene\GameMain.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="Character\Player.h" />
     <ClInclude Include="Character\Wolf.h" />
     <ClInclude Include="Info\Info.h" />
+    <ClInclude Include="Json\JsonLoader.h" />
     <ClInclude Include="Scene\Clear.h" />
     <ClInclude Include="Scene\GameMain.h" />
     <ClInclude Include="Scene\Over.h" />

@@ -1,7 +1,8 @@
 #include "Wolf.h"
 
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam, const Vec2f& pos)
+Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam, const Vec2f& pos) :
+	discovery(false)
 {
 	this->lib = lib;
 	this->pl  = pl;
@@ -47,7 +48,7 @@ void Wolf::Update()
 
 	UpdateLocalPos();
 
-	//CheckHit();
+	CheckHit();
 }
 
 // •`‰æ
@@ -59,7 +60,10 @@ void Wolf::Draw()
 
 #ifdef _DEBUG
 	DrawRect();
-	DrawViewRange();
+	if (state != ST::Death)
+	{
+		DrawViewRange();
+	}
 #endif
 }
 
@@ -90,11 +94,27 @@ void Wolf::Loitering()
 	worldPos.x += vel.x;
 
 	float size = tex.size.x * 2.0f;
-	if (fulcrum.x - size >= worldPos.x ||
-		worldPos.x >= fulcrum.x + size)
+	if (pl.lock()->GetState() != ST::Death)
 	{
-		oldState = state;
-		ChangeState(ST::Neutral);
+		if (fulcrum.x - size >= worldPos.x ||
+			worldPos.x >= fulcrum.x + size)
+		{
+			oldState = state;
+			ChangeState(ST::Neutral);
+		}
+	}
+	else
+	{
+		if (fulcrum.x - size >= worldPos.x)
+		{
+			turnFlag = false;
+			vel.x = speed;
+		}
+		else if (fulcrum.x + size <= worldPos.x)
+		{
+			turnFlag = true;
+			vel.x = -speed;
+		}
 	}
 }
 // ”­Œ©
@@ -130,10 +150,9 @@ void Wolf::Alert()
 void Wolf::WalkUpdate()
 {
 	// Ž‹ŠE‚É‘¨‚¦‚é‚Ü‚Åœpœj
-	static bool discovery = false;
 	if (CheckView())
 	{
-		discovery = true;
+		discovery = pl.lock()->GetState() != ST::Death ? true : false;
 	}
 
 	if (discovery)
@@ -164,7 +183,7 @@ void Wolf::AttackUpdate()
 	}
 	else
 	{
-		vel.x = worldPos.x > oldPlPos.x ? -speed*2 : speed*2;
+		vel.x = worldPos.x > oldPlPos.x ? -speed * 2 : speed * 2;
 		worldPos.x += vel.x;
 	}
 
@@ -196,7 +215,8 @@ void Wolf::Attack()
 void Wolf::DamageUpdate()
 {
 	static unsigned int cnt = 0;
-	if (worldPos.y < Const::GROUND)
+	stopFlag = false;
+	if (worldPos.y < Stage::Get().GetGround())
 	{
 		worldPos.x += vel.x;
 	}
@@ -207,7 +227,7 @@ void Wolf::DamageUpdate()
 			cnt = 0;
 			if (hp >= 0)
 			{
-				ChangeState(ST::Neutral);
+				ChangeState(ST::Walk);
 			}
 			else
 			{
@@ -220,15 +240,22 @@ void Wolf::DamageUpdate()
 // Ž€–S
 void Wolf::DeathUpdate()
 {
+	static unsigned int cnt = 0;
 	if (CheckAnimEnd())
 	{
 		stopFlag = true;
-		if (In.IsTrigger(Key::S))
+		if ((alpha < 0.0f) && (++cnt) > 10)
 		{
-			stopFlag = false;
-			hp = 3;
-			ChangeState(ST::Neutral);
+			cnt = 0;
+			tex.Delete("img/Enemy_1.png");
 		}
+		alpha -= 0.02f;
+		//if (In.IsTrigger(Key::S))
+		//{
+		//	stopFlag = false;
+		//	hp = 3;
+		//	ChangeState(ST::Walk);
+		//}
 	}
 }
 

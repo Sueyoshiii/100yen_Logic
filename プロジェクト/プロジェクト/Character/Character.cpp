@@ -1,8 +1,5 @@
 #include "Character.h"
 
-const float Const::GR = 1.9f;
-const float Const::GROUND = 1000.0f;
-
 // コンストラクタ
 Character::Character() :
 	state(ST::Neutral), oldState(state), worldPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
@@ -30,9 +27,9 @@ void Character::CorrectPosInStage()
 // 落下
 void Character::FallUpdate()
 {
-	vel.y += Const::GR;
+	vel.y += Stage::Get().GetGravity();
 	worldPos.y += vel.y;
-	worldPos.y = std::min(worldPos.y, Const::GROUND);
+	worldPos.y = std::min(worldPos.y, Stage::Get().GetGround());
 }
 
 // 状態遷移
@@ -168,7 +165,7 @@ void Character::InvicibleUpdate()
 	static unsigned int invincibleCnt = 0;
 	if (invincibleFlag)
 	{
-		if (invincibleCnt > 240)
+		if (invincibleCnt > 120)
 		{
 			alpha = 1.0f;
 			invincibleCnt = 0;
@@ -252,6 +249,11 @@ bool Character::GetTurnFlag() const
 bool Character::GetInvincibleFlag() const
 {
 	return invincibleFlag;
+}
+
+ST Character::GetState() const
+{
+	return state;
 }
 
 // 反転フラグセット

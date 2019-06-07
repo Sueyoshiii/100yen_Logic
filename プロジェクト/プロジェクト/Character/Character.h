@@ -28,16 +28,6 @@ enum class State
 	Death
 }ST;
 
-// 定数
-typedef
-struct ConstParam
-{
-	// 重力
-	static const float GR;
-	// 地面
-	static const float GROUND;
-}Const;
-
 class Character
 {
 public:
@@ -70,6 +60,9 @@ public:
 
 	// 無敵フラグ取得
 	bool GetInvincibleFlag()const;
+
+	// ステータス取得
+	ST GetState()const;
 
 	// 反転フラグセット
 	void SetTurnFlag(const bool flag);

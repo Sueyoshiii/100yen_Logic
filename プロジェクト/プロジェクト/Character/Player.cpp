@@ -21,11 +21,11 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	worldPos = cam.lock()->Correction(tex.pos);
 
 	speed   = 5.0f;
-	dushPow = 13.0f;
+	dushPow = 10.0f;
 	jumpPow = -40.0f;
 	vel     = Vec2f(speed, 0.0f);
 
-	hp = 3;
+	hp = 2;
 
 	knockBackRange = 4.0f;
 }
@@ -65,7 +65,7 @@ void Player::Draw()
 // ‘Ò‹@
 void Player::NeutralUpdate()
 {
-	if (worldPos.y < Const::GROUND)
+	if (worldPos.y < Stage::Get().GetGround())
 	{
 		jumpFlag = true;
 		ChangeState(ST::Jump);
@@ -127,7 +127,7 @@ void Player::JumpUpdate()
 		worldPos.x += vel.x;
 	}
 
-	if (worldPos.y >= Const::GROUND)
+	if (worldPos.y >= Stage::Get().GetGround())
 	{
 		jumpFlag = false;
 		ChangeState(ST::Neutral);
@@ -219,7 +219,8 @@ void Player::NextAttack(const unsigned int attackInterval)
 void Player::DamageUpdate()
 {
 	static unsigned int cnt = 0;
-	if (tex.pos.y < Const::GROUND)
+	stopFlag = false;
+	if (tex.pos.y < Stage::Get().GetGround())
 	{
 		worldPos.x += vel.x;
 	}
@@ -230,7 +231,7 @@ void Player::DamageUpdate()
 			cnt = 0;
 			jumpFlag = false;
 			dashFlag = false;
-			attackFlag = 0;
+			attackFlag = false;
 			if (hp >= 0)
 			{
 				invincibleFlag = true;

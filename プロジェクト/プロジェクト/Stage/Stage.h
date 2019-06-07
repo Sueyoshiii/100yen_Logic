@@ -20,6 +20,7 @@ public:
 
 class Stage
 {
+	// ステージ
 	struct Rect
 	{
 		Vec2f pos;
@@ -32,11 +33,31 @@ class Stage
 		float Left()const { return pos.x - w / 2.0f; };
 		float Right()const { return pos.x + w / 2.0f; };
 	};
+
+	// 定数
+	typedef
+		struct ConstParam
+	{
+		// 重力
+		static const float GR;
+		// 地面
+		static const float GROUND;
+	}Const;
 public:
 	~Stage();
 	static Stage& Get();
 
+	// ステージデータ読み込み
+	int Load(const std::string& filePath);
+
+	// ステージ範囲取得
 	StageRange GetRange()const;
+
+	// 地面取得
+	float GetGround()const;
+
+	// 重力取得
+	float GetGravity()const;
 private:
 	Stage();
 	Stage(const Stage&) = delete;

@@ -38,4 +38,7 @@ private:
 
 	// クールタイム
 	unsigned int coolTime;
+
+	// 発見フラグ
+	bool discovery;
 };

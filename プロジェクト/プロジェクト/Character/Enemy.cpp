@@ -24,21 +24,16 @@ void Enemy::CheckHit()
 				continue;
 			}
 
+			// 矩形の半分のサイズ
+			Vec2f plHalf = p.rect.size / 2.0f;
+			Vec2f emHalf = e.rect.size / 2.0f;
+
 			// 矩形の中心
-			Vec2f plCenter = p.rect.pos + p.rect.size / 2.0f;
-			Vec2f emCenter = e.rect.pos + e.rect.size / 2.0f;
+			Vec2f plCenter = p.rect.pos + plHalf;
+			Vec2f emCenter = e.rect.pos + emHalf;
 
-			float dis1  = std::hypot(plCenter.x - emCenter.x, plCenter.y - emCenter.y);
-			float angle = std::atan2(plCenter.x - emCenter.x, plCenter.y - emCenter.y);
-
-			Vec2f pSize = { std::abs(p.rect.size.x), p.rect.size.y };
-			pSize /= 2.0f;
-			Vec2f eSize = { std::abs(e.rect.size.x), e.rect.size.y };
-			eSize /= 2.0f;
-			float dis2 = std::hypot((pSize.x + eSize.x) * sin(angle), (pSize.y + eSize.y) * cos(angle));
-			if (dis1 <= dis2)
-			//if (std::fabs(plCenter.x - emCenter.x) < p.rect.size.x / 2.0f + e.rect.size.x / 2.0f &&
-			//	std::fabs(plCenter.y - emCenter.y) < p.rect.size.y / 2.0f + e.rect.size.y / 2.0f)
+			if (std::fabs(plCenter.x - emCenter.x) < fabs(plHalf.x + emHalf.x) &&
+				std::fabs(plCenter.y - emCenter.y) < fabs(plHalf.y + emHalf.y))
 			{
 				Vec2f dir = pl.lock()->GetPos() - GetPos();
 				if (p.type == HitType::Attack)
@@ -76,7 +71,7 @@ bool Enemy::CheckView()
 {
 	auto p = pl.lock();
 
-	float length = turnFlag ? -lib.lock()->GetWinSize().x / 2.0f : lib.lock()->GetWinSize().x / 2.0f;
+	float length = turnFlag ? -lib.lock()->GetWinSize().x / 3.0f : lib.lock()->GetWinSize().x / 3.0f;
 
 	seg = Segment();
 	seg.begin = tex.pos + tex.size / 2.0f;

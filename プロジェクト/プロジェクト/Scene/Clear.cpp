@@ -13,11 +13,11 @@ Clear::~Clear()
 }
 
 // •`‰æ
-void Clear::Draw(void)
+void Clear::Draw()
 {
 }
 
 // ˆ—
-void Clear::UpData(void)
+void Clear::UpData()
 {
 }

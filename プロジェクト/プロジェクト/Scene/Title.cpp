@@ -13,12 +13,12 @@ Title::~Title()
 {
 }
 // •`‰æ
-void Title::Draw(void)
+void Title::Draw()
 {
 }
 
 // ˆ—
-void Title::UpData(void)
+void Title::UpData()
 {
 	if (Input::Get().IsTrigger(Key::Space))
 	{

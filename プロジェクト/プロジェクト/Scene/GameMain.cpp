@@ -3,9 +3,8 @@
 #include "../BackGround/BackGround.h"
 #include "../Character/Player.h"
 #include "../Character/EnemyManager.h"
-#include "../Character/Wolf.h"
 
-#define Enem EnemyManager::Get()
+#define Enemy EnemyManager::Get()
 
 // コンストラクタ
 GameMain::GameMain(std::weak_ptr<MyLib> lib)
@@ -17,8 +16,8 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 	cam->SetFocus(pl);
 
 	// 敵さん達
-	Enem.Summons(EM::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
-	Enem.Summons(EM::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
+	Enemy.Summons(EM::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
+	Enemy.Summons(EM::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
 }
 
 // デストラクタ
@@ -27,18 +26,18 @@ GameMain::~GameMain()
 }
 
 // 描画
-void GameMain::Draw(void)
+void GameMain::Draw()
 {
 	bg->Draw();
-	Enem.Draw();
+	Enemy.Draw();
 	pl->Draw();
 }
 
 // 処理
-void GameMain::UpData(void)
+void GameMain::UpData()
 {
 	cam->Update();
 	bg->Update();
-	Enem.Update();
+	Enemy.Update();
 	pl->Update();
 }

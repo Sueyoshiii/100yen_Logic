@@ -40,5 +40,3 @@ struct Data
 	float animTime;
 	std::vector<AnimHitRect> rect;
 };
-
-// ステージ関係

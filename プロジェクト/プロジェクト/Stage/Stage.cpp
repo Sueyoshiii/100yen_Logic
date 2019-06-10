@@ -1,7 +1,7 @@
 #include "Stage.h"
 
-const float Stage::Const::GR = 1.9f;
-const float Stage::Const::GROUND = 1000.0f;
+const float Stage::ConstParam::GR = 1.9f;
+const float Stage::ConstParam::GROUND = 1000.0f;
 
 // コンストラクタ
 Stage::Stage()
@@ -37,11 +37,11 @@ StageRange Stage::GetRange() const
 // 地面取得
 float Stage::GetGround() const
 {
-	return Const::GROUND;
+	return ConstParam::GROUND;
 }
 
 // 重力取得
 float Stage::GetGravity() const
 {
-	return Const::GR;
+	return ConstParam::GR;
 }

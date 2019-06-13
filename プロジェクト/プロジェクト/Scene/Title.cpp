@@ -6,6 +6,9 @@
 Title::Title(std::weak_ptr<MyLib>lib)
 {
 	this->lib = lib;
+#ifdef _DEBUG
+	std::cout << "Title Scene" << std::endl;
+#endif
 }
 
 // デストラクタ

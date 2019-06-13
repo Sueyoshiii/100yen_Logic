@@ -18,6 +18,13 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 	// 敵さん達
 	Enemy.Summons(EM::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
 	Enemy.Summons(EM::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
+	Enemy.Summons(EM::Wolf, Vec2f(800.0f, 0.0f), lib, pl, cam);
+	Enemy.Summons(EM::Wolf, Vec2f(1000.0f, 0.0f), lib, pl, cam);
+	Enemy.Summons(EM::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
+
+#ifdef _DEBUG
+	std::cout << "GameMain Scene" << std::endl;
+#endif
 }
 
 // デストラクタ

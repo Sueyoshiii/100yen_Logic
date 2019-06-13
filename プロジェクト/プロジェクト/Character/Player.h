@@ -25,22 +25,22 @@ private:
 	void NeutralUpdate();
 	// 歩行
 	void WalkUpdate();
-	void Walk();
+	void CheckWalk();
 	// ジャンプ
 	void JumpUpdate();
-	void Jump();
+	void CheckJump();
 	// ダッシュ
 	void DashUpdate();
-	void Dash();
-	// 攻撃1
-	void Attack1Update();
-	void Attack1();
-	// 攻撃2
-	void Attack2Update();
-	// 攻撃3
-	void Attack3Update();
+	void CheckDash();
+	// 最初の攻撃
+	void FirstAttackUpdate();
+	void CheckFirstAttack();
+	// 2段目の攻撃
+	void SecondAttackUpdate();
+	// 3段目の攻撃
+	void ThirdAttackUpdate();
 	// 次の攻撃へ移る
-	void NextAttack(const unsigned int attackInterval);
+	void CheckNextAttack(const unsigned int attackInterval);
 	// ダメージ
 	void DamageUpdate();
 	// 死亡

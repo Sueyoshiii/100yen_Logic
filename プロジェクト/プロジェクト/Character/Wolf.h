@@ -24,10 +24,10 @@ private:
 	void Alert();
 	// •à‚«
 	void WalkUpdate();
-	void Walk();
+	void CheckWalk();
 	// UŒ‚
 	void AttackUpdate();
-	void Attack();
+	void CheckAttack();
 	// ”íƒ_ƒ[ƒW
 	void DamageUpdate();
 	// €–S

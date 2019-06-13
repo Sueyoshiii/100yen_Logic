@@ -34,8 +34,6 @@ public:
 	Enemy();
 	~Enemy();
 protected:
-	virtual void Walk() = 0;
-
 	// Õ“Ë”»’è
 	void CheckHit();
 

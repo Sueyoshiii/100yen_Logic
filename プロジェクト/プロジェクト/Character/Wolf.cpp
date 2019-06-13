@@ -83,7 +83,7 @@ void Wolf::NeutralUpdate()
 			cnt = 0;
 			turnFlag = !turnFlag;
 			vel.x = -vel.x;
-			Walk();
+			CheckWalk();
 		}
 		++cnt;
 	}
@@ -138,7 +138,7 @@ void Wolf::Alert()
 	float dis = fabs(worldPos.x - pl.lock()->GetWorldPos().x);
 	if (0.0f < dis && dis < 150)
 	{
-		Attack();
+		CheckAttack();
 	}
 	else
 	{
@@ -164,7 +164,7 @@ void Wolf::WalkUpdate()
 		Loitering();
 	}
 }
-void Wolf::Walk()
+void Wolf::CheckWalk()
 {
 	ChangeState(ST::Walk);
 }
@@ -187,7 +187,7 @@ void Wolf::AttackUpdate()
 		worldPos.x += vel.x;
 	}
 }
-void Wolf::Attack()
+void Wolf::CheckAttack()
 {
 	coolTime = 0;
 	vel.y = jumpPow;

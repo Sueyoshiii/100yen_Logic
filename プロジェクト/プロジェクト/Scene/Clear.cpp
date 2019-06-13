@@ -5,6 +5,9 @@
 Clear::Clear(std::weak_ptr<MyLib> lib)
 {
 	this->lib = lib;
+#ifdef _DEBUG
+	std::cout << "GameClear Scene" << std::endl;
+#endif
 }
 
 // デストラクタ

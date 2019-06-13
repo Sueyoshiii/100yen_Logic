@@ -71,13 +71,13 @@ void Player::NeutralUpdate()
 		ChangeState(ST::Jump);
 	}
 
-	Walk();
+	CheckWalk();
 
-	Jump();
+	CheckJump();
 
-	Dash();
+	CheckDash();
 
-	Attack1();
+	CheckFirstAttack();
 }
 
 // ï‡çs
@@ -98,13 +98,13 @@ void Player::WalkUpdate()
 		ChangeState(ST::Neutral);
 	}
 
-	Jump();
+	CheckJump();
 
-	Dash();
+	CheckDash();
 
-	Attack1();
+	CheckFirstAttack();
 }
-void Player::Walk()
+void Player::CheckWalk()
 {
 	if (In.IsKey(Key::Num4) || In.IsKey(Key::Num6))
 	{
@@ -133,7 +133,7 @@ void Player::JumpUpdate()
 		ChangeState(ST::Neutral);
 	}
 }
-void Player::Jump()
+void Player::CheckJump()
 {
 	if (!jumpFlag && In.IsTrigger(Key::Space))
 	{
@@ -153,7 +153,7 @@ void Player::DashUpdate()
 		ChangeState(ST::Neutral);
 	}
 }
-void Player::Dash()
+void Player::CheckDash()
 {
 	if (!dashFlag && In.IsTrigger(Key::X))
 	{
@@ -163,12 +163,12 @@ void Player::Dash()
 	}
 }
 
-// çUåÇ1
-void Player::Attack1Update()
+// 1íiñ⁄ÇÃçUåÇ
+void Player::FirstAttackUpdate()
 {
-	NextAttack(15);
+	CheckNextAttack(15);
 }
-void Player::Attack1()
+void Player::CheckFirstAttack()
 {
 	if (!attackFlag && In.IsTrigger(Key::Z))
 	{
@@ -178,20 +178,20 @@ void Player::Attack1()
 	}
 }
 
-// çUåÇ2
-void Player::Attack2Update()
+// 2íiñ⁄ÇÃçUåÇ
+void Player::SecondAttackUpdate()
 {
-	NextAttack(15);
+	CheckNextAttack(15);
 }
 
-// çUåÇ3
-void Player::Attack3Update()
+// 3íiñ⁄ÇÃçUåÇ
+void Player::ThirdAttackUpdate()
 {
-	NextAttack(25);
+	CheckNextAttack(25);
 }
 
 // éüÇÃçUåÇÇ÷à⁄ÇÈ
-void Player::NextAttack(const unsigned int attackInterval)
+void Player::CheckNextAttack(const unsigned int attackInterval)
 {
 	if (CheckAnimEnd())
 	{
@@ -270,9 +270,9 @@ void Player::InitFunc()
 	func[ST::Walk]    = std::bind(&Player::WalkUpdate, this);
 	func[ST::Jump]    = std::bind(&Player::JumpUpdate, this);
 	func[ST::Dash]    = std::bind(&Player::DashUpdate, this);
-	func[ST::Attack1] = std::bind(&Player::Attack1Update, this);
-	func[ST::Attack2] = std::bind(&Player::Attack2Update, this);
-	func[ST::Attack3] = std::bind(&Player::Attack3Update, this);
+	func[ST::Attack1] = std::bind(&Player::FirstAttackUpdate, this);
+	func[ST::Attack2] = std::bind(&Player::SecondAttackUpdate, this);
+	func[ST::Attack3] = std::bind(&Player::ThirdAttackUpdate, this);
 	func[ST::Damage]  = std::bind(&Player::DamageUpdate, this);
 	func[ST::Death]   = std::bind(&Player::DeathUpdate, this);
 }

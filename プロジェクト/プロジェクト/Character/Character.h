@@ -97,8 +97,6 @@ protected:
 	// 無敵処理
 	void InvicibleUpdate();
 
-	///*もしMyLibクラスの弱参照をメンバとして持たせるなら、
-	///*MyLibChildクラス等のインターフェースクラスを用いたほうが後々楽
 	// ライブラリ
 	std::weak_ptr<MyLib> lib;
 

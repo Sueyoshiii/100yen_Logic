@@ -13,11 +13,11 @@ Over::~Over()
 }
 
 // •`‰æ
-void Over::Draw(void)
+void Over::Draw()
 {
 }
 
 // ˆ—
-void Over::UpData(void)
+void Over::UpData()
 {
 }

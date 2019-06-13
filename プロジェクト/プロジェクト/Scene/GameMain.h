@@ -6,7 +6,6 @@
 class Camera;
 class BackGround;
 class Player;
-class Wolf;
 
 class GameMain :
 	public Scene
@@ -18,10 +17,10 @@ public:
 	~GameMain();
 
 	// 描画
-	void Draw(void);
+	void Draw();
 	
 	// 処理
-	void UpData(void);
+	void UpData();
 
 private:
 	// カメラ
@@ -32,8 +31,4 @@ private:
 
 	// プレイヤー
 	std::shared_ptr<Player> pl;
-
-	// 狼
-	// 最終的には敵は一括管理
-	std::shared_ptr<Wolf> wolf;
 };

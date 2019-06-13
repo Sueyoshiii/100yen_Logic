@@ -1,13 +1,16 @@
 #include "Info.h"
 
+// コンストラクタ
 Info::Info()
 {
 }
 
+// デストラクタ
 Info::~Info()
 {
 }
 
+// インスタンス
 Info& Info::Get()
 {
 	static Info instance;

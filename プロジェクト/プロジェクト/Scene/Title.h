@@ -12,10 +12,10 @@ public:
 	~Title();
 
 	// •`‰æ
-	void Draw(void);
+	void Draw();
 
 	// ˆ—
-	void UpData(void);
+	void UpData();
 
 private:
 };

@@ -183,25 +183,9 @@ void Wolf::AttackUpdate()
 	}
 	else
 	{
-		vel.x = worldPos.x > oldPlPos.x ? -speed * 2 : speed * 2;
+		vel.x = worldPos.x > oldPlPos.x ? -speed * 2.0f : speed * 2.0f;
 		worldPos.x += vel.x;
 	}
-
-	/*
-	
-	水平方向
-		速度：vX = v0cosθ
-		変位：x  = v0cosθ*t
-			  t  = x / (v0cosθ)
-	鉛直方向
-		速度：vY = v0sinθ-gt
-		変位：y  = v0sinθ*t-1/2gt^2
-
-	xをyの式に代入
-		y = (v0sinθ) * x/(v0cosθ) - 1/2g (x/v0cosθ)^2
-		y = xtanθ - (g/2v0^2cos^2θ)x^2
-
-	*/
 }
 void Wolf::Attack()
 {
@@ -250,12 +234,6 @@ void Wolf::DeathUpdate()
 			tex.Delete("img/Enemy_1.png");
 		}
 		alpha -= 0.02f;
-		//if (In.IsTrigger(Key::S))
-		//{
-		//	stopFlag = false;
-		//	hp = 3;
-		//	ChangeState(ST::Walk);
-		//}
 	}
 }
 

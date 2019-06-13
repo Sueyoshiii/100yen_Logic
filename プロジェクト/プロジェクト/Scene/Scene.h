@@ -12,10 +12,10 @@ public:
 	~Scene() {}
 
 	// •`‰æ
-	virtual void Draw(void) = 0;
+	virtual void Draw() = 0;
 
 	// ˆ—
-	virtual void UpData(void) = 0;
+	virtual void UpData() = 0;
 
 protected:
 	// ƒ‰ƒCƒuƒ‰ƒŠ

@@ -3,7 +3,6 @@
 
 class Camera;
 
-
 struct StageRange
 {
 private:
@@ -35,14 +34,14 @@ class Stage
 	};
 
 	// 定数
-	typedef
-		struct ConstParam
+	struct ConstParam
 	{
 		// 重力
 		static const float GR;
-		// 地面
+		// 地面（仮）
+		// ステージデータから引っ張ってくるようにする
 		static const float GROUND;
-	}Const;
+	};
 public:
 	~Stage();
 	static Stage& Get();
@@ -63,5 +62,6 @@ private:
 	Stage(const Stage&) = delete;
 	void operator=(const Stage&) = delete;
 
+	//範囲
 	Rect range;
 };

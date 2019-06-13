@@ -22,8 +22,15 @@ public:
 	// 対象を設定
 	void SetFocus(std::weak_ptr<Player> pl);
 private:
+	// 座標
 	Vec2f pos;
+
+	// サイズ
 	Vec2f size;
+
+	// ライブラリ
 	std::weak_ptr<MyLib> lib;
+
+	// プレイヤー
 	std::weak_ptr<Player> pl;
 };

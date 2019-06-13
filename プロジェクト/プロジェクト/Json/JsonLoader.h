@@ -1,11 +1,20 @@
 #pragma once
 #include <string>
-#include <unordered_map>
+#include <boost/property_tree/ptree.hpp>
+#include <MyLib.h>
+
+struct StageData
+{
+	int width;
+	int height;
+	int eventNum;
+};
 
 class JsonLoader
 {
 public:
 	~JsonLoader();
+	static JsonLoader& Get();
 
 	// .jsonデータ読み込み
 	int Load(const std::string& filePath);
@@ -15,4 +24,5 @@ private:
 	void operator=(const JsonLoader&) = delete;
 
 	// .jsonデータ
+	boost::property_tree::ptree data;
 };

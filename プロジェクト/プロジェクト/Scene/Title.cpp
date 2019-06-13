@@ -1,11 +1,15 @@
 #include "Title.h"
 #include "GameMain.h"
 #include "../Game/Game.h"
+#include "../Json/JsonLoader.h"
 
 // コンストラクタ
 Title::Title(std::weak_ptr<MyLib>lib)
 {
 	this->lib = lib;
+
+	JsonLoader::Get().Load("data/stage/test.json");
+
 #ifdef _DEBUG
 	std::cout << "Title Scene" << std::endl;
 #endif

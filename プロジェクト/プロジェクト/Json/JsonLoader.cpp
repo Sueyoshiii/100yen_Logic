@@ -26,7 +26,7 @@ JsonLoader& JsonLoader::Get()
 // 読み込み
 int JsonLoader::Load(const std::string& filePath)
 {
-	json_parser::read_json(filePath.c_str(), data);
+	//json_parser::read_json(filePath.c_str(), data);
 
 	// ↓テスト中やよー
 

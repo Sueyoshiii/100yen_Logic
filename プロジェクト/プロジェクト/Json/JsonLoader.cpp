@@ -1,9 +1,11 @@
 #include "JsonLoader.h"
-//#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 #include <map>
+#include <fstream>
+#include <iterator>
 
-//using namespace boost::property_tree;
+using namespace boost::property_tree;
 
 // コンストラクタ
 JsonLoader::JsonLoader()
@@ -24,7 +26,7 @@ JsonLoader& JsonLoader::Get()
 // 読み込み
 int JsonLoader::Load(const std::string& filePath)
 {
-	//json_parser::read_json(filePath.c_str(), data);
+	json_parser::read_json(filePath.c_str(), data);
 
 	// ↓テスト中やよー
 
@@ -54,15 +56,21 @@ int JsonLoader::Load(const std::string& filePath)
 
 	// ↓自前やよー
 
-	FILE* file = nullptr;
-	if (fopen_s(&file, filePath.c_str(), "rb") != 0)
+	std::ifstream ifs(filePath.c_str());
+	if (ifs.fail())
 	{
 		return -1;
 	}
 
-	unsigned char strNum = 0;
+	// イテレータ用意
+	std::istreambuf_iterator<char> it(ifs);
+	std::istreambuf_iterator<char> last;
 
-	std::string jsonStr;
+	std::string str(it, last);
+
+	ifs.close();
+
+	std::cout << str << std::endl;
 
 	return 0;
 }

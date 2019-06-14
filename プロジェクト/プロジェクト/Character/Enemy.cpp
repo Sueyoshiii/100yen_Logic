@@ -32,6 +32,7 @@ void Enemy::CheckHit()
 			Vec2f plCenter = p.rect.pos + plHalf;
 			Vec2f emCenter = e.rect.pos + emHalf;
 
+			// ’†SŠÔ‚Ì‹——£‚Æ•Ó‚Ì’·‚³‚Å”»’è
 			if (std::fabs(plCenter.x - emCenter.x) < fabs(plHalf.x + emHalf.x) &&
 				std::fabs(plCenter.y - emCenter.y) < fabs(plHalf.y + emHalf.y))
 			{
@@ -44,22 +45,21 @@ void Enemy::CheckHit()
 				}
 				else
 				{
-					if (pl.lock()->GetInvincibleFlag())
+					if (!pl.lock()->GetInvincibleFlag())
 					{
-						return;
+						bool nextTurn = turnFlag;
+						if (dir.x < 0)
+						{
+							nextTurn = false;
+						}
+						else if (dir.x > 0)
+						{
+							nextTurn = true;
+						}
+						pl.lock()->SetTurnFlag(nextTurn);
+						pl.lock()->KnockBack(dir);
+						pl.lock()->ChangeState(ST::Damage);
 					}
-					bool nextTurn = turnFlag;
-					if (dir.x < 0)
-					{
-						nextTurn = false;
-					}
-					else if (dir.x > 0)
-					{
-						nextTurn = true;
-					}
-					pl.lock()->SetTurnFlag(nextTurn);
-					pl.lock()->KnockBack(dir);
-					pl.lock()->ChangeState(ST::Damage);
 				}
 			}
 		}
@@ -73,11 +73,13 @@ bool Enemy::CheckView()
 
 	float length = turnFlag ? -lib.lock()->GetWinSize().x / 3.0f : lib.lock()->GetWinSize().x / 3.0f;
 
+	// ‹ŠEü
 	seg = Segment();
 	seg.begin = tex.pos + tex.size / 2.0f;
 	seg.end   = Vec2f(seg.begin.x + (length), seg.begin.y);
 	seg.vec   = seg.end - seg.begin;
 
+	// ‹éŒ`ü•ª
 	pSeg[0] = Segment(p->GetPos(), Vec2f(p->GetPos().x + p->GetSize().x, p->GetPos().y));
 	pSeg[1] = Segment(Vec2f(p->GetPos().x + p->GetSize().x, p->GetPos().y), p->GetPos() + p->GetSize());
 	pSeg[2] = Segment(p->GetPos() + p->GetSize(), Vec2f(p->GetPos().x, p->GetPos().y + p->GetSize().y));

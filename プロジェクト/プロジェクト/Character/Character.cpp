@@ -197,6 +197,7 @@ void Character::InitState()
 	stMap[ST::Neutral] = "Neutral";
 	stMap[ST::Walk]    = "Walk";
 	stMap[ST::Jump]    = "Jump";
+	stMap[ST::Fall]    = "Fall";
 	stMap[ST::Dash]    = "Dash";
 	stMap[ST::Attack1] = "Attack1";
 	stMap[ST::Attack2] = "Attack2";

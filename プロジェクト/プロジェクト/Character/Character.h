@@ -20,6 +20,7 @@ enum class State
 	Neutral,
 	Walk,
 	Jump,
+	Fall,
 	Dash,
 	Attack1,
 	Attack2,

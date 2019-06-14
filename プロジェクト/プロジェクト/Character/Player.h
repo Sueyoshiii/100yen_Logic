@@ -29,6 +29,9 @@ private:
 	// ジャンプ
 	void JumpUpdate();
 	void CheckJump();
+	// 落下
+	void FallUpdate();
+	void CheckFall();
 	// ダッシュ
 	void DashUpdate();
 	void CheckDash();

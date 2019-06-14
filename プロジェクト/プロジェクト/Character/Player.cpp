@@ -43,7 +43,12 @@ void Player::Update()
 
 	CorrectPosInStage();
 
-	FallUpdate();
+	if (!jumpFlag && 
+		worldPos.y < Stage::Get().GetGround() &&
+		state != ST::Damage)
+	{
+		CheckFall();
+	}
 
 	UpdateLocalPos();
 
@@ -65,12 +70,6 @@ void Player::Draw()
 // 待機
 void Player::NeutralUpdate()
 {
-	if (worldPos.y < Stage::Get().GetGround())
-	{
-		jumpFlag = true;
-		ChangeState(ST::Jump);
-	}
-
 	CheckWalk();
 
 	CheckJump();
@@ -127,10 +126,15 @@ void Player::JumpUpdate()
 		worldPos.x += vel.x;
 	}
 
-	if (worldPos.y >= Stage::Get().GetGround())
+	if (vel.y <= 0)
+	{
+		vel.y += Stage::Get().GetGravity();
+		worldPos.y += vel.y;
+	}
+	else
 	{
 		jumpFlag = false;
-		ChangeState(ST::Neutral);
+		ChangeState(ST::Fall);
 	}
 }
 void Player::CheckJump()
@@ -143,13 +147,43 @@ void Player::CheckJump()
 	}
 }
 
+// 落下
+void Player::FallUpdate()
+{
+	if (In.IsKey(Key::Num4))
+	{
+		turnFlag = true;
+		worldPos.x -= vel.x;
+	}
+	else if (In.IsKey(Key::Num6))
+	{
+		turnFlag = false;
+		worldPos.x += vel.x;
+	}
+
+	vel.y += Stage::Get().GetGravity();
+	worldPos.y += vel.y;
+	if (worldPos.y > Stage::Get().GetGround())
+	{
+		worldPos.y = Stage::Get().GetGround();
+		ChangeState(ST::Neutral);
+	}
+}
+void Player::CheckFall()
+{
+	ChangeState(ST::Fall);
+}
+
 // ダッシュ
 void Player::DashUpdate()
 {
 	worldPos.x += vel.x;
-	if (CheckAnimEnd())
+	static unsigned int cnt = 0;
+	if (++cnt > 15)
 	{
+		cnt = 0;
 		dashFlag = false;
+		stopFlag = false;
 		ChangeState(ST::Neutral);
 	}
 }
@@ -158,6 +192,9 @@ void Player::CheckDash()
 	if (!dashFlag && In.IsTrigger(Key::X))
 	{
 		dashFlag = true;
+		stopFlag = true;
+		attackCnt = 0;
+		attackFlag = false;
 		vel.x = turnFlag ? -dushPow : dushPow;
 		ChangeState(ST::Dash);
 	}
@@ -204,6 +241,7 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 				stopFlag = false;
 				ChangeState(ST(int(state) + 1));
 			}
+			CheckDash();
 		}
 		if ((++attackCnt) > attackInterval)
 		{
@@ -213,6 +251,10 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 			ChangeState(ST::Neutral);
 		}
 	}
+	else
+	{
+		CheckDash();
+	}
 }
 
 // 被ダメージ
@@ -220,7 +262,12 @@ void Player::DamageUpdate()
 {
 	static unsigned int cnt = 0;
 	stopFlag = false;
-	if (tex.pos.y < Stage::Get().GetGround())
+
+	vel.y += Stage::Get().GetGravity();
+	worldPos.y += vel.y;
+	worldPos.y = std::min(worldPos.y, Stage::Get().GetGround());
+
+	if (worldPos.y < Stage::Get().GetGround())
 	{
 		worldPos.x += vel.x;
 	}
@@ -269,6 +316,7 @@ void Player::InitFunc()
 	func[ST::Neutral] = std::bind(&Player::NeutralUpdate, this);
 	func[ST::Walk]    = std::bind(&Player::WalkUpdate, this);
 	func[ST::Jump]    = std::bind(&Player::JumpUpdate, this);
+	func[ST::Fall]    = std::bind(&Player::FallUpdate, this);
 	func[ST::Dash]    = std::bind(&Player::DashUpdate, this);
 	func[ST::Attack1] = std::bind(&Player::FirstAttackUpdate, this);
 	func[ST::Attack2] = std::bind(&Player::SecondAttackUpdate, this);

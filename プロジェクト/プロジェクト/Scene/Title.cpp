@@ -8,7 +8,7 @@ Title::Title(std::weak_ptr<MyLib>lib)
 {
 	this->lib = lib;
 
-	JsonLoader::Get().Load("data/stage/test.json");
+	JsonLoader::Get().Load("data/stage/untitled.json");
 
 #ifdef _DEBUG
 	std::cout << "Title Scene" << std::endl;

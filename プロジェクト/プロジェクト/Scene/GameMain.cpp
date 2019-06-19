@@ -1,6 +1,7 @@
 #include "GameMain.h"
 #include "../Camera/Camera.h"
 #include "../BackGround/BackGround.h"
+#include "../Stage/Stage.h"
 #include "../Character/Player.h"
 #include "../Character/EnemyManager.h"
 
@@ -13,6 +14,11 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 	cam = std::make_shared<Camera>(lib);
 	bg = std::make_shared <BackGround>(lib, cam);
 	pl = std::make_shared<Player>(lib, cam);
+
+	// ステージデータの読み込み
+	Stage::Get().Load("data/stage/untitled.json");
+
+	// 対象をプレイヤーにする
 	cam->SetFocus(pl);
 
 	// 敵さん達
@@ -35,8 +41,16 @@ GameMain::~GameMain()
 // 描画
 void GameMain::Draw()
 {
+	// 背景
 	bg->Draw();
+
+	// ステージ
+	Stage::Get().Draw();
+
+	// 敵
 	Enemy.Draw();
+
+	// プレイヤー
 	pl->Draw();
 }
 

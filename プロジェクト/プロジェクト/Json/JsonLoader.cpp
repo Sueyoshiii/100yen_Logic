@@ -2,8 +2,6 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
 #include <iostream>
-#include <map>
-#include <fstream>
 #include <iterator>
 
 using namespace boost::property_tree;

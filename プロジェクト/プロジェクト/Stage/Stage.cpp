@@ -46,27 +46,25 @@ Stage& Stage::Get()
 // ステージデータ読み込み
 int Stage::Load(const std::string& filePath)
 {
-	// 読み込み
+	// json読み込み
 	json_parser::read_json(filePath.c_str(), data);
 
 	// レイヤー数取得
 	int size = GetValue<int>(data, "nextlayerid") - 1;
 	stage.layers.resize(size);
 
+	// チップのサイズ
+	stage.divSize = {
+		GetValue<int>(data, "tilewidth"),
+		GetValue<int>(data, "tileheight")
+	};
+
+	// レイヤー情報
 	auto layers = data.get_child("layers");
 	for (auto& layer : stage.layers)
 	{
 		// レイヤー名
 		layer.name = GetValue<std::string>(layers, ".name");
-
-		// マップデータ取得
-		auto data = layers.get_child(".data");
-		while (!data.empty())
-		{
-			auto front = data.front();
-			layer.data.push_back(atoi(front.second.data().c_str()));
-			data.pop_front();
-		}
 
 		// マス数取得
 		layer.massNum = {
@@ -74,16 +72,65 @@ int Stage::Load(const std::string& filePath)
 			GetValue<int>(layers, ".height")
 		};
 
+
+		// マップデータ取得
+		auto data = layers.get_child(".data");
+		layer.chip.resize(data.size());
+		unsigned int index = 0;
+		while (!data.empty())
+		{
+			// 先頭
+			auto front = data.front();
+
+			// 先頭の値
+			int chipNum = atoi(front.second.data().c_str());
+
+			// 削除
+			data.pop_front();
+
+			// テクスチャ
+			auto& chip = layer.chip[index];
+
+			// チップ番号
+			chip.data = chipNum;
+
+			// チップなし
+			if (chip.data == 0)
+			{
+				++index;
+				continue;
+			}
+
+			// 読み込み
+			chip.tex.Load("img/tileset.png");
+
+			// サイズ
+			chip.tex.size = Vec2f(64.0f, 64.0f);
+
+			// 描画位置
+			chip.tex.pos = {
+				float(index % layer.massNum.x) * chip.tex.size.x,
+				floorf(float(index / layer.massNum.y)) * chip.tex.size.y
+			};
+
+			// 分割サイズ
+			chip.tex.divSize = {
+				float(stage.divSize.x),
+				float(stage.divSize.y)
+			};
+
+			// 分割位置
+			--chipNum;
+			chip.tex.offsetPos.x += float(chipNum % 5) * chip.tex.divSize.x;
+			chip.tex.offsetPos.y += floorf(float(chipNum / 5)) * chip.tex.divSize.y;
+
+			++index;
+		}
+
 		// レイヤータイプ
 		std::string str = GetValue<std::string>(layers, ".type");
 		layer.type = layerType[str];
 	}
-
-	// チップのサイズ
-	stage.divSize = {
-		GetValue<int>(data, "tilewidth"),
-		GetValue<int>(data, "tileheight")
-	};
 
 	// ステージのサイズ
 	stage.size = stage.divSize * stage.layers[0].massNum;
@@ -95,9 +142,16 @@ int Stage::Load(const std::string& filePath)
 	return 0;
 }
 
-void Stage::Draw()
+// 描画
+void Stage::Draw(std::weak_ptr<MyLib> lib)
 {
-
+	for (auto& chip : stage.layers[0].chip)
+	{
+		if (chip.data > 0)
+		{
+			lib.lock()->Draw(chip.tex);
+		}
+	}
 }
 
 // 範囲取得

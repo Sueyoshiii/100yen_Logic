@@ -4,6 +4,7 @@
 #include <MyLib.h>
 #include <unordered_map>
 #include <vector>
+#include <memory>
 
 class Camera;
 
@@ -23,10 +24,21 @@ enum class LayerType
 	Group
 };
 
+// マップチップ
+struct MapchipData
+{
+	int data;
+	Texture tex;
+	MapchipData() {}
+	MapchipData(const int data, const Texture& tex) :
+		data(data), tex(tex) {}
+};
+
+// レイヤーデータ
 struct LayerData
 {
 	// マップデータ
-	std::vector<int> data;
+	std::vector<MapchipData> chip;
 	// レイヤー名
 	std::string name;
 	// レイヤータイプ
@@ -35,6 +47,7 @@ struct LayerData
 	Vec2 massNum;
 };
 
+// ステージデータ
 struct StageData
 {
 	// ステージ全体のサイズ
@@ -94,7 +107,7 @@ public:
 	int Load(const std::string& filePath);
 
 	// 描画
-	void Draw();
+	void Draw(std::weak_ptr<MyLib> lib);
 
 	// ステージ範囲取得
 	StageRange GetRange()const;

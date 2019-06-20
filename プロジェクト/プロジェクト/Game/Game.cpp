@@ -26,7 +26,7 @@ void Game::Init()
 	lib = std::make_shared<MyLib>(screenSize);
 	lib->ChangeTitle("LittleRed");
 
-	ChangeScene(new Title(lib));
+	ChangeScene(new GameMain(lib));
 }
 
 // XV

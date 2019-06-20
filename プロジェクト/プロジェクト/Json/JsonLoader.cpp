@@ -1,8 +1,7 @@
 #include "JsonLoader.h"
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/foreach.hpp>
 #include <iostream>
-#include <map>
-#include <fstream>
 #include <iterator>
 
 using namespace boost::property_tree;
@@ -10,6 +9,7 @@ using namespace boost::property_tree;
 // コンストラクタ
 JsonLoader::JsonLoader()
 {
+	Init();
 }
 
 // デストラクタ
@@ -29,56 +29,64 @@ int JsonLoader::Load(const std::string& filePath)
 	// 読み込み
 	json_parser::read_json(filePath.c_str(), data);
 
-	// 全文字列を出力
-	write_json(std::cout, data);
+	// レイヤー数取得
+	int size = GetValue<int>(data, "nextlayerid") - 1;
+	stage.layers.resize(size);
 
-
-	for (auto& i : data.get_child("Test.Nakano"))
+	auto layers = data.get_child("layers");
+	for (auto& layer : stage.layers)
 	{
-		std::cout << i.second.data() << std::endl;
+		// レイヤー名
+		layer.name = GetValue<std::string>(layers, ".name");
+		
+		// マップデータ取得
+		auto data = layers.get_child(".data");
+		while (!data.empty())
+		{
+			auto front = data.front();
+			layer.data.push_back(atoi(front.second.data().c_str()));
+			data.pop_front();
+		}
+		
+		// マス数取得
+		layer.massNum = { 
+			GetValue<int>(layers, ".width"),
+			GetValue<int>(layers, ".height")
+		};
+
+		// レイヤータイプ
+		std::string str = GetValue<std::string>(layers, ".type");
+		layer.type = layerType[str];
 	}
 
-	// 整数値取得
-	int year = data.get_optional<int>("Test.SchoolYear").value();
-	std::cout << year << std::endl;
+	// チップのサイズ
+	stage.divSize = {
+		GetValue<int>(data, "tilewidth"),
+		GetValue<int>(data, "tileheight")
+	};
 
-	// 真偽値取得
-	bool flg = data.get_optional<bool>("Test.Kawaii").value();
-	std::cout << flg << std::endl;
+	// ステージのサイズ
+	stage.size = stage.divSize * stage.layers[0].massNum;
 
-	std::map<std::string, std::string> map;
-	for (auto& m : data.get_child("Test.Girls"))
-	{
-		map[m.first] = m.second.data();
-	}
+	// マップタイプ
+	std::string str = GetValue<std::string>(data, "type");
+	stage.type = mapType[str];
 
-	for (auto itr = map.begin(); itr != map.end(); ++itr)
-	{
-		std::cout << itr->first << " : " << itr->second << std::endl;
-	}
+	return 0;
+}
 
-	// ↓自前やよー
+// 初期化
+int JsonLoader::Init()
+{
+	// マップタイプ
+	mapType["map"]    = MapType::Map;
+	mapType["object"] = MapType::Object;
 
-	//std::ifstream ifs(filePath.c_str());
-	//if (ifs.fail())
-	//{
-	//	return -1;
-	//}
-
-	// イテレータ用意
-	//std::istreambuf_iterator<char> it(ifs);
-	//std::istreambuf_iterator<char> last;
-	//std::string str(it, last);
-
-	// 1行ずつ取得
-	//std::string str;
-	//while (std::getline(ifs, str))
-	//{
-
-	//	std::cout << str << std::endl;
-	//}
-
-	//ifs.close();
+	// レイヤータイプ
+	layerType["tilelayer"]   = LayerType::Tile;
+	layerType["objectlayer"] = LayerType::Object;
+	layerType["imagelayer"]  = LayerType::Image;
+	layerType["grouplayer"]  = LayerType::Group;
 
 	return 0;
 }

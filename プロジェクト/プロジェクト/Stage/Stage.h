@@ -1,7 +1,64 @@
 #pragma once
+#include <string>
+#include <boost/property_tree/ptree.hpp>
 #include <MyLib.h>
+#include <unordered_map>
+#include <vector>
+#include <memory>
 
 class Camera;
+
+// マップタイプ
+enum class MapType
+{
+	Map,
+	Object,
+};
+
+// レイヤータイプ
+enum class LayerType
+{
+	Tile,
+	Object,
+	Image,
+	Group
+};
+
+// マップチップ
+struct MapchipData
+{
+	int data;
+	Texture tex;
+	MapchipData() {}
+	MapchipData(const int data, const Texture& tex) :
+		data(data), tex(tex) {}
+};
+
+// レイヤーデータ
+struct LayerData
+{
+	// マップデータ
+	std::vector<MapchipData> chip;
+	// レイヤー名
+	std::string name;
+	// レイヤータイプ
+	LayerType type;
+	// マス数
+	Vec2 massNum;
+};
+
+// ステージデータ
+struct StageData
+{
+	// ステージ全体のサイズ
+	Vec2 size;
+	// チップ一つのサイズ
+	Vec2 divSize;
+	// マップタイプ
+	MapType type;
+	// レイヤー
+	std::vector<LayerData> layers;
+};
 
 struct StageRange
 {
@@ -49,6 +106,9 @@ public:
 	// ステージデータ読み込み
 	int Load(const std::string& filePath);
 
+	// 描画
+	void Draw(std::weak_ptr<MyLib> lib);
+
 	// ステージ範囲取得
 	StageRange GetRange()const;
 
@@ -62,6 +122,29 @@ private:
 	Stage(const Stage&) = delete;
 	void operator=(const Stage&) = delete;
 
+
+	// 文字列を数値に変換
+	template<typename T>
+	T GetValue(const boost::property_tree::ptree& tree, const std::string& str)
+	{
+		return tree.get_optional<T>(str.c_str()).value();
+	}
+
+	// 初期化
+	int Init();
+
 	//範囲
 	Rect range;
+
+	// .jsonデータ
+	boost::property_tree::ptree data;
+
+	// ステージ
+	StageData stage;
+
+	// マップタイプ
+	std::unordered_map<std::string, MapType> mapType;
+
+	// レイヤータイプ
+	std::unordered_map<std::string, LayerType> layerType;
 };

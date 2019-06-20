@@ -200,6 +200,7 @@
     <ClInclude Include="Scene\Title.h" />
     <ClInclude Include="Stage\Stage.h" />
     <ClInclude Include="Typedef.h" />
+    <ClInclude Include="utility\Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\Game.h" />

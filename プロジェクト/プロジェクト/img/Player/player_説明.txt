@@ -1,0 +1,12 @@
+è„Ç©ÇÁ
+
+Neutral
+Walk
+Attack1
+Attack2
+Attack3
+Dash
+Jump
+Fall
+Damage
+Death

@@ -24,7 +24,7 @@ void BackGround::Update()
 {
 }
 
-// •b‚ª
+// •`‰æ
 void BackGround::Draw()
 {
 	for (size_t i = 0; i < tex.size(); ++i)

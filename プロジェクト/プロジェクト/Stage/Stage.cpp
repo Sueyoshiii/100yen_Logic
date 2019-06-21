@@ -1,6 +1,6 @@
 #include "Stage.h"
+#include "../Camera/Camera.h"
 #include <boost/property_tree/json_parser.hpp>
-#include <boost/foreach.hpp>
 #include <iostream>
 #include <iterator>
 
@@ -44,7 +44,7 @@ Stage& Stage::Get()
 }
 
 // ステージデータ読み込み
-int Stage::Load(const std::string& jsonFilePath, const std::string& imgFilePath)
+int Stage::Load(std::weak_ptr<Camera> cam, const std::string& jsonFilePath, const std::string& imgFilePath)
 {
 	// json読み込み
 	json_parser::read_json(jsonFilePath.c_str(), data);
@@ -71,7 +71,6 @@ int Stage::Load(const std::string& jsonFilePath, const std::string& imgFilePath)
 			GetValue<int>(layers, ".width"),
 			GetValue<int>(layers, ".height")
 		};
-
 
 		// マップデータ取得
 		auto data = layers.get_child(".data");
@@ -112,6 +111,9 @@ int Stage::Load(const std::string& jsonFilePath, const std::string& imgFilePath)
 				float(index % layer.massNum.x) * chip.tex.size.x,
 				floorf(float(index / layer.massNum.y)) * chip.tex.size.y
 			};
+
+			// カメラに座標を合わせる
+			chip.tex.pos = cam.lock()->Correction(chip.tex.pos);
 
 			// 分割サイズ
 			chip.tex.divSize = {

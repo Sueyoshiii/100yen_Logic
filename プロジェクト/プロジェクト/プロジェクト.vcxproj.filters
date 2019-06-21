@@ -37,17 +37,17 @@
     <ClCompile Include="Json\JsonLoader.cpp">
       <Filter>Json</Filter>
     </ClCompile>
-    <ClCompile Include="Character\Player.cpp">
+    <ClCompile Include="Character\Enemy\Enemy.cpp">
+      <Filter>Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\Enemy\EnemyManager.cpp">
+      <Filter>Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\Enemy\Wolf\Wolf.cpp">
+      <Filter>Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\Player\Player.cpp">
       <Filter>Character\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Character\Wolf.cpp">
-      <Filter>Character\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Character\Enemy.cpp">
-      <Filter>Character\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Character\EnemyManager.cpp">
-      <Filter>Character\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,17 +91,17 @@
       <Filter>Json</Filter>
     </ClInclude>
     <ClInclude Include="utility\Utility.h" />
-    <ClInclude Include="Character\Player.h">
+    <ClInclude Include="Character\Enemy\Enemy.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\Enemy\EnemyManager.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\Enemy\Wolf\Wolf.h">
+      <Filter>Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\Player\Player.h">
       <Filter>Character\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Character\Wolf.h">
-      <Filter>Character\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Character\Enemy.h">
-      <Filter>Character\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Character\EnemyManager.h">
-      <Filter>Character\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

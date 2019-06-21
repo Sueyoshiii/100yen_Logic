@@ -104,7 +104,7 @@ public:
 	static Stage& Get();
 
 	// ステージデータ読み込み
-	int Load(const std::string& filePath);
+	int Load(const std::string& jsonFilePath, const std::string& imgFilePath);
 
 	// 描画
 	void Draw(std::weak_ptr<MyLib> lib);

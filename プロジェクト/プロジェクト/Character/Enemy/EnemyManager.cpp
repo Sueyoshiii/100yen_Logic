@@ -1,5 +1,5 @@
 #include "EnemyManager.h"
-#include "Wolf.h"
+#include "Wolf/Wolf.h"
 
 // コンストラクタ
 EnemyManager::EnemyManager()

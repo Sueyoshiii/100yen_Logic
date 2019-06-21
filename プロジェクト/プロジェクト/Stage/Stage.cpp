@@ -44,10 +44,10 @@ Stage& Stage::Get()
 }
 
 // ステージデータ読み込み
-int Stage::Load(const std::string& filePath)
+int Stage::Load(const std::string& jsonFilePath, const std::string& imgFilePath)
 {
 	// json読み込み
-	json_parser::read_json(filePath.c_str(), data);
+	json_parser::read_json(jsonFilePath.c_str(), data);
 
 	// レイヤー数取得
 	int size = GetValue<int>(data, "nextlayerid") - 1;
@@ -102,7 +102,7 @@ int Stage::Load(const std::string& filePath)
 			}
 
 			// 読み込み
-			chip.tex.Load("img/tileset.png");
+			chip.tex.Load(imgFilePath);
 
 			// サイズ
 			chip.tex.size = Vec2f(64.0f, 64.0f);
@@ -121,8 +121,10 @@ int Stage::Load(const std::string& filePath)
 
 			// 分割位置
 			--chipNum;
-			chip.tex.offsetPos.x += float(chipNum % 5) * chip.tex.divSize.x;
-			chip.tex.offsetPos.y += floorf(float(chipNum / 5)) * chip.tex.divSize.y;
+			chip.tex.offsetPos += {
+				float(chipNum % 5)* chip.tex.divSize.x,
+				floorf(float(chipNum / 5)) * chip.tex.divSize.y
+			};
 
 			++index;
 		}

@@ -2,8 +2,8 @@
 #include "../Camera/Camera.h"
 #include "../BackGround/BackGround.h"
 #include "../Stage/Stage.h"
-#include "../Character/Player.h"
-#include "../Character/EnemyManager.h"
+#include "../Character/Player/Player.h"
+#include "../Character/Enemy/EnemyManager.h"
 
 #define Enemy EnemyManager::Get()
 
@@ -16,7 +16,7 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 	pl = std::make_shared<Player>(lib, cam);
 
 	// ステージデータの読み込み
-	Stage::Get().Load("data/stage/map.json");
+	Stage::Get().Load("data/stage/map.json", "img/tileset.png");
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);

@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include "../Stage/Stage.h"
-#include "../Character/Player.h"
+#include "../Character/Player/Player.h"
 
 Camera::Camera(std::weak_ptr<MyLib> lib) :
 	lib(lib), size(Vec2f(float(lib.lock()->GetWinSize().x), float(lib.lock()->GetWinSize().y)))

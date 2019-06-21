@@ -1,6 +1,6 @@
 #pragma once
-#include "Character.h"
-#include "Player.h"
+#include "../Character.h"
+#include "../Player/Player.h"
 #include <array>
 
 // “G‚³‚ñ’B‚Ì‚¨–¼‘O

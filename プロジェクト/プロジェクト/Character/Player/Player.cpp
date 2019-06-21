@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "../Stage/Stage.h"
+#include "../../Stage/Stage.h"
 #include <iostream>
 
 // コンストラクタ

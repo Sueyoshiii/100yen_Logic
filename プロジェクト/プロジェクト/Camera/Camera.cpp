@@ -32,7 +32,7 @@ void Camera::Update()
 	}
 }
 
-// Žó‚¯Žæ‚Á‚½À•W‚ðƒJƒƒ‰‚Ì”ÍˆÍ“à‚É•â³
+// Žó‚¯Žæ‚Á‚½À•W‚ð•â³
 Vec2f Camera::Correction(const Vec2f& pos)
 {
 	return Vec2f(pos.x - (this->pos.x - size.x / 2), pos.y);

@@ -10,7 +10,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	this->cam = cam;
 
 	LoadData("data/chara/player.info");
-	LoadImage("img/player.png");
+	LoadImage("img/Player/player.png");
 
 	InitFunc();
 	ChangeState(ST::Neutral);

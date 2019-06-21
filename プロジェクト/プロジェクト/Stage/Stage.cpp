@@ -103,6 +103,24 @@ int Stage::Load(std::weak_ptr<Camera> cam, const std::string& jsonFilePath, cons
 			// 読み込み
 			chip.tex.Load(imgFilePath);
 
+			// 分割サイズ
+			chip.tex.divSize = {
+				float(stage.divSize.x),
+				float(stage.divSize.y)
+			};
+
+			// エディター側が1から始まるので引く
+			--chipNum;
+
+			// 横の分割数
+			int chipMax = int(chip.tex.size.x / chip.tex.divSize.x);
+
+			// 分割位置
+			chip.tex.offsetPos = {
+				float(chipNum % chipMax) * chip.tex.divSize.x,
+					floorf(float(chipNum / chipMax)) * chip.tex.divSize.y
+			};
+
 			// サイズ
 			chip.tex.size = Vec2f(64.0f, 64.0f);
 
@@ -111,22 +129,7 @@ int Stage::Load(std::weak_ptr<Camera> cam, const std::string& jsonFilePath, cons
 				float(index % layer.massNum.x) * chip.tex.size.x,
 				floorf(float(index / layer.massNum.y)) * chip.tex.size.y
 			};
-
-			// カメラに座標を合わせる
-			chip.tex.pos = cam.lock()->Correction(chip.tex.pos);
-
-			// 分割サイズ
-			chip.tex.divSize = {
-				float(stage.divSize.x),
-				float(stage.divSize.y)
-			};
-
-			// 分割位置
-			--chipNum;
-			chip.tex.offsetPos += {
-				float(chipNum % 5)* chip.tex.divSize.x,
-				floorf(float(chipNum / 5)) * chip.tex.divSize.y
-			};
+			chip.tex.pos.x -= int(cam.lock()->GetPos().x) % int(chip.tex.size.x);
 
 			++index;
 		}

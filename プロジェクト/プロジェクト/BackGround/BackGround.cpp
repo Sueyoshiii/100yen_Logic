@@ -9,7 +9,7 @@ BackGround::BackGround(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	tex.resize(2);
 	for (auto& i : tex)
 	{
-		i.Load("img/haikei.png");
+		i.Load("img/Stage/haikei.png");
 		i.size = Vec2f(float(lib.lock()->GetWinSize().x), float(lib.lock()->GetWinSize().y) * 1.8f);
 	}
 }

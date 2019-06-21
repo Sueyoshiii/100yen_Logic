@@ -9,7 +9,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	this->cam = cam;
 
 	LoadData("data/chara/enemy_1.info");
-	LoadImage("img/Enemy_1.png");
+	LoadImage("img/Enemy/Enemy_1.png");
 
 	InitFunc();
 	ChangeState(ST::Walk);

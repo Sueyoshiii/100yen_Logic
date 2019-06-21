@@ -147,4 +147,6 @@ private:
 
 	// レイヤータイプ
 	std::unordered_map<std::string, LayerType> layerType;
+
+	Vec2f pos;
 };

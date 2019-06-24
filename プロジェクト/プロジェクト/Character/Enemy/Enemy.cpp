@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "../CharaEffect/EffectManager.h"
 #include <iostream>
 
 Enemy::Enemy() :
@@ -42,6 +43,7 @@ void Enemy::CheckHit()
 					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
 					KnockBack(-dir);
 					ChangeState(ST::Damage);
+					EffectManager::Get().Create(EffectType::Flower, tex.pos);
 				}
 				else
 				{

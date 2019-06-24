@@ -5,22 +5,18 @@ class Flower :
 	public CharaEffect
 {
 public:
+	Flower(const Vec2f& pos);
 	~Flower();
-
-	static Flower& Get();
 
 	// çXêV
 	void Update();
 
 	// ï`âÊ
 	void Draw();
+	void Draw(std::weak_ptr<MyLib> lib);
 
-	// ê∂ê¨
-	void Create(const Vec2f& inPos);
+	// çÌèú
+	void Delete();
 private:
-	Flower();
-	Flower(const Flower&) = delete;
-	void operator=(const Flower&) = delete;
-
 	std::vector<Texture> texs;
 };

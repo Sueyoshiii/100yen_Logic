@@ -170,6 +170,7 @@
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Character\Character.cpp" />
     <ClCompile Include="Character\CharaEffect\CharaEffect.cpp" />
+    <ClCompile Include="Character\CharaEffect\EffectManager.cpp" />
     <ClCompile Include="Character\CharaEffect\Flower.cpp" />
     <ClCompile Include="Character\Enemy\Enemy.cpp" />
     <ClCompile Include="Character\Enemy\EnemyManager.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Character\Character.h" />
     <ClInclude Include="Character\CharaEffect\CharaEffect.h" />
+    <ClInclude Include="Character\CharaEffect\EffectManager.h" />
     <ClInclude Include="Character\CharaEffect\Flower.h" />
     <ClInclude Include="Character\Enemy\Enemy.h" />
     <ClInclude Include="Character\Enemy\EnemyManager.h" />

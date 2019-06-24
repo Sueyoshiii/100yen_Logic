@@ -51,6 +51,7 @@
     </ClCompile>
     <ClCompile Include="Character\CharaEffect\CharaEffect.cpp" />
     <ClCompile Include="Character\CharaEffect\Flower.cpp" />
+    <ClCompile Include="Character\CharaEffect\EffectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Info\Info.h">
@@ -107,6 +108,7 @@
     </ClInclude>
     <ClInclude Include="Character\CharaEffect\CharaEffect.h" />
     <ClInclude Include="Character\CharaEffect\Flower.h" />
+    <ClInclude Include="Character\CharaEffect\EffectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Info">

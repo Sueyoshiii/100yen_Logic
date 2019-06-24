@@ -4,8 +4,10 @@
 #include "../Stage/Stage.h"
 #include "../Character/Player/Player.h"
 #include "../Character/Enemy/EnemyManager.h"
+#include "../Character/CharaEffect/EffectManager.h"
 
 #define Enemy EnemyManager::Get()
+#define Effects EffectManager::Get()
 
 // コンストラクタ
 GameMain::GameMain(std::weak_ptr<MyLib> lib)
@@ -52,6 +54,8 @@ void GameMain::Draw()
 
 	// プレイヤー
 	pl->Draw();
+
+	Effects.Draw(lib);
 }
 
 // 処理
@@ -61,4 +65,9 @@ void GameMain::UpData()
 	bg->Update();
 	Enemy.Update();
 	pl->Update();
+	if (In.IsTrigger(Key::Q))
+	{
+		Effects.Create(EffectType::Flower, pl->GetWorldPos());
+	}
+	Effects.Update();
 }

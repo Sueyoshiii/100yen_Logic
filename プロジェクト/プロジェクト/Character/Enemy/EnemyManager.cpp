@@ -21,9 +21,18 @@ EnemyManager& EnemyManager::Get()
 // XV
 void EnemyManager::Update()
 {
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
+	for (auto itr = list.begin(); itr != list.end();)
 	{
-		(*itr)->Update();
+		if ((*itr)->GetDeleteFlag())
+		{
+			itr = list.erase(itr);
+			continue;
+		}
+		else
+		{
+			(*itr)->Update();
+			++itr;
+		}
 	}
 }
 

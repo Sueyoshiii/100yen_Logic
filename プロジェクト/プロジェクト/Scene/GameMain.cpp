@@ -65,9 +65,5 @@ void GameMain::UpData()
 	bg->Update();
 	Enemy.Update();
 	pl->Update();
-	if (In.IsTrigger(Key::Q))
-	{
-		Effects.Create(EffectType::Flower, pl->GetWorldPos());
-	}
 	Effects.Update();
 }

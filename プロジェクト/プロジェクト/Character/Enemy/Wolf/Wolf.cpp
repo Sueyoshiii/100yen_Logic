@@ -12,16 +12,14 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	LoadImage("img/Enemy/Enemy_1.png");
 
 	InitFunc();
-	ChangeState(ST::Walk);
+	ChangeState(CharacterState::Walk);
 
 	tex.size *= 2.0f;
 
-	speed   = 2.0f;
-	dushPow = 10.0f;
-	jumpPow = -30.0f;
-	vel     = Vec2f(speed, 0.0f);
+	// hp, speed, attack, defense, dush, jump
+	cParam = CharacterParameter(1, 2.0f, 2, 2, 10.0f, -30.0f);
 
-	hp = 2;
+	vel = Vec2f(cParam.speed, 0.0f);
 
 	turnFlag = false;
 
@@ -60,7 +58,7 @@ void Wolf::Draw()
 
 #ifdef _DEBUG
 	DrawRect();
-	if (state != ST::Death)
+	if (state != CharacterState::Death)
 	{
 		DrawViewRange();
 	}
@@ -71,7 +69,7 @@ void Wolf::Draw()
 void Wolf::NeutralUpdate()
 {
 	static unsigned int cnt = 0;
-	if (oldState == ST::Walk || oldState == ST::Attack1)
+	if (oldState == CharacterState::Walk || oldState == CharacterState::Attack1)
 	{
 		if (!CheckAnimEnd())
 		{
@@ -94,13 +92,13 @@ void Wolf::Loitering()
 	worldPos.x += vel.x;
 
 	float size = tex.size.x * 2.0f;
-	if (pl.lock()->GetState() != ST::Death)
+	if (pl.lock()->GetState() != CharacterState::Death)
 	{
 		if (fulcrum.x - size >= worldPos.x ||
 			worldPos.x >= fulcrum.x + size)
 		{
 			oldState = state;
-			ChangeState(ST::Neutral);
+			ChangeState(CharacterState::Neutral);
 		}
 	}
 	else
@@ -108,12 +106,12 @@ void Wolf::Loitering()
 		if (fulcrum.x - size >= worldPos.x)
 		{
 			turnFlag = false;
-			vel.x = speed;
+			vel.x = cParam.speed;
 		}
 		else if (fulcrum.x + size <= worldPos.x)
 		{
 			turnFlag = true;
-			vel.x = -speed;
+			vel.x = -cParam.speed;
 		}
 	}
 }
@@ -126,12 +124,12 @@ void Wolf::Alert()
 		if (worldPos.x > pl.lock()->GetWorldPos().x)
 		{
 			turnFlag = true;
-			vel.x = -speed;
+			vel.x = -cParam.speed;
 		}
 		else
 		{
 			turnFlag = false;
-			vel.x = speed;
+			vel.x = cParam.speed;
 		}
 	}
 
@@ -152,7 +150,7 @@ void Wolf::WalkUpdate()
 	// Ž‹ŠE‚É‘¨‚¦‚é‚Ü‚Åœpœj
 	if (CheckView())
 	{
-		discovery = pl.lock()->GetState() != ST::Death ? true : false;
+		discovery = pl.lock()->GetState() != CharacterState::Death ? true : false;
 	}
 
 	if (discovery)
@@ -166,7 +164,7 @@ void Wolf::WalkUpdate()
 }
 void Wolf::CheckWalk()
 {
-	ChangeState(ST::Walk);
+	ChangeState(CharacterState::Walk);
 }
 
 // UŒ‚
@@ -178,21 +176,21 @@ void Wolf::AttackUpdate()
 		if ((++coolTime) > 80)
 		{
 			stopFlag = false;
-			ChangeState(ST::Neutral);
+			ChangeState(CharacterState::Neutral);
 		}
 	}
 	else
 	{
-		vel.x = worldPos.x > oldPlPos.x ? -speed * 2.0f : speed * 2.0f;
+		vel.x = worldPos.x > oldPlPos.x ? -cParam.speed * 2.0f : cParam.speed * 2.0f;
 		worldPos.x += vel.x;
 	}
 }
 void Wolf::CheckAttack()
 {
 	coolTime = 0;
-	vel.y = jumpPow;
+	vel.y = cParam.jumpPow;
 	oldPlPos = pl.lock()->GetWorldPos();
-	ChangeState(ST::Attack1);
+	ChangeState(CharacterState::Attack1);
 }
 
 // ”íƒ_ƒ[ƒW
@@ -209,13 +207,13 @@ void Wolf::DamageUpdate()
 		if ((++cnt) > 40)
 		{
 			cnt = 0;
-			if (hp >= 0)
+			if (cParam.hp > 0)
 			{
-				ChangeState(ST::Walk);
+				ChangeState(CharacterState::Walk);
 			}
 			else
 			{
-				ChangeState(ST::Death);
+				ChangeState(CharacterState::Death);
 			}
 		}
 	}
@@ -231,7 +229,7 @@ void Wolf::DeathUpdate()
 		if ((alpha < 0.0f) && (++cnt) > 10)
 		{
 			cnt = 0;
-			tex.Delete("img/Enemy_1.png");
+			deleteFlag = true;
 		}
 		alpha -= 0.02f;
 	}
@@ -242,9 +240,9 @@ void Wolf::InitFunc()
 {
 	func.clear();
 
-	func[ST::Neutral] = std::bind(&Wolf::NeutralUpdate, this);
-	func[ST::Walk]    = std::bind(&Wolf::WalkUpdate, this);
-	func[ST::Attack1] = std::bind(&Wolf::AttackUpdate, this);
-	func[ST::Damage]  = std::bind(&Wolf::DamageUpdate, this);
-	func[ST::Death]   = std::bind(&Wolf::DeathUpdate, this);
+	func[CharacterState::Neutral] = std::bind(&Wolf::NeutralUpdate, this);
+	func[CharacterState::Walk]    = std::bind(&Wolf::WalkUpdate, this);
+	func[CharacterState::Attack1] = std::bind(&Wolf::AttackUpdate, this);
+	func[CharacterState::Damage]  = std::bind(&Wolf::DamageUpdate, this);
+	func[CharacterState::Death]   = std::bind(&Wolf::DeathUpdate, this);
 }

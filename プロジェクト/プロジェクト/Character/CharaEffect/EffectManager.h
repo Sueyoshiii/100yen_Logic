@@ -2,6 +2,8 @@
 #include "CharaEffect.h"
 #include <list>
 
+class Player;
+
 class EffectManager
 {
 public:
@@ -16,7 +18,7 @@ public:
 	void Draw(std::weak_ptr<MyLib> lib);
 
 	// ê∂ê¨
-	void Create(const EffectType& type, const Vec2f& pos);
+	void Create(const EffectType& type, const Vec2f& pos, std::weak_ptr<Player> pl);
 private:
 	EffectManager();
 	EffectManager(const EffectManager&) = delete;

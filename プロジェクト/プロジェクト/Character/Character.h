@@ -11,11 +11,10 @@
 #include <functional>
 #include <algorithm>
 
-#define In Input::Get()
+#define INPUT Input::Get()
 
-// 状態
-typedef
-enum class State
+// キャラクターの状態
+enum class CharacterState
 {
 	Neutral,
 	Walk,
@@ -27,7 +26,43 @@ enum class State
 	Attack3,
 	Damage,
 	Death
-}ST;
+};
+
+// キャラクターのパラメータ
+struct CharacterParameter
+{
+	// 体力
+	int hp;
+
+	// 移動速度
+	float speed;
+
+	// 攻撃力
+	int attackPow;
+
+	// 防御力
+	int defensePow;
+
+	// ダッシュ力
+	float dushPow;
+
+	// ジャンプ力
+	float jumpPow;
+
+	CharacterParameter() :
+		hp(0), speed(0.0f), attackPow(0), defensePow(0), 
+		dushPow(0.0f), jumpPow(0.0f) {}
+
+	CharacterParameter(const int hp, const float speed, const int attackPow,
+		const int defencePow, const float dushPow, const float jumpPow) :
+		hp(hp), speed(speed), attackPow(attackPow), defensePow(defencePow), 
+		dushPow(dushPow), jumpPow(jumpPow) {}
+
+	CharacterParameter(const float speed, const int attackPow,
+		const int defencePow, const float dushPow, const float jumpPow) :
+		speed(speed), attackPow(attackPow), defensePow(defencePow), 
+		dushPow(dushPow), jumpPow(jumpPow) {}
+};
 
 class Character
 {
@@ -42,7 +77,7 @@ public:
 	virtual void Draw() = 0;
 
 	// 状態遷移
-	void ChangeState(const ST state);
+	void ChangeState(const CharacterState state);
 
 	// ノックバック
 	void KnockBack(const Vec2f& vec);
@@ -63,10 +98,16 @@ public:
 	bool GetInvincibleFlag()const;
 
 	// ステータス取得
-	ST GetState()const;
+	CharacterState GetState()const;
+
+	// パラメータ取得
+	CharacterParameter GetParam()const;
 
 	// 反転フラグセット
 	void SetTurnFlag(const bool flag);
+
+	// ダメージセット
+	void SetDamage(const int attackPow, const int defensePow);
 protected:
 	// ステージ内に座標を補正
 	void CorrectPosInStage();
@@ -108,13 +149,13 @@ protected:
 	Texture tex;
 
 	// 状態
-	ST state;
+	CharacterState state;
 
 	// 1つ前の状態
-	ST oldState;
+	CharacterState oldState;
 
 	// 状態コンテナ
-	std::unordered_map<ST, std::string> stMap;
+	std::unordered_map<CharacterState, std::string> stMap;
 
 	// ワールド座標
 	Vec2f worldPos;
@@ -138,7 +179,7 @@ protected:
 	unsigned int index;
 
 	// 状態の関数ポインタ
-	std::unordered_map<ST, std::function<void(void)>> func;
+	std::unordered_map<CharacterState, std::function<void(void)>> func;
 
 	// データ
 	std::weak_ptr<std::unordered_map<std::string, Data>> info;
@@ -146,27 +187,21 @@ protected:
 	// アニメーション止める
 	bool stopFlag;
 
-	// 体力
-	int hp;
-
-	// 移動速度
-	float speed;
-
-	// ダッシュ力
-	float dushPow;
-
-	// ジャンプ力
-	float jumpPow;
+	// キャラクターパラメータ
+	CharacterParameter cParam;
 
 	// 無敵フラグ
 	bool invincibleFlag;
 
 	// ノックバック距離
 	float knockBackRange;
+
+	// ダメージ
+	int damage;
 private:
 	// 状態初期化
 	void InitState();
 
 	// 矩形
-	std::unordered_map<ST, std::vector<std::vector<Primitive>>> box;
+	std::unordered_map<CharacterState, std::vector<std::vector<Primitive>>> box;
 };

@@ -17,5 +17,8 @@ public:
 	~CharaEffect();
 	virtual void Draw(std::weak_ptr<MyLib> lib) = 0;
 	virtual void Delete() = 0;
-private:
+
+	bool GetDeleteFlag()const;
+protected:
+	bool deleteFlag;
 };

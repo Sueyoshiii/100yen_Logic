@@ -33,6 +33,9 @@ class Enemy :
 public:
 	Enemy();
 	~Enemy();
+
+	// 削除フラグ取得
+	bool GetDeleteFlag()const;
 protected:
 	// 衝突判定
 	void CheckHit();
@@ -70,4 +73,7 @@ protected:
 
 	// Playerの前座標
 	Vec2f oldPlPos;
+
+	// 削除フラグ
+	bool deleteFlag;
 };

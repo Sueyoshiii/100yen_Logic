@@ -3,7 +3,7 @@
 #include <iostream>
 
 Enemy::Enemy() :
-	viewLine(Primitive(PrimitiveType::line))
+	viewLine(Primitive(PrimitiveType::line)), deleteFlag(false)
 {
 }
 
@@ -42,8 +42,9 @@ void Enemy::CheckHit()
 				{
 					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
 					KnockBack(-dir);
-					ChangeState(ST::Damage);
-					EffectManager::Get().Create(EffectType::Flower, tex.pos);
+					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
+					ChangeState(CharacterState::Damage);
+					EffectManager::Get().Create(EffectType::Flower, tex.pos, pl);
 				}
 				else
 				{
@@ -60,9 +61,11 @@ void Enemy::CheckHit()
 						}
 						pl.lock()->SetTurnFlag(nextTurn);
 						pl.lock()->KnockBack(dir);
-						pl.lock()->ChangeState(ST::Damage);
+						pl.lock()->SetDamage(cParam.attackPow, pl.lock()->GetParam().defensePow);
+						pl.lock()->ChangeState(CharacterState::Damage);
 					}
 				}
+				break;
 			}
 		}
 	}
@@ -131,4 +134,10 @@ void Enemy::DrawViewRange()
 	viewLine.pos[0] = Vec3f(seg.begin);
 	viewLine.pos[1] = Vec3f(seg.end);
 	lib.lock()->Draw(viewLine, Vec3f(1.0f, 1.0f, 0.0f), 0.5f);
+}
+
+// íœƒtƒ‰ƒOæ“¾
+bool Enemy::GetDeleteFlag() const
+{
+	return deleteFlag;
 }

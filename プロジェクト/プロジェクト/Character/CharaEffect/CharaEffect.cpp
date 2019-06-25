@@ -2,11 +2,17 @@
 #include "../Player/Player.h"
 
 // コンストラクタ
-CharaEffect::CharaEffect()
+CharaEffect::CharaEffect() :
+	deleteFlag(false)
 {
 }
 
 // デストラクタ
 CharaEffect::~CharaEffect()
 {
+}
+
+bool CharaEffect::GetDeleteFlag() const
+{
+	return deleteFlag;
 }

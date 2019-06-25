@@ -2,10 +2,9 @@
 
 // コンストラクタ
 Character::Character() :
-	state(ST::Neutral), oldState(state), worldPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
-	turnFlag(false), frame(0), animCnt(0), index(0), stopFlag(false),
-	speed(1.0f), dushPow(1.0f), jumpPow(1.0f), invincibleFlag(false),
-	knockBackRange(0.0f)
+	state(CharacterState::Neutral), oldState(state), worldPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
+	turnFlag(false), frame(0), animCnt(0), index(0), stopFlag(false), damage(0),
+	invincibleFlag(false), cParam(CharacterParameter()), knockBackRange(0.0f)
 {
 	InitState();
 }
@@ -33,7 +32,7 @@ void Character::FallUpdate()
 }
 
 // 状態遷移
-void Character::ChangeState(const ST state)
+void Character::ChangeState(const CharacterState state)
 {
 	if (func.find(state) == func.end())
 	{
@@ -44,9 +43,10 @@ void Character::ChangeState(const ST state)
 	index   = 0;
 	this->state = state;
 
-	if (this->state == ST::Damage)
+	if (this->state == CharacterState::Damage)
 	{
-		--hp;
+		cParam.hp -= damage;
+		printf("%d\n", damage);
 	}
 
 	if (box.find(this->state) == box.end())
@@ -183,7 +183,7 @@ void Character::InvicibleUpdate()
 void Character::KnockBack(const Vec2f& vec)
 {
 	float v = vec.x != 0.0f ? vec.x / std::fabs(vec.x) : -1.0f;
-	vel = Vec2f(knockBackRange / 2.0f * v, jumpPow / 2.0f);
+	vel = Vec2f(knockBackRange / 2.0f * v, cParam.jumpPow / 2.0f);
 }
 
 // ステータス初期化
@@ -194,16 +194,16 @@ void Character::InitState()
 		stMap.clear();
 	}
 
-	stMap[ST::Neutral] = "Neutral";
-	stMap[ST::Walk]    = "Walk";
-	stMap[ST::Jump]    = "Jump";
-	stMap[ST::Fall]    = "Fall";
-	stMap[ST::Dash]    = "Dash";
-	stMap[ST::Attack1] = "Attack1";
-	stMap[ST::Attack2] = "Attack2";
-	stMap[ST::Attack3] = "Attack3";
-	stMap[ST::Damage]  = "Damage";
-	stMap[ST::Death]   = "Death";
+	stMap[CharacterState::Neutral] = "Neutral";
+	stMap[CharacterState::Walk]    = "Walk";
+	stMap[CharacterState::Jump]    = "Jump";
+	stMap[CharacterState::Fall]    = "Fall";
+	stMap[CharacterState::Dash]    = "Dash";
+	stMap[CharacterState::Attack1] = "Attack1";
+	stMap[CharacterState::Attack2] = "Attack2";
+	stMap[CharacterState::Attack3] = "Attack3";
+	stMap[CharacterState::Damage]  = "Damage";
+	stMap[CharacterState::Death]   = "Death";
 }
 
 // 衝突矩形を取得
@@ -252,14 +252,30 @@ bool Character::GetInvincibleFlag() const
 	return invincibleFlag;
 }
 
-ST Character::GetState() const
+// ステータス取得
+CharacterState Character::GetState() const
 {
 	return state;
+}
+
+// パラメータ取得
+CharacterParameter Character::GetParam() const
+{
+	return cParam;
 }
 
 // 反転フラグセット
 void Character::SetTurnFlag(const bool flag)
 {
 	turnFlag = flag;
+}
+
+// ダメージセット
+void Character::SetDamage(const int attackPow, const int defensePow)
+{
+	int value = attackPow - defensePow;
+
+	// 0以下だった場合は1にする
+	damage = value > 0 ? value : 1;
 }
 

@@ -52,6 +52,7 @@
     <ClCompile Include="Character\CharaEffect\CharaEffect.cpp" />
     <ClCompile Include="Character\CharaEffect\Flower.cpp" />
     <ClCompile Include="Character\CharaEffect\EffectManager.cpp" />
+    <ClCompile Include="Character\CharaEffect\Slash\Slash.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Info\Info.h">
@@ -109,6 +110,7 @@
     <ClInclude Include="Character\CharaEffect\CharaEffect.h" />
     <ClInclude Include="Character\CharaEffect\Flower.h" />
     <ClInclude Include="Character\CharaEffect\EffectManager.h" />
+    <ClInclude Include="Character\CharaEffect\Slash\Slash.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Info">

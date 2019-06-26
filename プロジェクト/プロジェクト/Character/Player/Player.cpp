@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "../../Stage/Stage.h"
+#include "../CharaEffect/EffectManager.h"
 #include <iostream>
 
 // コンストラクタ
@@ -209,6 +210,7 @@ void Player::CheckFirstAttack()
 		attackFlag = true;
 		attackCnt  = 0;
 		ChangeState(CharacterState::Attack1);
+		EffectManager::Get().CreateSlash(state, tex.pos, tex.size, turnFlag);
 	}
 }
 
@@ -236,7 +238,9 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 			{
 				attackCnt = 0;
 				stopFlag = false;
-				ChangeState(CharacterState(int(state) + 1));
+				CharacterState next = CharacterState(int(state) + 1);
+				ChangeState(next);
+				EffectManager::Get().CreateSlash(next, tex.pos, tex.size, turnFlag);
 			}
 			CheckDash();
 		}

@@ -1,6 +1,7 @@
 #include "EffectManager.h"
 #include "../Player/Player.h"
-#include "Flower.h"
+#include "Flower/Flower.h"
+#include "Slash/Slash.h"
 
 // コンストラクタ
 EffectManager::EffectManager()
@@ -54,8 +55,10 @@ void EffectManager::Create(const EffectType& type, const Vec2f& pos, std::weak_p
 		map[type] = std::make_shared<Flower>(pos, pl);
 		list.push_back(map[type]);
 	}
-	else if (type == EffectType::Slashing)
-	{
+}
 
-	}
+void EffectManager::CreateSlash(const CharacterState& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag)
+{
+	map[EffectType::Slashing] = std::make_shared<Slash>(state, pos, size, turnFlag);
+	list.push_back(map[EffectType::Slashing]);
 }

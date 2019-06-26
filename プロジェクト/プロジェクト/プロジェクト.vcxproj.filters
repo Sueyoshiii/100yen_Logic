@@ -50,9 +50,9 @@
       <Filter>Character\Player</Filter>
     </ClCompile>
     <ClCompile Include="Character\CharaEffect\CharaEffect.cpp" />
-    <ClCompile Include="Character\CharaEffect\Flower.cpp" />
     <ClCompile Include="Character\CharaEffect\EffectManager.cpp" />
     <ClCompile Include="Character\CharaEffect\Slash\Slash.cpp" />
+    <ClCompile Include="Character\CharaEffect\Flower\Flower.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Info\Info.h">
@@ -108,9 +108,9 @@
       <Filter>Character\Player</Filter>
     </ClInclude>
     <ClInclude Include="Character\CharaEffect\CharaEffect.h" />
-    <ClInclude Include="Character\CharaEffect\Flower.h" />
     <ClInclude Include="Character\CharaEffect\EffectManager.h" />
     <ClInclude Include="Character\CharaEffect\Slash\Slash.h" />
+    <ClInclude Include="Character\CharaEffect\Flower\Flower.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Info">

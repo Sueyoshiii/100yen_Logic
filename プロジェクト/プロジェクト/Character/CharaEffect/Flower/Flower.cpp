@@ -1,6 +1,6 @@
 #include "Flower.h"
-#include "../Player/Player.h"
-#include "../../Stage/Stage.h"
+#include "../../Player/Player.h"
+#include "../../../Stage/Stage.h"
 #include <random>
 
 // コンストラクタ

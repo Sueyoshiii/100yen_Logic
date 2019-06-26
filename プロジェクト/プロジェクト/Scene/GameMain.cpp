@@ -24,11 +24,11 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 	cam->SetFocus(pl);
 
 	// “G‚³‚ñ’B
-	Enemy.Summons(EM::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
-	Enemy.Summons(EM::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
-	Enemy.Summons(EM::Wolf, Vec2f(800.0f, 0.0f), lib, pl, cam);
-	Enemy.Summons(EM::Wolf, Vec2f(1000.0f, 0.0f), lib, pl, cam);
-	Enemy.Summons(EM::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
+	//Enemy.Summons(EM::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
+	//Enemy.Summons(EM::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
+	//Enemy.Summons(EM::Wolf, Vec2f(800.0f, 0.0f), lib, pl, cam);
+	//Enemy.Summons(EM::Wolf, Vec2f(1000.0f, 0.0f), lib, pl, cam);
+	//Enemy.Summons(EM::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
 
 #ifdef _DEBUG
 	std::cout << "GameMain Scene" << std::endl;
@@ -50,7 +50,7 @@ void GameMain::Draw()
 	Stage::Get().Draw(lib);
 
 	// “G
-	Enemy.Draw();
+	//Enemy.Draw();
 
 	// ƒvƒŒƒCƒ„[
 	pl->Draw();
@@ -63,7 +63,7 @@ void GameMain::UpData()
 {
 	cam->Update();
 	bg->Update();
-	Enemy.Update();
+	//Enemy.Update();
 	pl->Update();
 	Effects.Update();
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "CharaEffect.h"
+#include "../CharaEffect.h"
 
 class Player;
 

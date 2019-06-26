@@ -1,0 +1,11 @@
+上から
+
+Neutral
+Walk
+Run(プレイヤー補足時の移動モーション)
+Threat(威嚇、使うなら使ってといった感じ)
+Howling(咆哮、同上)
+Save(攻撃前の溜め)
+Attack
+Damage
+Death

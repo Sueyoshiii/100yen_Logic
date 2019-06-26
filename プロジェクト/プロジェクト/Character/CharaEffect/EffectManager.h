@@ -19,7 +19,7 @@ public:
 
 	// ê∂ê¨
 	void Create(const EffectType& type, const Vec2f& pos, std::weak_ptr<Player> pl);
-	void CreateSlash(const CharacterState& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
+	void CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 private:
 	EffectManager();
 	EffectManager(const EffectManager&) = delete;

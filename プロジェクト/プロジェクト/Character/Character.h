@@ -14,19 +14,19 @@
 #define INPUT Input::Get()
 
 // キャラクターの状態
-enum class CharacterState
-{
-	Neutral,
-	Walk,
-	Jump,
-	Fall,
-	Dash,
-	Attack1,
-	Attack2,
-	Attack3,
-	Damage,
-	Death
-};
+//enum class CharacterState
+//{
+//	Neutral,
+//	Walk,
+//	Jump,
+//	Fall,
+//	Dash,
+//	Attack1,
+//	Attack2,
+//	Attack3,
+//	Damage,
+//	Death
+//};
 
 // キャラクターのパラメータ
 struct CharacterParameter
@@ -77,7 +77,7 @@ public:
 	virtual void Draw() = 0;
 
 	// 状態遷移
-	void ChangeState(const CharacterState state);
+	void ChangeState(const std::string& state);
 
 	// ノックバック
 	void KnockBack(const Vec2f& vec);
@@ -98,7 +98,7 @@ public:
 	bool GetInvincibleFlag()const;
 
 	// ステータス取得
-	CharacterState GetState()const;
+	std::string GetState()const;
 
 	// パラメータ取得
 	CharacterParameter GetParam()const;
@@ -149,13 +149,13 @@ protected:
 	Texture tex;
 
 	// 状態
-	CharacterState state;
+	std::string state;
 
 	// 1つ前の状態
-	CharacterState oldState;
+	std::string oldState;
 
 	// 状態コンテナ
-	std::unordered_map<CharacterState, std::string> stMap;
+	//std::unordered_map<CharacterState, std::string> stMap;
 
 	// ワールド座標
 	Vec2f worldPos;
@@ -179,7 +179,7 @@ protected:
 	unsigned int index;
 
 	// 状態の関数ポインタ
-	std::unordered_map<CharacterState, std::function<void(void)>> func;
+	std::unordered_map<std::string, std::function<void(void)>> func;
 
 	// データ
 	std::weak_ptr<std::unordered_map<std::string, Data>> info;
@@ -203,5 +203,5 @@ private:
 	void InitState();
 
 	// 矩形
-	std::unordered_map<CharacterState, std::vector<std::vector<Primitive>>> box;
+	std::unordered_map<std::string, std::vector<std::vector<Primitive>>> box;
 };

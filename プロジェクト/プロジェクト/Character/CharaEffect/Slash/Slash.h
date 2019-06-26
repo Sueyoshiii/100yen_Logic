@@ -1,13 +1,11 @@
 #pragma once
 #include "../CharaEffect.h"
 
-class Player;
-
 class Slash :
 	public CharaEffect
 {
 public:
-	Slash(const CharacterState& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
+	Slash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 	~Slash();
 
 	// 更新
@@ -28,8 +26,9 @@ private:
 	// 攻撃処理
 	void AttackUpdate(const unsigned int attackInterval);
 
-	std::unordered_map <CharacterState, std::function<void(void)>> stFunc;
-	std::weak_ptr<Player> pl;
+	// 攻撃フレーム
 	unsigned int attackCnt;
-	CharacterState state;
+
+	// 状態コンテナ
+	std::unordered_map<std::string, std::string> stateMap;
 };

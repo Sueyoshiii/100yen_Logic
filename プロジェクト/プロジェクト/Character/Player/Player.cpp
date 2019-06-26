@@ -14,7 +14,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	LoadImage("img/Player/player.png");
 
 	InitFunc();
-	ChangeState(CharacterState::Neutral);
+	ChangeState("Neutral");
 
 	tex.size *= 2.0f;
 
@@ -43,7 +43,7 @@ void Player::Update()
 
 	if (!jumpFlag && 
 		worldPos.y < Stage::Get().GetGround() &&
-		state != CharacterState::Damage)
+		state != "Damage")
 	{
 		CheckFall();
 	}
@@ -92,7 +92,7 @@ void Player::WalkUpdate()
 	}
 	else
 	{
-		ChangeState(CharacterState::Neutral);
+		ChangeState("Neutral");
 	}
 
 	CheckJump();
@@ -106,7 +106,7 @@ void Player::CheckWalk()
 	if (INPUT.IsKey(Key::Num4) || INPUT.IsKey(Key::Num6))
 	{
 		vel.x = cParam.speed;
-		ChangeState(CharacterState::Walk);
+		ChangeState("Walk");
 	}
 }
 
@@ -132,7 +132,7 @@ void Player::JumpUpdate()
 	else
 	{
 		jumpFlag = false;
-		ChangeState(CharacterState::Fall);
+		ChangeState("Fall");
 	}
 }
 void Player::CheckJump()
@@ -141,7 +141,7 @@ void Player::CheckJump()
 	{
 		jumpFlag = true;
 		vel.y = cParam.jumpPow;
-		ChangeState(CharacterState::Jump);
+		ChangeState("Jump");
 	}
 }
 
@@ -164,12 +164,12 @@ void Player::FallUpdate()
 	if (worldPos.y > Stage::Get().GetGround())
 	{
 		worldPos.y = Stage::Get().GetGround();
-		ChangeState(CharacterState::Neutral);
+		ChangeState("Neutral");
 	}
 }
 void Player::CheckFall()
 {
-	ChangeState(CharacterState::Fall);
+	ChangeState("Fall");
 }
 
 // ダッシュ
@@ -182,7 +182,7 @@ void Player::DashUpdate()
 		cnt = 0;
 		dashFlag = false;
 		stopFlag = false;
-		ChangeState(CharacterState::Neutral);
+		ChangeState("Neutral");
 	}
 }
 void Player::CheckDash()
@@ -194,7 +194,7 @@ void Player::CheckDash()
 		attackCnt = 0;
 		attackFlag = false;
 		vel.x = turnFlag ? -cParam.dushPow : cParam.dushPow;
-		ChangeState(CharacterState::Dash);
+		ChangeState("Dash");
 	}
 }
 
@@ -209,8 +209,8 @@ void Player::CheckFirstAttack()
 	{
 		attackFlag = true;
 		attackCnt  = 0;
-		ChangeState(CharacterState::Attack1);
-		EffectManager::Get().CreateSlash(state, tex.pos, tex.size, turnFlag);
+		ChangeState("Attack1");
+		EffectManager::Get().CreateSlash(state, worldPos, tex.size, turnFlag);
 	}
 }
 
@@ -232,15 +232,19 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 	if (CheckAnimEnd())
 	{
 		stopFlag = true;
-		if (state != CharacterState::Attack3)
+		if (state != "Attack3")
 		{
 			if (INPUT.IsTrigger(Key::Z))
 			{
 				attackCnt = 0;
 				stopFlag = false;
-				CharacterState next = CharacterState(int(state) + 1);
+				auto itr = state.rbegin();
+				char& numStr = *itr;
+				int num = atoi(&numStr);
+				++num;
+				std::string next = "Attack" + std::to_string(num);
 				ChangeState(next);
-				EffectManager::Get().CreateSlash(next, tex.pos, tex.size, turnFlag);
+				//EffectManager::Get().CreateSlash(next, tex.pos, tex.size, turnFlag);
 			}
 			CheckDash();
 		}
@@ -249,7 +253,7 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 			attackCnt = 0;
 			attackFlag = false;
 			stopFlag = false;
-			ChangeState(CharacterState::Neutral);
+			ChangeState("Neutral");
 		}
 	}
 	else
@@ -283,11 +287,11 @@ void Player::DamageUpdate()
 			if (cParam.hp > 0)
 			{
 				invincibleFlag = true;
-				ChangeState(CharacterState::Neutral);
+				ChangeState("Neutral");
 			}
 			else
 			{
-				ChangeState(CharacterState::Death);
+				ChangeState("Death");
 			}
 		}
 	}
@@ -304,7 +308,7 @@ void Player::DeathUpdate()
 		{
 			stopFlag = false;
 			cParam.hp = 3;
-			ChangeState(CharacterState::Neutral);
+			ChangeState("Neutral");
 		}
 	}
 }
@@ -314,16 +318,16 @@ void Player::InitFunc()
 {
 	func.clear();
 
-	func[CharacterState::Neutral] = std::bind(&Player::NeutralUpdate, this);
-	func[CharacterState::Walk]    = std::bind(&Player::WalkUpdate, this);
-	func[CharacterState::Jump]    = std::bind(&Player::JumpUpdate, this);
-	func[CharacterState::Fall]    = std::bind(&Player::FallUpdate, this);
-	func[CharacterState::Dash]    = std::bind(&Player::DashUpdate, this);
-	func[CharacterState::Attack1] = std::bind(&Player::FirstAttackUpdate, this);
-	func[CharacterState::Attack2] = std::bind(&Player::SecondAttackUpdate, this);
-	func[CharacterState::Attack3] = std::bind(&Player::ThirdAttackUpdate, this);
-	func[CharacterState::Damage]  = std::bind(&Player::DamageUpdate, this);
-	func[CharacterState::Death]   = std::bind(&Player::DeathUpdate, this);
+	func["Neutral"] = std::bind(&Player::NeutralUpdate, this);
+	func["Walk"]    = std::bind(&Player::WalkUpdate, this);
+	func["Jump"]    = std::bind(&Player::JumpUpdate, this);
+	func["Fall"]    = std::bind(&Player::FallUpdate, this);
+	func["Dash"]    = std::bind(&Player::DashUpdate, this);
+	func["Attack1"] = std::bind(&Player::FirstAttackUpdate, this);
+	func["Attack2"] = std::bind(&Player::SecondAttackUpdate, this);
+	func["Attack3"] = std::bind(&Player::ThirdAttackUpdate, this);
+	func["Damage"]  = std::bind(&Player::DamageUpdate, this);
+	func["Death"]   = std::bind(&Player::DeathUpdate, this);
 }
 
 // ローカル座標取得

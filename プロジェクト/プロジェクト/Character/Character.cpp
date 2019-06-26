@@ -2,7 +2,7 @@
 
 // コンストラクタ
 Character::Character() :
-	state(CharacterState::Neutral), oldState(state), worldPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
+	state("Neutral"), oldState(state), worldPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
 	turnFlag(false), frame(0), animCnt(0), index(0), stopFlag(false), damage(0),
 	invincibleFlag(false), cParam(CharacterParameter()), knockBackRange(0.0f)
 {
@@ -32,7 +32,7 @@ void Character::FallUpdate()
 }
 
 // 状態遷移
-void Character::ChangeState(const CharacterState state)
+void Character::ChangeState(const std::string& state)
 {
 	if (func.find(state) == func.end())
 	{
@@ -43,18 +43,17 @@ void Character::ChangeState(const CharacterState state)
 	index   = 0;
 	this->state = state;
 
-	if (this->state == CharacterState::Damage)
+	if (this->state == "Damage")
 	{
 		cParam.hp -= damage;
-		printf("%d\n", damage);
 	}
 
 	if (box.find(this->state) == box.end())
 	{
-		box[this->state].resize(info.lock()->at(stMap[state]).rect.size());
+		box[this->state].resize(info.lock()->at(this->state).rect.size());
 		for (unsigned int i = 0; i < box[this->state].size(); ++i)
 		{
-			box[this->state][i].resize(info.lock()->at(stMap[state]).rect[i].hit.size());
+			box[this->state][i].resize(info.lock()->at(this->state).rect[i].hit.size());
 			std::fill(box[this->state][i].begin(), box[this->state][i].end(), Primitive(PrimitiveType::box));
 		}
 	}
@@ -71,8 +70,8 @@ void Character::LoadData(const std::string& filePath)
 void Character::LoadImage(const std::string& filePath)
 {
 	tex.Load(filePath);
-	tex.size    = info.lock()->at(stMap[state]).rect[index].anim.size;
-	tex.divSize = info.lock()->at(stMap[state]).rect[index].anim.size;
+	tex.size    = info.lock()->at(state).rect[index].anim.size;
+	tex.divSize = info.lock()->at(state).rect[index].anim.size;
 }
 
 // 画像描画
@@ -80,7 +79,7 @@ void Character::DrawImage()
 {
 	tex.offsetPos = {
 		tex.divSize.x * index,
-		info.lock()->at(stMap[state]).rect[index].anim.pos.y
+		info.lock()->at(state).rect[index].anim.pos.y
 	};
 	lib.lock()->Draw(tex, alpha, turnFlag);
 }
@@ -89,11 +88,11 @@ void Character::DrawImage()
 void Character::DrawRect()
 {
 	unsigned int id = 0;
-	for (auto& i : info.lock()->at(stMap[state]).rect[index].hit)
+	for (auto& i : info.lock()->at(state).rect[index].hit)
 	{
 		Vec2f pos;
 		Vec2f size;
-		Vec2f animSize = info.lock()->at(stMap[state]).rect[index].anim.size;
+		Vec2f animSize = info.lock()->at(state).rect[index].anim.size;
 		if (turnFlag)
 		{
 			pos  = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-i.rect.pos.x, i.rect.pos.y) * tex.size / animSize;
@@ -134,9 +133,9 @@ void Character::AnimationUpdate()
 		return;
 	}
 	++frame;
-	if (frame > info.lock()->at(stMap[state]).animTime)
+	if (frame > info.lock()->at(state).animTime)
 	{
-		index = (index + 1 >= info.lock()->at(stMap[state]).rect.size()) ? 0 : ++index;
+		index = (index + 1 >= info.lock()->at(state).rect.size()) ? 0 : ++index;
 		frame = 0;
 	}
 }
@@ -144,8 +143,8 @@ void Character::AnimationUpdate()
 // アニメーションの終了を調べる
 bool Character::CheckAnimEnd()
 {
-	if (index >= info.lock()->at(stMap[state]).rect.size() - 1 &&
-		frame >= info.lock()->at(stMap[state]).animTime)
+	if (index >= info.lock()->at(state).rect.size() - 1 &&
+		frame >= info.lock()->at(state).animTime)
 	{
 		return true;
 	}
@@ -189,30 +188,30 @@ void Character::KnockBack(const Vec2f& vec)
 // ステータス初期化
 void Character::InitState()
 {
-	if (stMap.empty())
-	{
-		stMap.clear();
-	}
+	//if (stMap.empty())
+	//{
+	//	stMap.clear();
+	//}
 
-	stMap[CharacterState::Neutral] = "Neutral";
-	stMap[CharacterState::Walk]    = "Walk";
-	stMap[CharacterState::Jump]    = "Jump";
-	stMap[CharacterState::Fall]    = "Fall";
-	stMap[CharacterState::Dash]    = "Dash";
-	stMap[CharacterState::Attack1] = "Attack1";
-	stMap[CharacterState::Attack2] = "Attack2";
-	stMap[CharacterState::Attack3] = "Attack3";
-	stMap[CharacterState::Damage]  = "Damage";
-	stMap[CharacterState::Death]   = "Death";
+	//stMap[CharacterState::Neutral] = "Neutral";
+	//stMap[CharacterState::Walk]    = "Walk";
+	//stMap[CharacterState::Jump]    = "Jump";
+	//stMap[CharacterState::Fall]    = "Fall";
+	//stMap[CharacterState::Dash]    = "Dash";
+	//stMap[CharacterState::Attack1] = "Attack1";
+	//stMap[CharacterState::Attack2] = "Attack2";
+	//stMap[CharacterState::Attack3] = "Attack3";
+	//stMap[CharacterState::Damage]  = "Damage";
+	//stMap[CharacterState::Death]   = "Death";
 }
 
 // 衝突矩形を取得
 std::vector<HitRect<Vec2f>> Character::GetRect()
 {
-	auto hit = info.lock()->at(stMap[state]).rect[index].hit;
+	auto hit = info.lock()->at(state).rect[index].hit;
 	std::for_each(hit.begin(), hit.end(), [&](HitRect<Vec2f> & rect)->void
 	{
-		Vec2f animSize = info.lock()->at(stMap[state]).rect[index].anim.size;
+		Vec2f animSize = info.lock()->at(state).rect[index].anim.size;
 		if (turnFlag)
 		{
 			rect.rect.pos = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-rect.rect.pos.x, rect.rect.pos.y) * tex.size / animSize;
@@ -253,7 +252,7 @@ bool Character::GetInvincibleFlag() const
 }
 
 // ステータス取得
-CharacterState Character::GetState() const
+std::string Character::GetState() const
 {
 	return state;
 }

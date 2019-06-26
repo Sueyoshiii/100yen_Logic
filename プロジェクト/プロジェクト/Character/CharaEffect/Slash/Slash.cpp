@@ -1,19 +1,18 @@
 #include "Slash.h"
-#include "../../Player/Player.h"
 
 // コンストラクタ
-Slash::Slash(const CharacterState& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag)
+Slash::Slash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag) :
+	attackCnt(0)
 {
-	this->state = state;
-
-	LoadData("data/chara/player_effect.info");
-	LoadImage("img/Player/player_effect.png");
-
 	InitState();
 
+	this->turnFlag = turnFlag;
+	this->state = stateMap[state];
+	LoadData("data/chara/player_effect.info");
+	LoadImage("img/Player/player_effect.png");
+	ChangeState(this->state);
 	tex.pos = Vec2f(pos.x + size.x / 2.0f, pos.y);
 	tex.size = size;
-	this->turnFlag = turnFlag;
 }
 
 // デストラクタ
@@ -24,12 +23,7 @@ Slash::~Slash()
 // 更新
 void Slash::Update()
 {
-	if (stFunc.find(state) == stFunc.end())
-	{
-		return;
-	}
-
-	stFunc[state]();
+	func[this->state]();
 }
 
 // 描画
@@ -38,6 +32,10 @@ void Slash::Draw()
 }
 void Slash::Draw(std::weak_ptr<MyLib> lib)
 {
+	if (deleteFlag)
+	{
+		return;
+	}
 	AnimationUpdate();
 
 	DrawImage();
@@ -46,9 +44,13 @@ void Slash::Draw(std::weak_ptr<MyLib> lib)
 // 状態初期化
 void Slash::InitState()
 {
-	stFunc[CharacterState::Attack1] = std::bind(&Slash::FirstAttackUpdate, this);
-	stFunc[CharacterState::Attack2] = std::bind(&Slash::SecondAttackUpdate, this);
-	stFunc[CharacterState::Attack3] = std::bind(&Slash::ThirdAttackUpdate, this);
+	stateMap["Attack1"] = "first";
+	stateMap["Attack2"] = "second";
+	stateMap["Attack3"] = "third";
+
+	func["first"]  = std::bind(&Slash::FirstAttackUpdate, this);
+	func["second"] = std::bind(&Slash::SecondAttackUpdate, this);
+	func["third"]  = std::bind(&Slash::ThirdAttackUpdate, this);
 }
 
 // 初撃

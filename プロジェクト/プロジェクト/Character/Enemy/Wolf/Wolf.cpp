@@ -12,7 +12,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	LoadImage("img/Enemy/Enemy_1.png");
 
 	InitFunc();
-	ChangeState(CharacterState::Walk);
+	ChangeState("Walk");
 
 	tex.size *= 2.0f;
 
@@ -58,7 +58,7 @@ void Wolf::Draw()
 
 #ifdef _DEBUG
 	DrawRect();
-	if (state != CharacterState::Death)
+	if (state != "Death")
 	{
 		DrawViewRange();
 	}
@@ -69,7 +69,7 @@ void Wolf::Draw()
 void Wolf::NeutralUpdate()
 {
 	static unsigned int cnt = 0;
-	if (oldState == CharacterState::Walk || oldState == CharacterState::Attack1)
+	if (oldState == "Walk" || oldState == "Attack1")
 	{
 		if (!CheckAnimEnd())
 		{
@@ -92,13 +92,13 @@ void Wolf::Loitering()
 	worldPos.x += vel.x;
 
 	float size = tex.size.x * 2.0f;
-	if (pl.lock()->GetState() != CharacterState::Death)
+	if (pl.lock()->GetState() != "Death")
 	{
 		if (fulcrum.x - size >= worldPos.x ||
 			worldPos.x >= fulcrum.x + size)
 		{
 			oldState = state;
-			ChangeState(CharacterState::Neutral);
+			ChangeState("Neutral");
 		}
 	}
 	else
@@ -150,7 +150,7 @@ void Wolf::WalkUpdate()
 	// Ž‹ŠE‚É‘¨‚¦‚é‚Ü‚Åœpœj
 	if (CheckView())
 	{
-		discovery = pl.lock()->GetState() != CharacterState::Death ? true : false;
+		discovery = pl.lock()->GetState() != "Death" ? true : false;
 	}
 
 	if (discovery)
@@ -164,7 +164,7 @@ void Wolf::WalkUpdate()
 }
 void Wolf::CheckWalk()
 {
-	ChangeState(CharacterState::Walk);
+	ChangeState("Walk");
 }
 
 // UŒ‚
@@ -176,7 +176,7 @@ void Wolf::AttackUpdate()
 		if ((++coolTime) > 80)
 		{
 			stopFlag = false;
-			ChangeState(CharacterState::Neutral);
+			ChangeState("Neutral");
 		}
 	}
 	else
@@ -190,7 +190,7 @@ void Wolf::CheckAttack()
 	coolTime = 0;
 	vel.y = cParam.jumpPow;
 	oldPlPos = pl.lock()->GetWorldPos();
-	ChangeState(CharacterState::Attack1);
+	ChangeState("Attack1");
 }
 
 // ”íƒ_ƒ[ƒW
@@ -209,11 +209,11 @@ void Wolf::DamageUpdate()
 			cnt = 0;
 			if (cParam.hp > 0)
 			{
-				ChangeState(CharacterState::Walk);
+				ChangeState("Walk");
 			}
 			else
 			{
-				ChangeState(CharacterState::Death);
+				ChangeState("Death");
 			}
 		}
 	}
@@ -240,9 +240,9 @@ void Wolf::InitFunc()
 {
 	func.clear();
 
-	func[CharacterState::Neutral] = std::bind(&Wolf::NeutralUpdate, this);
-	func[CharacterState::Walk]    = std::bind(&Wolf::WalkUpdate, this);
-	func[CharacterState::Attack1] = std::bind(&Wolf::AttackUpdate, this);
-	func[CharacterState::Damage]  = std::bind(&Wolf::DamageUpdate, this);
-	func[CharacterState::Death]   = std::bind(&Wolf::DeathUpdate, this);
+	func["Neutral"] = std::bind(&Wolf::NeutralUpdate, this);
+	func["Walk"]    = std::bind(&Wolf::WalkUpdate, this);
+	func["Attack1"] = std::bind(&Wolf::AttackUpdate, this);
+	func["Damage"]  = std::bind(&Wolf::DamageUpdate, this);
+	func["Death"]   = std::bind(&Wolf::DeathUpdate, this);
 }

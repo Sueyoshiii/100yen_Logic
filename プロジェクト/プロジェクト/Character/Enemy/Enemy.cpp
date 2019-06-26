@@ -43,7 +43,7 @@ void Enemy::CheckHit()
 					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
 					KnockBack(-dir);
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
-					ChangeState(CharacterState::Damage);
+					ChangeState("Damage");
 					EffectManager::Get().Create(EffectType::Flower, tex.pos, pl);
 				}
 				else
@@ -62,7 +62,7 @@ void Enemy::CheckHit()
 						pl.lock()->SetTurnFlag(nextTurn);
 						pl.lock()->KnockBack(dir);
 						pl.lock()->SetDamage(cParam.attackPow, pl.lock()->GetParam().defensePow);
-						pl.lock()->ChangeState(CharacterState::Damage);
+						pl.lock()->ChangeState("Damage");
 					}
 				}
 				break;

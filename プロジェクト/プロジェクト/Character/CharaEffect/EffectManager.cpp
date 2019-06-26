@@ -57,7 +57,7 @@ void EffectManager::Create(const EffectType& type, const Vec2f& pos, std::weak_p
 	}
 }
 
-void EffectManager::CreateSlash(const CharacterState& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag)
+void EffectManager::CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag)
 {
 	map[EffectType::Slashing] = std::make_shared<Slash>(state, pos, size, turnFlag);
 	list.push_back(map[EffectType::Slashing]);

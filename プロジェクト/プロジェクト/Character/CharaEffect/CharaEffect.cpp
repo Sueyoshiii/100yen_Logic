@@ -12,6 +12,7 @@ CharaEffect::~CharaEffect()
 {
 }
 
+// íœƒtƒ‰ƒOæ“¾
 bool CharaEffect::GetDeleteFlag() const
 {
 	return deleteFlag;

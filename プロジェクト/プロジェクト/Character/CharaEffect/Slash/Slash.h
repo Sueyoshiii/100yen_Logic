@@ -7,6 +7,14 @@ class Slash :
 	public CharaEffect
 {
 public:
-	Slash();
+	Slash(std::weak_ptr<Player> pl);
 	~Slash();
+
+	// XV
+	void Update();
+
+	// •`‰æ
+	void Draw();
+	void Draw(std::weak_ptr<MyLib> lib);
+private:
 };

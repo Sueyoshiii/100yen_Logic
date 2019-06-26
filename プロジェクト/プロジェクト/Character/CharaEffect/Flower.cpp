@@ -59,11 +59,6 @@ void Flower::Draw(std::weak_ptr<MyLib> lib)
 	}
 }
 
-// íœ
-void Flower::Delete()
-{
-}
-
 // ƒhƒƒbƒv
 void Flower::DropUpdate()
 {

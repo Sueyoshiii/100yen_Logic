@@ -20,6 +20,9 @@ public:
 	// 生成
 	void Create(const EffectType& type, const Vec2f& pos, std::weak_ptr<Player> pl);
 	void CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
+
+	// エフェクト取得
+	std::weak_ptr<CharaEffect> GetEffect(const EffectType& type);
 private:
 	EffectManager();
 	EffectManager(const EffectManager&) = delete;

@@ -25,17 +25,21 @@ void Enemy::CheckHit()
 				continue;
 			}
 
+			Box pBox = Box(p.rect.pos, p.rect.size);
+			Box eBox = Box(e.rect.pos, e.rect.size);
+
 			// 矩形の半分のサイズ
-			Vec2f plHalf = p.rect.size / 2.0f;
-			Vec2f emHalf = e.rect.size / 2.0f;
+			//Vec2f plHalf = p.rect.size / 2.0f;
+			//Vec2f emHalf = e.rect.size / 2.0f;
 
 			// 矩形の中心
-			Vec2f plCenter = p.rect.pos + plHalf;
-			Vec2f emCenter = e.rect.pos + emHalf;
+			//Vec2f plCenter = p.rect.pos + plHalf;
+			//Vec2f emCenter = e.rect.pos + emHalf;
 
 			// 中心間の距離と辺の長さで判定
-			if (std::fabs(plCenter.x - emCenter.x) < fabs(plHalf.x + emHalf.x) &&
-				std::fabs(plCenter.y - emCenter.y) < fabs(plHalf.y + emHalf.y))
+			//if (std::fabs(plCenter.x - emCenter.x) < fabs(plHalf.x + emHalf.x) &&
+			//	std::fabs(plCenter.y - emCenter.y) < fabs(plHalf.y + emHalf.y))
+			if (CheckColBox(pBox, eBox))
 			{
 				Vec2f dir = pl.lock()->GetPos() - GetPos();
 				if (p.type == HitType::Attack)
@@ -71,6 +75,34 @@ void Enemy::CheckHit()
 	}
 }
 
+void Enemy::CheckHitEffect()
+{
+	auto effect = EffectManager::Get().GetEffect(EffectType::Slashing);
+	for (auto& ef : effect.lock()->GetRect())
+	{
+		for (auto& em : GetRect())
+		{
+			if (em.type == HitType::Attack)
+			{
+				continue;
+			}
+
+			Box efBox = Box(ef.rect.pos, ef.rect.size);
+			Box emBox = Box(em.rect.pos, em.rect.size);
+
+			if (CheckColBox(efBox, emBox))
+			{
+				Vec2f dir = pl.lock()->GetPos() - GetPos();
+				SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
+				KnockBack(-dir);
+				SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
+				ChangeState("Damage");
+				EffectManager::Get().Create(EffectType::Flower, tex.pos, pl);
+			}
+		}
+	}
+}
+
 // 視界判定
 bool Enemy::CheckView()
 {
@@ -96,6 +128,18 @@ bool Enemy::CheckView()
 		{
 			return true;
 		}
+	}
+
+	return false;
+}
+
+// 矩形同士の衝突判定
+bool Enemy::CheckColBox(const Box& box1, const Box& box2)
+{
+	if (fabs(box1.centor.x - box2.centor.x) < fabs(box1.half.x + box2.half.x) &&
+		fabs(box1.centor.y - box2.centor.y) < fabs(box1.half.y + box2.half.y))
+	{
+		return true;
 	}
 
 	return false;

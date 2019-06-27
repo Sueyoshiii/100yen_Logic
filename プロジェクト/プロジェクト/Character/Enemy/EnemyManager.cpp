@@ -46,9 +46,9 @@ void EnemyManager::Draw()
 }
 
 // è¢ä´
-void EnemyManager::Summons(const EM& em, const Vec2f& pos, std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
+void EnemyManager::Summons(const Enemies& em, const Vec2f& pos, std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
 {
-	if (em == EM::Wolf)
+	if (em == Enemies::Wolf)
 	{
 		map[em] = std::make_shared<Wolf>(lib, pl, cam, pos);
 		list.emplace_back(map[em]);

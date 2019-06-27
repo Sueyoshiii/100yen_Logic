@@ -25,17 +25,19 @@ void EffectManager::Update()
 {
 	for (auto itr = list.begin(); itr != list.end();)
 	{
-		if ((*itr)->GetDeleteFlag())
-		{
-			//(*itr)->Delete();
-			//itr = list.erase(itr);
-			//continue;
-		}
-		else
-		{
-		}
-			(*itr)->Update();
-			++itr;
+		//if ((*itr)->GetDeleteFlag())
+		//{
+		//	(*itr)->Delete();
+		//	itr = list.erase(itr);
+		//	continue;
+		//}
+		//else
+		//{
+		//	(*itr)->Update();
+		//	++itr;
+		//}
+		(*itr)->Update();
+		++itr;
 	}
 }
 
@@ -62,4 +64,9 @@ void EffectManager::CreateSlash(const std::string& state, const Vec2f& pos, cons
 {
 	map[EffectType::Slashing] = std::make_shared<Slash>(state, pos, size, turnFlag);
 	list.push_back(map[EffectType::Slashing]);
+}
+
+std::weak_ptr<CharaEffect> EffectManager::GetEffect(const EffectType& type)
+{
+	return map[type];
 }

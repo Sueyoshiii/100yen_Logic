@@ -238,13 +238,14 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 			{
 				attackCnt = 0;
 				stopFlag = false;
+
 				auto itr = state.rbegin();
 				char& numStr = *itr;
 				int num = atoi(&numStr);
-				++num;
-				std::string next = "Attack" + std::to_string(num);
+				std::string next = "Attack" + std::to_string(++num);
+
 				ChangeState(next);
-				//EffectManager::Get().CreateSlash(next, tex.pos, tex.size, turnFlag);
+				EffectManager::Get().CreateSlash(next, tex.pos, tex.size, turnFlag);
 			}
 			CheckDash();
 		}

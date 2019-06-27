@@ -37,8 +37,13 @@ void Slash::Draw()
 void Slash::Draw(std::weak_ptr<MyLib> lib)
 {
 	this->lib = lib;
-	AnimationUpdate();
 
+	if (deleteFlag) 
+	{
+		return;
+	}
+
+	AnimationUpdate();
 	DrawImage();
 
 #ifdef _DEBUG

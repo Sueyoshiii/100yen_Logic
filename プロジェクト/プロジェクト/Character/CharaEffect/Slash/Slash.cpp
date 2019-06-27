@@ -6,12 +6,16 @@ Slash::Slash(const std::string& state, const Vec2f& pos, const Vec2f& size, cons
 {
 	InitState();
 
-	this->turnFlag = turnFlag;
 	this->state = stateMap[state];
+
 	LoadData("data/chara/player_effect.info");
 	LoadImage("img/Player/player_effect.png");
+
 	ChangeState(this->state);
-	tex.pos = Vec2f(pos.x + size.x / 2.0f, pos.y);
+
+	this->turnFlag = turnFlag;
+	float x  = this->turnFlag ? pos.x - size.x / 1.5f : pos.x + size.x / 1.5f;
+	tex.pos  = Vec2f(x, pos.y);
 	tex.size = size;
 }
 
@@ -32,13 +36,20 @@ void Slash::Draw()
 }
 void Slash::Draw(std::weak_ptr<MyLib> lib)
 {
-	if (deleteFlag)
-	{
-		return;
-	}
+	this->lib = lib;
 	AnimationUpdate();
 
 	DrawImage();
+
+#ifdef _DEBUG
+	DrawRect();
+#endif
+}
+
+// çÌèú
+void Slash::Delete()
+{
+	tex.Delete("img/Player/player_effect.png");
 }
 
 // èÛë‘èâä˙âª
@@ -48,6 +59,7 @@ void Slash::InitState()
 	stateMap["Attack2"] = "second";
 	stateMap["Attack3"] = "third";
 
+	func.clear();
 	func["first"]  = std::bind(&Slash::FirstAttackUpdate, this);
 	func["second"] = std::bind(&Slash::SecondAttackUpdate, this);
 	func["third"]  = std::bind(&Slash::ThirdAttackUpdate, this);

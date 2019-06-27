@@ -65,5 +65,9 @@ void GameMain::UpData()
 	bg->Update();
 	//Enemy.Update();
 	pl->Update();
+	if (INPUT.IsTrigger(Key::Q))
+	{
+		Effects.Create(EffectType::Flower, Vec2f(), pl);
+	}
 	Effects.Update();
 }

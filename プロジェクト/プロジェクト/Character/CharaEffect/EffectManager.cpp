@@ -27,14 +27,15 @@ void EffectManager::Update()
 	{
 		if ((*itr)->GetDeleteFlag())
 		{
-			itr = list.erase(itr);
-			continue;
+			//(*itr)->Delete();
+			//itr = list.erase(itr);
+			//continue;
 		}
 		else
 		{
+		}
 			(*itr)->Update();
 			++itr;
-		}
 	}
 }
 

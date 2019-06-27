@@ -210,7 +210,7 @@ void Player::CheckFirstAttack()
 		attackFlag = true;
 		attackCnt  = 0;
 		ChangeState("Attack1");
-		EffectManager::Get().CreateSlash(state, worldPos, tex.size, turnFlag);
+		EffectManager::Get().CreateSlash(state, tex.pos, tex.size, turnFlag);
 	}
 }
 

@@ -33,7 +33,7 @@ Flower::Flower(const Vec2f& pos, std::weak_ptr<Player> pl)
 // デストラクタ
 Flower::~Flower()
 {
-	texs.clear();
+	Delete();
 }
 
 // 更新
@@ -55,8 +55,20 @@ void Flower::Draw(std::weak_ptr<MyLib> lib)
 {
 	for (auto& t : texs)
 	{
-		lib.lock()->Draw(t);
+		lib.lock()->Draw(t, alpha);
 	}
+}
+
+// 削除
+void Flower::Delete()
+{
+	unsigned int index = 0;
+	for (auto& t : texs)
+	{
+		t.Delete(path[index]);
+		++index;
+	}
+	texs.clear();
 }
 
 // ドロップ
@@ -96,6 +108,7 @@ void Flower::SuctionUpdate()
 		if (fabs(dis.x) < fabs(pHalf.x + half.x) &&
 			fabs(dis.y) < fabs(pHalf.y + half.y))
 		{
+			alpha = 0.0f;
 			deleteFlag = true;
 		}
 	}

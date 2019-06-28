@@ -28,17 +28,6 @@ void Enemy::CheckHit()
 			Box pBox = Box(p.rect.pos, p.rect.size);
 			Box eBox = Box(e.rect.pos, e.rect.size);
 
-			// 矩形の半分のサイズ
-			//Vec2f plHalf = p.rect.size / 2.0f;
-			//Vec2f emHalf = e.rect.size / 2.0f;
-
-			// 矩形の中心
-			//Vec2f plCenter = p.rect.pos + plHalf;
-			//Vec2f emCenter = e.rect.pos + emHalf;
-
-			// 中心間の距離と辺の長さで判定
-			//if (std::fabs(plCenter.x - emCenter.x) < fabs(plHalf.x + emHalf.x) &&
-			//	std::fabs(plCenter.y - emCenter.y) < fabs(plHalf.y + emHalf.y))
 			if (CheckColBox(pBox, eBox))
 			{
 				Vec2f dir = pl.lock()->GetPos() - GetPos();

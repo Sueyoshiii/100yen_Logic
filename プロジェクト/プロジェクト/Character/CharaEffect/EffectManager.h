@@ -4,6 +4,15 @@
 
 class Player;
 
+struct ListParameter
+{
+	EffectType type;
+	std::shared_ptr<CharaEffect> ptr;
+	ListParameter() : type(EffectType::Flower), ptr(nullptr) {}
+	ListParameter(const EffectType& type, std::shared_ptr<CharaEffect> ptr) :
+		type(type), ptr(ptr) {}
+};
+
 class EffectManager
 {
 public:
@@ -21,13 +30,15 @@ public:
 	void Create(const EffectType& type, const Vec2f& pos, std::weak_ptr<Player> pl);
 	void CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 
-	// エフェクト取得
-	std::weak_ptr<CharaEffect> GetEffect(const EffectType& type);
+	// エフェクトリスト取得
+	std::list<ListParameter> GetEffectList();
 private:
 	EffectManager();
 	EffectManager(const EffectManager&) = delete;
 	void operator=(const EffectManager&) = delete;
 
 	std::unordered_map<EffectType, std::shared_ptr<CharaEffect>> map;
-	std::list<std::shared_ptr<CharaEffect>> list;
+	std::list<ListParameter> list;
+	//std::list<std::shared_ptr<CharaEffect>> list;
+	//std::unordered_map<EffectType, std::list<std::shared_ptr<CharaEffect>>> list;
 };

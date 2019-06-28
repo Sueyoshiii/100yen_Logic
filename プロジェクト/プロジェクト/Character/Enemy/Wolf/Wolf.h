@@ -25,6 +25,14 @@ private:
 	// •à‚«
 	void WalkUpdate();
 	void CheckWalk();
+	// ˆĞŠd
+	void ThreatUpdate();
+	// ™ôšK
+	void HowlingUpdate();
+	// ’Ç‚¢‚©‚¯‚é
+	void RunUpdate();
+	// —­‚ß
+	void SaveUpdate();
 	// UŒ‚
 	void AttackUpdate();
 	void CheckAttack();

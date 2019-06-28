@@ -25,28 +25,38 @@ void EffectManager::Update()
 {
 	for (auto itr = list.begin(); itr != list.end();)
 	{
-		//if ((*itr)->GetDeleteFlag())
-		//{
-		//	(*itr)->Delete();
-		//	itr = list.erase(itr);
-		//	continue;
-		//}
-		//else
-		//{
-		//	(*itr)->Update();
-		//	++itr;
-		//}
-		(*itr)->Update();
-		++itr;
+		if ((*itr).ptr->GetDeleteFlag())
+		{
+			//(*itr).ptr->Delete();
+			itr = list.erase(itr);
+			continue;
+		}
+		else
+		{
+			(*itr).ptr->Update();
+			++itr;
+		}
+		//(*itr).ptr->Update();
+		//++itr;
 	}
 }
 
 // 描画
 void EffectManager::Draw(std::weak_ptr<MyLib> lib)
 {
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
+	for (auto itr = list.begin(); itr != list.end();)
 	{
-		(*itr)->Draw(lib);
+		if ((*itr).ptr->GetDeleteFlag())
+		{
+			//(*itr).ptr->Delete();
+			itr = list.erase(itr);
+			continue;
+		}
+		else
+		{
+			(*itr).ptr->Draw(lib);
+			++itr;
+		}
 	}
 }
 
@@ -56,17 +66,18 @@ void EffectManager::Create(const EffectType& type, const Vec2f& pos, std::weak_p
 	if (type == EffectType::Flower)
 	{
 		map[type] = std::make_shared<Flower>(pos, pl);
-		list.push_back(map[type]);
+		list.push_back(ListParameter(EffectType::Flower, map[type]));
 	}
 }
 
 void EffectManager::CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag)
 {
 	map[EffectType::Slashing] = std::make_shared<Slash>(state, pos, size, turnFlag);
-	list.push_back(map[EffectType::Slashing]);
+	list.push_back(ListParameter(EffectType::Slashing, map[EffectType::Slashing]));
 }
 
-std::weak_ptr<CharaEffect> EffectManager::GetEffect(const EffectType& type)
+// エフェクトリスト取得
+std::list<ListParameter> EffectManager::GetEffectList()
 {
-	return map[type];
+	return list;
 }

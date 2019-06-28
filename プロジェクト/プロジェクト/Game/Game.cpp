@@ -34,9 +34,9 @@ void Game::Update()
 {
 	while (lib->CheckMsg() && !(Input::Get().IsKey(Key::Escape)))
 	{
-		scene->UpData();
 
 		Draw();
+		scene->UpData();
 	}
 }
 

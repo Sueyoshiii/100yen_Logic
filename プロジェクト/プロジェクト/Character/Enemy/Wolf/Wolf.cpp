@@ -12,7 +12,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	LoadImage("img/Enemy/Enemy_1.png");
 
 	InitFunc();
-	ChangeState("Walk");
+	ChangeState("Neutral");
 
 	tex.size *= 2.0f;
 
@@ -167,6 +167,26 @@ void Wolf::CheckWalk()
 	ChangeState("Walk");
 }
 
+// ˆĞŠd
+void Wolf::ThreatUpdate()
+{
+}
+
+// ™ôšK
+void Wolf::HowlingUpdate()
+{
+}
+
+// ’Ç‚¢‚©‚¯‚é
+void Wolf::RunUpdate()
+{
+}
+
+// —­‚ß
+void Wolf::SaveUpdate()
+{
+}
+
 // UŒ‚
 void Wolf::AttackUpdate()
 {
@@ -242,7 +262,11 @@ void Wolf::InitFunc()
 
 	func["Neutral"] = std::bind(&Wolf::NeutralUpdate, this);
 	func["Walk"]    = std::bind(&Wolf::WalkUpdate, this);
-	func["Attack1"] = std::bind(&Wolf::AttackUpdate, this);
+	func["Threat"]  = std::bind(&Wolf::ThreatUpdate, this);
+	func["Howling"] = std::bind(&Wolf::HowlingUpdate, this);
+	func["Run"]     = std::bind(&Wolf::RunUpdate, this);
+	func["Save"]    = std::bind(&Wolf::SaveUpdate, this);
+	func["Attack"]  = std::bind(&Wolf::AttackUpdate, this);
 	func["Damage"]  = std::bind(&Wolf::DamageUpdate, this);
 	func["Death"]   = std::bind(&Wolf::DeathUpdate, this);
 }

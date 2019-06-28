@@ -77,27 +77,38 @@ void Enemy::CheckHit()
 
 void Enemy::CheckHitEffect()
 {
-	auto effect = EffectManager::Get().GetEffect(EffectType::Slashing);
-	for (auto& ef : effect.lock()->GetRect())
+	auto list = EffectManager::Get().GetEffectList();
+
+	for (auto itr = list.begin(); itr != list.end(); ++itr)
 	{
-		for (auto& em : GetRect())
+		// �ԁA�폜�ς݂͑ΏۊO
+		if ((*itr).type == EffectType::Flower || (*itr).ptr->GetDeleteFlag())
 		{
-			if (em.type == HitType::Attack)
-			{
-				continue;
-			}
+			continue;
+		}
 
-			Box efBox = Box(ef.rect.pos, ef.rect.size);
-			Box emBox = Box(em.rect.pos, em.rect.size);
-
-			if (CheckColBox(efBox, emBox))
+		for (auto& ef : (*itr).ptr->GetRect())
+		{
+			for (auto& em : GetRect())
 			{
-				Vec2f dir = pl.lock()->GetPos() - GetPos();
-				SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
-				KnockBack(-dir);
-				SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
-				ChangeState("Damage");
-				EffectManager::Get().Create(EffectType::Flower, tex.pos, pl);
+				if (em.type == HitType::Attack)
+				{
+					continue;
+				}
+				Box efBox = Box(ef.rect.pos, ef.rect.size);
+				Box emBox = Box(em.rect.pos, em.rect.size);
+
+				if (CheckColBox(efBox, emBox))
+				{
+					Vec2f dir = pl.lock()->GetPos() - GetPos();
+					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
+					KnockBack(-dir);
+					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
+					ChangeState("Damage");
+					EffectManager::Get().Create(EffectType::Flower, tex.pos, pl);
+
+					break;
+				}
 			}
 		}
 	}

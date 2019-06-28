@@ -40,14 +40,6 @@ Wolf::~Wolf()
 // XV
 void Wolf::Update()
 {
-	if (pl.lock()->GetState() == "Death")
-	{
-		if (state != "Neutral" && state != "Walk")
-		{
-			ChangeState("Neutral");
-		}
-	}
-
 	func[state]();
 
 	FallUpdate();
@@ -276,7 +268,7 @@ void Wolf::DamageUpdate()
 			cnt = 0;
 			if (cParam.hp > 0)
 			{
-				ChangeState("Threat");
+				CheckTreat();
 			}
 			else
 			{

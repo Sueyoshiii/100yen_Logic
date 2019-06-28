@@ -25,19 +25,19 @@ void EffectManager::Update()
 {
 	for (auto itr = list.begin(); itr != list.end();)
 	{
-		if ((*itr).ptr->GetDeleteFlag())
-		{
-			//(*itr).ptr->Delete();
-			itr = list.erase(itr);
-			continue;
-		}
-		else
-		{
-			(*itr).ptr->Update();
-			++itr;
-		}
-		//(*itr).ptr->Update();
-		//++itr;
+		//if ((*itr).ptr->GetDeleteFlag())
+		//{
+		//	//(*itr).ptr->Delete();
+		//	itr = list.erase(itr);
+		//	continue;
+		//}
+		//else
+		//{
+		//	(*itr).ptr->Update();
+		//	++itr;
+		//}
+		(*itr).ptr->Update();
+		++itr;
 	}
 }
 
@@ -46,17 +46,19 @@ void EffectManager::Draw(std::weak_ptr<MyLib> lib)
 {
 	for (auto itr = list.begin(); itr != list.end();)
 	{
-		if ((*itr).ptr->GetDeleteFlag())
-		{
-			//(*itr).ptr->Delete();
-			itr = list.erase(itr);
-			continue;
-		}
-		else
-		{
-			(*itr).ptr->Draw(lib);
-			++itr;
-		}
+		//if ((*itr).ptr->GetDeleteFlag())
+		//{
+		//	//(*itr).ptr->Delete();
+		//	itr = list.erase(itr);
+		//	continue;
+		//}
+		//else
+		//{
+		//	(*itr).ptr->Draw(lib);
+		//	++itr;
+		//}
+		(*itr).ptr->Draw(lib);
+		++itr;
 	}
 }
 

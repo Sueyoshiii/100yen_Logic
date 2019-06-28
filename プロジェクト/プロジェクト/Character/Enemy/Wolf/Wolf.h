@@ -18,21 +18,21 @@ private:
 	void InitFunc();
 	// ë“ã@
 	void NeutralUpdate();
-	// úpúj
-	void Loitering();
-	// î≠å©
-	void Alert();
 	// ï‡Ç´
 	void WalkUpdate();
 	void CheckWalk();
-	// à–äd
-	void ThreatUpdate();
 	// ôÙöK
 	void HowlingUpdate();
+	void CheckHowling();
+	// à–äd
+	void ThreatUpdate();
+	void CheckTreat();
 	// í«Ç¢Ç©ÇØÇÈ
 	void RunUpdate();
+	void CheckRun();
 	// ó≠Çﬂ
 	void SaveUpdate();
+	void CheckSave();
 	// çUåÇ
 	void AttackUpdate();
 	void CheckAttack();
@@ -49,4 +49,8 @@ private:
 
 	// î≠å©ÉtÉâÉO
 	bool discovery;
+
+	unsigned int cnt;
+
+	bool coolFlag;
 };

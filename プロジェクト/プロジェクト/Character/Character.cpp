@@ -141,10 +141,10 @@ void Character::AnimationUpdate()
 }
 
 // アニメーションの終了を調べる
-bool Character::CheckAnimEnd()
+bool Character::CheckAnimEnd(const unsigned int num)
 {
-	if (index >= info.lock()->at(state).rect.size() - 1 &&
-		frame >= info.lock()->at(state).animTime)
+	if (index >= info.lock()->at(state).rect.size() - num &&
+		frame >= info.lock()->at(state).animTime - (num -1))
 	{
 		return true;
 	}

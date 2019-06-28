@@ -131,7 +131,7 @@ protected:
 	void AnimationUpdate();
 
 	// アニメーションの終了を調べる
-	bool CheckAnimEnd();
+	bool CheckAnimEnd(const unsigned int num = 1);
 
 	// ローカル座標の更新
 	void UpdateLocalPos();

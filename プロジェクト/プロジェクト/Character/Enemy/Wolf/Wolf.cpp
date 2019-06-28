@@ -2,7 +2,7 @@
 
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam, const Vec2f& pos) :
-	discovery(false)
+	discovery(false), cnt(0), coolFlag(false)
 {
 	this->lib = lib;
 	this->pl  = pl;
@@ -17,7 +17,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	tex.size *= 2.0f;
 
 	// hp, speed, attack, defense, dush, jump
-	cParam = CharacterParameter(1, 2.0f, 2, 2, 10.0f, -30.0f);
+	cParam = CharacterParameter(2, 2.0f, 2, 2, 10.0f, -30.0f);
 
 	vel = Vec2f(cParam.speed, 0.0f);
 
@@ -40,6 +40,14 @@ Wolf::~Wolf()
 // XV
 void Wolf::Update()
 {
+	if (pl.lock()->GetState() == "Death")
+	{
+		if (state != "Neutral" && state != "Walk")
+		{
+			ChangeState("Neutral");
+		}
+	}
+
 	func[state]();
 
 	FallUpdate();
@@ -47,6 +55,7 @@ void Wolf::Update()
 	UpdateLocalPos();
 
 	CheckHit();
+	CheckHitEffect();
 }
 
 // •`‰æ
@@ -68,8 +77,13 @@ void Wolf::Draw()
 // ‘Ò‹@
 void Wolf::NeutralUpdate()
 {
+	if (tex.pos.y < Stage::Get().GetGround())
+	{
+		return;
+	}
+
 	static unsigned int cnt = 0;
-	if (oldState == "Walk" || oldState == "Attack1")
+	if (!CheckView())
 	{
 		if (!CheckAnimEnd())
 		{
@@ -85,62 +99,9 @@ void Wolf::NeutralUpdate()
 		}
 		++cnt;
 	}
-}
-// œpœj
-void Wolf::Loitering()
-{
-	worldPos.x += vel.x;
-
-	float size = tex.size.x * 2.0f;
-	if (pl.lock()->GetState() != "Death")
-	{
-		if (fulcrum.x - size >= worldPos.x ||
-			worldPos.x >= fulcrum.x + size)
-		{
-			oldState = state;
-			ChangeState("Neutral");
-		}
-	}
 	else
 	{
-		if (fulcrum.x - size >= worldPos.x)
-		{
-			turnFlag = false;
-			vel.x = cParam.speed;
-		}
-		else if (fulcrum.x + size <= worldPos.x)
-		{
-			turnFlag = true;
-			vel.x = -cParam.speed;
-		}
-	}
-}
-// ”­Œ©
-void Wolf::Alert()
-{
-	static unsigned int cnt = 0;
-	if ((++cnt) % 10 == 0)
-	{
-		if (worldPos.x > pl.lock()->GetWorldPos().x)
-		{
-			turnFlag = true;
-			vel.x = -cParam.speed;
-		}
-		else
-		{
-			turnFlag = false;
-			vel.x = cParam.speed;
-		}
-	}
-
-	float dis = fabs(worldPos.x - pl.lock()->GetWorldPos().x);
-	if (0.0f < dis && dis < 150)
-	{
-		CheckAttack();
-	}
-	else
-	{
-		worldPos.x += vel.x;
+		CheckHowling();
 	}
 }
 
@@ -150,41 +111,128 @@ void Wolf::WalkUpdate()
 	// Ž‹ŠE‚É‘¨‚¦‚é‚Ü‚Åœpœj
 	if (CheckView())
 	{
-		discovery = pl.lock()->GetState() != "Death" ? true : false;
-	}
-
-	if (discovery)
-	{
-		Alert();
+		CheckHowling();
 	}
 	else
 	{
-		Loitering();
+		worldPos.x += vel.x;
+
+		float size = tex.size.x * 2.0f;
+		if (fulcrum.x - size >= worldPos.x ||
+			worldPos.x >= fulcrum.x + size)
+		{
+			oldState = state;
+			ChangeState("Neutral");
+		}
 	}
 }
 void Wolf::CheckWalk()
 {
-	ChangeState("Walk");
+	ChangeState("walk");
+}
+
+// ™ôšK
+void Wolf::HowlingUpdate()
+{	
+	if (cnt > 20)
+	{
+		stopFlag = false;
+		if (CheckAnimEnd())
+		{
+			CheckTreat();
+		}
+	}
+	else
+	{
+		if (CheckAnimEnd(2))
+		{
+			stopFlag = true;
+			++cnt;
+		}
+	}
+}
+void Wolf::CheckHowling()
+{
+	cnt = 0;
+	ChangeState("Howling");
 }
 
 // ˆÐŠd
 void Wolf::ThreatUpdate()
 {
+	if (!coolFlag)
+	{
+		if (CheckAnimEnd())
+		{
+			stopFlag = true;
+			++cnt;
+		}
+		if (cnt > 10)
+		{
+			stopFlag = false;
+			CheckRun();
+		}
+	}
+	else
+	{
+		turnFlag = worldPos.x > pl.lock()->GetWorldPos().x ? true : false;
+		if ((++coolTime) > 120)
+		{
+			coolFlag = false;
+			coolTime = 0;
+			CheckRun();
+		}
+	}
 }
-
-// ™ôšK
-void Wolf::HowlingUpdate()
+void Wolf::CheckTreat()
 {
+	cnt = 0;
+	ChangeState("Threat");
 }
 
 // ’Ç‚¢‚©‚¯‚é
 void Wolf::RunUpdate()
 {
+	if (worldPos.x > pl.lock()->GetWorldPos().x)
+	{
+		turnFlag = true;
+		vel.x = -cParam.speed;
+	}
+	else
+	{
+		turnFlag = false;
+		vel.x = cParam.speed;
+	}
+
+	float dis = fabs(worldPos.x - pl.lock()->GetWorldPos().x);
+	if (0.0f < dis && dis < 150)
+	{
+		CheckSave();
+	}
+	else
+	{
+		worldPos.x += vel.x;
+	}
+}
+void Wolf::CheckRun()
+{
+	cnt = 0;
+	cParam.speed = 6.0f;
+	ChangeState("Run");
 }
 
 // —­‚ß
 void Wolf::SaveUpdate()
 {
+	if (CheckAnimEnd())
+	{
+		CheckAttack();
+	}
+}
+void Wolf::CheckSave()
+{
+	cnt = 0;
+	ChangeState("Save");
 }
 
 // UŒ‚
@@ -192,25 +240,24 @@ void Wolf::AttackUpdate()
 {
 	if (CheckAnimEnd())
 	{
-		stopFlag = true;
-		if ((++coolTime) > 80)
+		if (tex.pos.y >= Stage::Get().GetGround())
 		{
-			stopFlag = false;
-			ChangeState("Neutral");
+			coolFlag = true;
+			coolTime = 0;
+			CheckTreat();
 		}
 	}
 	else
 	{
-		vel.x = worldPos.x > oldPlPos.x ? -cParam.speed * 2.0f : cParam.speed * 2.0f;
 		worldPos.x += vel.x;
 	}
 }
 void Wolf::CheckAttack()
 {
-	coolTime = 0;
-	vel.y = cParam.jumpPow;
 	oldPlPos = pl.lock()->GetWorldPos();
-	ChangeState("Attack1");
+	vel.x    = worldPos.x > oldPlPos.x ? -cParam.speed : cParam.speed;
+	vel.y    = cParam.jumpPow;
+	ChangeState("Attack");
 }
 
 // ”íƒ_ƒ[ƒW
@@ -229,7 +276,7 @@ void Wolf::DamageUpdate()
 			cnt = 0;
 			if (cParam.hp > 0)
 			{
-				ChangeState("Walk");
+				ChangeState("Threat");
 			}
 			else
 			{
@@ -261,9 +308,9 @@ void Wolf::InitFunc()
 	func.clear();
 
 	func["Neutral"] = std::bind(&Wolf::NeutralUpdate, this);
-	func["Walk"]    = std::bind(&Wolf::WalkUpdate, this);
-	func["Threat"]  = std::bind(&Wolf::ThreatUpdate, this);
+	func["walk"]    = std::bind(&Wolf::WalkUpdate, this);
 	func["Howling"] = std::bind(&Wolf::HowlingUpdate, this);
+	func["Threat"]  = std::bind(&Wolf::ThreatUpdate, this);
 	func["Run"]     = std::bind(&Wolf::RunUpdate, this);
 	func["Save"]    = std::bind(&Wolf::SaveUpdate, this);
 	func["Attack"]  = std::bind(&Wolf::AttackUpdate, this);

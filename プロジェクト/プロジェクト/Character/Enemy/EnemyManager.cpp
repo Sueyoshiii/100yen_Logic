@@ -23,16 +23,18 @@ void EnemyManager::Update()
 {
 	for (auto itr = list.begin(); itr != list.end();)
 	{
-		if ((*itr)->GetDeleteFlag())
-		{
-			itr = list.erase(itr);
-			continue;
-		}
-		else
-		{
-			(*itr)->Update();
-			++itr;
-		}
+		//if ((*itr)->GetDeleteFlag())
+		//{
+		//	itr = list.erase(itr);
+		//	continue;
+		//}
+		//else
+		//{
+		//	(*itr)->Update();
+		//	++itr;
+		//}
+		(*itr)->Update();
+		++itr;
 	}
 }
 

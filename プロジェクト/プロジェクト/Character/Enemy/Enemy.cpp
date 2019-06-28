@@ -119,6 +119,11 @@ bool Enemy::CheckView()
 {
 	auto p = pl.lock();
 
+	if (p->GetState() == "Death")
+	{
+		return false;
+	}
+
 	float length = turnFlag ? -lib.lock()->GetWinSize().x / 3.0f : lib.lock()->GetWinSize().x / 3.0f;
 
 	// ‹ŠEü

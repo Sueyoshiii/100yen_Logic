@@ -42,18 +42,9 @@ void EffectManager::Update()
 // •`‰æ
 void EffectManager::Draw(std::weak_ptr<MyLib> lib)
 {
-	for (auto itr = list.begin(); itr != list.end();)
+	for (auto itr = list.begin(); itr != list.end(); ++itr)
 	{
-		if ((*itr).ptr->GetDeleteFlag())
-		{
-			itr = list.erase(itr);
-			continue;
-		}
-		else
-		{
-			(*itr).ptr->Draw(lib);
-			++itr;
-		}
+		(*itr).ptr->Draw(lib);
 	}
 }
 

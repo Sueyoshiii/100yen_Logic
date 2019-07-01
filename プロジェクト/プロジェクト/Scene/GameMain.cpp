@@ -10,9 +10,10 @@
 GameMain::GameMain(std::weak_ptr<MyLib> lib)
 {
 	this->lib = lib;
+
 	cam = std::make_shared<Camera>(lib);
-	bg = std::make_shared <BackGround>(lib, cam);
-	pl = std::make_shared<Player>(lib, cam);
+	bg  = std::make_shared <BackGround>(lib, cam);
+	pl  = std::make_shared<Player>(lib, cam);
 
 	// ステージデータの読み込み
 	Stage::Get().Load(cam, "data/stage/map.json", "img/Stage/tileset.png");
@@ -52,15 +53,25 @@ void GameMain::Draw()
 	// プレイヤー
 	pl->Draw();
 
+	// エフェクト
 	EffectManager::Get().Draw(lib);
 }
 
 // 処理
 void GameMain::UpData()
 {
+	// カメラ
 	cam->Update();
+
+	// 背景
 	bg->Update();
+
+	// 敵
 	EnemyManager::Get().Update();
+
+	// プレイヤー
 	pl->Update();
+
+	// エフェクト
 	EffectManager::Get().Update();
 }

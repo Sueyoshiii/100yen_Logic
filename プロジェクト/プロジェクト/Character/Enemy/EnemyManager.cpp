@@ -34,8 +34,6 @@ void EnemyManager::Update()
 			(*itr)->Update();
 			++itr;
 		}
-		//(*itr)->Update();
-		//++itr;
 	}
 }
 

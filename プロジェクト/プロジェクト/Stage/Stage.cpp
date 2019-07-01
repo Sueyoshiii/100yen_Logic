@@ -12,7 +12,7 @@ const float Stage::ConstParam::GROUND = 1000.0f;
 // コンストラクタ
 Stage::Stage()
 {
-	range = Stage::Rect(Vec2f(0, 0), 640 * 10, 640);
+	range = Stage::Rect(Vec2f(0, 0), 1280 * 5, 640);
 	Init();
 }
 

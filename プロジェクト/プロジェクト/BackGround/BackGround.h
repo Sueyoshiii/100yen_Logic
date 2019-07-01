@@ -20,6 +20,10 @@ private:
 	// ”wŒi‰æ‘œ
 	std::vector<Texture> tex;
 
+	std::vector<Texture> layer1;
+	std::vector<Texture> layer2;
+	std::vector<Texture> layer3;
+
 	// ƒ‰ƒCƒuƒ‰ƒŠ
 	std::weak_ptr<MyLib> lib;
 

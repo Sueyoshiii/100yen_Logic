@@ -6,6 +6,8 @@
 #include "../Character/Enemy/EnemyManager.h"
 #include "../Character/CharaEffect/EffectManager.h"
 
+#include "../Json/JsonLoader.h"
+
 // コンストラクタ
 GameMain::GameMain(std::weak_ptr<MyLib> lib)
 {
@@ -20,13 +22,16 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);
-
+	
 	// 敵さん達
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(800.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1000.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
+
+	// test
+	//JsonLoader::Get().Load("data/stage/map.json");
 
 #ifdef _DEBUG
 	std::cout << "GameMain Scene" << std::endl;

@@ -122,7 +122,6 @@ private:
 	Stage(const Stage&) = delete;
 	void operator=(const Stage&) = delete;
 
-
 	// •¶š—ñ‚ğ”’l‚É•ÏŠ·
 	template<typename T>
 	T GetValue(const boost::property_tree::ptree& tree, const std::string& str)

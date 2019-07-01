@@ -46,8 +46,8 @@ void Wolf::Update()
 
 	UpdateLocalPos();
 
-	CheckHit();
-	CheckHitEffect();
+	//CheckHit();
+	//CheckHitEffect();
 }
 
 // •`‰æ

@@ -29,8 +29,9 @@ public:
 	// 描画
 	void Draw(std::weak_ptr<MyLib> lib);
 
-	// 生成
+	// 花生成
 	void CreateFlower(const Vec2f& pos, std::weak_ptr<Player> pl);
+	// 斬撃生成
 	void CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 
 	// エフェクトリスト取得

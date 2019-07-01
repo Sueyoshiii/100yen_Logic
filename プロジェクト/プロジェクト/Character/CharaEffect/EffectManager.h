@@ -30,7 +30,7 @@ public:
 	void Draw(std::weak_ptr<MyLib> lib);
 
 	// 生成
-	void Create(const EffectType& type, const Vec2f& pos, std::weak_ptr<Player> pl);
+	void CreateFlower(const Vec2f& pos, std::weak_ptr<Player> pl);
 	void CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 
 	// エフェクトリスト取得
@@ -42,6 +42,4 @@ private:
 
 	std::unordered_map<EffectType, std::shared_ptr<CharaEffect>> map;
 	std::list<ListParameter> list;
-	//std::list<std::shared_ptr<CharaEffect>> list;
-	//std::unordered_map<EffectType, std::list<std::shared_ptr<CharaEffect>>> list;
 };

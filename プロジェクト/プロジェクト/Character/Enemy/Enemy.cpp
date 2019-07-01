@@ -37,7 +37,7 @@ void Enemy::CheckHit()
 					KnockBack(-dir);
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 					ChangeState("Damage");
-					EffectManager::Get().Create(EffectType::Flower, tex.pos, pl);
+					EffectManager::Get().CreateFlower(tex.pos, pl);
 				}
 				else
 				{
@@ -94,7 +94,7 @@ void Enemy::CheckHitEffect()
 					KnockBack(-dir);
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 					ChangeState("Damage");
-					EffectManager::Get().Create(EffectType::Flower, tex.pos, pl);
+					EffectManager::Get().CreateFlower(tex.pos, pl);
 
 					break;
 				}

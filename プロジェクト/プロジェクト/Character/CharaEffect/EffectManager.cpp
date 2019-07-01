@@ -28,7 +28,6 @@ void EffectManager::Update()
 	{
 		if ((*itr).ptr->GetDeleteFlag())
 		{
-			//(*itr).ptr->Delete();
 			itr = list.erase(itr);
 			continue;
 		}
@@ -37,8 +36,6 @@ void EffectManager::Update()
 			(*itr).ptr->Update();
 			++itr;
 		}
-		//(*itr).ptr->Update();
-		//++itr;
 	}
 }
 
@@ -49,7 +46,6 @@ void EffectManager::Draw(std::weak_ptr<MyLib> lib)
 	{
 		if ((*itr).ptr->GetDeleteFlag())
 		{
-			//(*itr).ptr->Delete();
 			itr = list.erase(itr);
 			continue;
 		}
@@ -58,19 +54,14 @@ void EffectManager::Draw(std::weak_ptr<MyLib> lib)
 			(*itr).ptr->Draw(lib);
 			++itr;
 		}
-		//(*itr).ptr->Draw(lib);
-		//++itr;
 	}
 }
 
 // ê∂ê¨
-void EffectManager::Create(const EffectType& type, const Vec2f& pos, std::weak_ptr<Player> pl)
+void EffectManager::CreateFlower(const Vec2f& pos, std::weak_ptr<Player> pl)
 {
-	if (type == EffectType::Flower)
-	{
-		map[type] = std::make_shared<Flower>(pos, pl);
-		list.push_back(ListParameter(EffectType::Flower, map[type]));
-	}
+	map[EffectType::Flower] = std::make_shared<Flower>(pos, pl);
+	list.push_back(ListParameter(EffectType::Flower, map[EffectType::Flower]));
 }
 
 void EffectManager::CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag)

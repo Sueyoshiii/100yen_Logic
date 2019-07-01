@@ -9,6 +9,7 @@ EnemyManager::EnemyManager()
 // デストラクタ
 EnemyManager::~EnemyManager()
 {
+	list.clear();
 }
 
 // インスタンス

@@ -33,7 +33,6 @@ Flower::Flower(const Vec2f& pos, std::weak_ptr<Player> pl)
 // デストラクタ
 Flower::~Flower()
 {
-	//Delete();
 }
 
 // 更新

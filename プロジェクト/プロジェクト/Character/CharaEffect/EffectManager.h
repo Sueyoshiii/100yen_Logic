@@ -6,8 +6,11 @@ class Player;
 
 struct ListParameter
 {
+	// í•Ê
 	EffectType type;
+	// ƒf[ƒ^
 	std::shared_ptr<CharaEffect> ptr;
+
 	ListParameter() : type(EffectType::Flower), ptr(nullptr) {}
 	ListParameter(const EffectType& type, std::shared_ptr<CharaEffect> ptr) :
 		type(type), ptr(ptr) {}

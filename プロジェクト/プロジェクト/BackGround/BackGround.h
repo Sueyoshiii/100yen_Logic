@@ -2,8 +2,15 @@
 #include <MyLib.h>
 #include <memory>
 #include <vector>
+#include <array>
 
 class Camera;
+
+struct BackParameter
+{
+	std::array<Texture, 2> tex;
+	std::array<Vec2f, 2> oldPos;
+};
 
 class BackGround
 {
@@ -17,13 +24,6 @@ public:
 	// •`‰æ
 	void Draw();
 private:
-	// ”wŒi‰æ‘œ
-	std::vector<Texture> tex;
-
-	std::vector<Texture> layer1;
-	std::vector<Texture> layer2;
-	std::vector<Texture> layer3;
-
 	// ƒ‰ƒCƒuƒ‰ƒŠ
 	std::weak_ptr<MyLib> lib;
 
@@ -32,4 +32,9 @@ private:
 
 	// ”½“]ƒtƒ‰ƒO
 	bool turnFlag;
+
+	std::vector<BackParameter> layer;
+
+	Vec2f oldCamPos;
+	float offset;
 };

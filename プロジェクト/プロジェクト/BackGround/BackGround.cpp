@@ -10,10 +10,14 @@ namespace {
 BackGround::BackGround(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	lib(lib), cam(cam), turnFlag(false)
 {
-	path[0] = "img/Stage/Bushes_1.png";
-	path[1] = "img/Stage/Trees_2.png";
-	path[2] = "img/Stage/Trees_3.png";
-	path[3] = "img/Stage/Back.png";
+	path[0] = "img/Stage/kari/kari_1.png";
+	path[1] = "img/Stage/kari/kari_2.png";
+	path[2] = "img/Stage/kari/kari_3.png";
+	path[3] = "img/Stage/kari/kari_4.png";
+	//path[0] = "img/Stage/Bushes_1.png";
+	//path[1] = "img/Stage/Trees_2.png";
+	//path[2] = "img/Stage/Trees_3.png";
+	//path[3] = "img/Stage/Back.png";
 
 	layer.resize(LAYER_MAX);
 	unsigned int index = 0;
@@ -40,26 +44,26 @@ BackGround::~BackGround()
 // çXêV
 void BackGround::Update()
 {
-	//for (unsigned int i = 0; i < layer.size(); ++i)
-	//{
-	//	for (unsigned int j = 0; j < layer[i].tex.size() - 1; ++j)
-	//	{
-	//		float v = i < 2 ? -cam.lock()->GetPos().x : (oldCamPos.x - cam.lock()->GetPos().x) / offset;
-	//		layer[i].tex[j].pos.x = (layer[i].tex[j].size.x * j) + int(v) % int(layer[i].tex[j].size.x);
-	//	}
-	//}
+	for (unsigned int i = 0; i < layer.size() - 1; ++i)
+	{
+		for (unsigned int j = 0; j < layer[i].tex.size(); ++j)
+		{
+			float v = i < 2 ? -cam.lock()->GetPos().x : (oldCamPos.x - cam.lock()->GetPos().x) / offset;
+			layer[i].tex[j].pos.x = (layer[i].tex[j].size.x * j) + int(v) % int(layer[i].tex[j].size.x);
+		}
+	}
 }
 
 // ï`âÊ
 void BackGround::Draw()
 {
-	//for (int i = int(layer.size() - 1); i >= 0; --i)
-	//{
-	//	for (auto& t : layer[i].tex)
-	//	{
-	//		lib.lock()->Draw(t, 1.0f, turnFlag);
-	//	}
-	//}
+	for (int i = int(layer.size() - 1); i >= 0; --i)
+	{
+		for (auto& t : layer[i].tex)
+		{
+			lib.lock()->Draw(t, 1.0f, turnFlag);
+		}
+	}
 
-	lib.lock()->Draw(layer[3].tex[0]);
+	//lib.lock()->Draw(layer[3].tex[0]);
 }

@@ -7,12 +7,12 @@
 using namespace boost::property_tree;
 
 const float Stage::ConstParam::GR = 1.9f;
-const float Stage::ConstParam::GROUND = 1000.0f;
+const float Stage::ConstParam::GROUND = 1200.0f;
 
 // コンストラクタ
 Stage::Stage()
 {
-	range = Stage::Rect(Vec2f(0, 0), 1280 * 5, 640);
+	range = Stage::Rect(Vec2f(0, 0), 1280 * 10, 640);
 	Init();
 }
 

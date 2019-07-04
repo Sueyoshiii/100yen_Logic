@@ -2,7 +2,7 @@
 
 // コンストラクタ
 Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam, const Vec2f& pos) :
-	discovery(false), cnt(0), coolFlag(false)
+	discovery(false), cnt(0), coolFlag(false), coolTime(0)
 {
 	this->lib = lib;
 	this->pl  = pl;
@@ -42,12 +42,15 @@ void Wolf::Update()
 {
 	func[state]();
 
-	FallUpdate();
+	if (!jumpFlag && state != "Damage")
+	{
+		FallUpdate();
+	}
 
 	UpdateLocalPos();
 
-	//CheckHit();
-	//CheckHitEffect();
+	CheckHit();
+	CheckHitEffect();
 }
 
 // 描画
@@ -69,7 +72,7 @@ void Wolf::Draw()
 // 待機
 void Wolf::NeutralUpdate()
 {
-	if (tex.pos.y < Stage::Get().GetGround())
+	if (GetFootPos().y < Stage::Get().GetGround())
 	{
 		return;
 	}
@@ -216,6 +219,8 @@ void Wolf::CheckRun()
 // 溜め
 void Wolf::SaveUpdate()
 {
+	turnFlag = worldPos.x > pl.lock()->GetWorldPos().x ? true : false;
+
 	if (CheckAnimEnd())
 	{
 		CheckAttack();
@@ -230,22 +235,21 @@ void Wolf::CheckSave()
 // 攻撃
 void Wolf::AttackUpdate()
 {
-	if (CheckAnimEnd())
+	worldPos.x += vel.x;
+	vel.y += Stage::Get().GetGravity();
+	worldPos.y += vel.y;
+	if (GetFootPos().y > Stage::Get().GetGround())
 	{
-		if (tex.pos.y >= Stage::Get().GetGround())
-		{
-			coolFlag = true;
-			coolTime = 0;
-			CheckTreat();
-		}
-	}
-	else
-	{
-		worldPos.x += vel.x;
+		worldPos.y = Stage::Get().GetGround() - tex.size.y;
+		jumpFlag = false;
+		coolFlag = true;
+		coolTime = 0;
+		CheckTreat();
 	}
 }
 void Wolf::CheckAttack()
 {
+	jumpFlag = true;
 	oldPlPos = pl.lock()->GetWorldPos();
 	vel.x    = worldPos.x > oldPlPos.x ? -cParam.speed : cParam.speed;
 	vel.y    = cParam.jumpPow;
@@ -257,12 +261,17 @@ void Wolf::DamageUpdate()
 {
 	static unsigned int cnt = 0;
 	stopFlag = false;
-	if (worldPos.y < Stage::Get().GetGround())
+
+	vel.y += Stage::Get().GetGravity();
+	worldPos.y += vel.y;
+
+	if (GetFootPos().y < Stage::Get().GetGround())
 	{
 		worldPos.x += vel.x;
 	}
 	else
 	{
+		worldPos.y = Stage::Get().GetGround() - tex.size.y;
 		if ((++cnt) > 40)
 		{
 			cnt = 0;

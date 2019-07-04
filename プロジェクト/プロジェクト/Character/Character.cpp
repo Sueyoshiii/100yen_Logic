@@ -4,9 +4,9 @@
 Character::Character() :
 	state("Neutral"), oldState(state), worldPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
 	turnFlag(false), frame(0), animCnt(0), index(0), stopFlag(false), damage(0),
-	invincibleFlag(false), cParam(CharacterParameter()), knockBackRange(0.0f)
+	invincibleFlag(false), cParam(CharacterParameter()), knockBackRange(0.0f),
+	jumpFlag(false)
 {
-	InitState();
 }
 
 // デストラクタ
@@ -28,7 +28,7 @@ void Character::FallUpdate()
 {
 	vel.y += Stage::Get().GetGravity();
 	worldPos.y += vel.y;
-	worldPos.y = std::min(worldPos.y, Stage::Get().GetGround());
+	worldPos.y = std::min(GetFootPos().y, Stage::Get().GetGround() - tex.size.y);
 }
 
 // 状態遷移
@@ -182,27 +182,7 @@ void Character::InvicibleUpdate()
 void Character::KnockBack(const Vec2f& vec)
 {
 	float v = vec.x != 0.0f ? vec.x / std::fabs(vec.x) : -1.0f;
-	vel = Vec2f(knockBackRange / 2.0f * v, cParam.jumpPow / 2.0f);
-}
-
-// ステータス初期化
-void Character::InitState()
-{
-	//if (stMap.empty())
-	//{
-	//	stMap.clear();
-	//}
-
-	//stMap[CharacterState::Neutral] = "Neutral";
-	//stMap[CharacterState::Walk]    = "Walk";
-	//stMap[CharacterState::Jump]    = "Jump";
-	//stMap[CharacterState::Fall]    = "Fall";
-	//stMap[CharacterState::Dash]    = "Dash";
-	//stMap[CharacterState::Attack1] = "Attack1";
-	//stMap[CharacterState::Attack2] = "Attack2";
-	//stMap[CharacterState::Attack3] = "Attack3";
-	//stMap[CharacterState::Damage]  = "Damage";
-	//stMap[CharacterState::Death]   = "Death";
+	vel = Vec2f(knockBackRange / 2.0f * v, -25.0f);
 }
 
 // 衝突矩形を取得
@@ -261,6 +241,12 @@ std::string Character::GetState() const
 CharacterParameter Character::GetParam() const
 {
 	return cParam;
+}
+
+// 足元取得
+Vec2f Character::GetFootPos()
+{
+	return Vec2f(worldPos.x + tex.size.x / 2, worldPos.y + tex.size.y);
 }
 
 // 反転フラグセット

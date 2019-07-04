@@ -13,21 +13,6 @@
 
 #define INPUT Input::Get()
 
-// キャラクターの状態
-//enum class CharacterState
-//{
-//	Neutral,
-//	Walk,
-//	Jump,
-//	Fall,
-//	Dash,
-//	Attack1,
-//	Attack2,
-//	Attack3,
-//	Damage,
-//	Death
-//};
-
 // キャラクターのパラメータ
 struct CharacterParameter
 {
@@ -103,6 +88,9 @@ public:
 	// パラメータ取得
 	CharacterParameter GetParam()const;
 
+	// 足元取得
+	Vec2f GetFootPos();
+
 	// 反転フラグセット
 	void SetTurnFlag(const bool flag);
 
@@ -154,9 +142,6 @@ protected:
 	// 1つ前の状態
 	std::string oldState;
 
-	// 状態コンテナ
-	//std::unordered_map<CharacterState, std::string> stMap;
-
 	// ワールド座標
 	Vec2f worldPos;
 
@@ -198,10 +183,10 @@ protected:
 
 	// ダメージ
 	int damage;
-private:
-	// 状態初期化
-	void InitState();
 
+	// ジャンプフラグ
+	bool jumpFlag;
+private:
 	// 矩形
 	std::unordered_map<std::string, std::vector<std::vector<Primitive>>> box;
 };

@@ -46,20 +46,26 @@ GameMain::~GameMain()
 // 描画
 void GameMain::Draw()
 {
-	// 背景
-	bg->Draw();
+	if (pl->GetState() != "Death")
+	{
+		// 背景
+		bg->Draw();
 
-	// ステージ
-	Stage::Get().Draw(lib);
+		// ステージ
+		Stage::Get().Draw(lib);
 
-	// 敵
-	EnemyManager::Get().Draw();
+		// 敵
+		EnemyManager::Get().Draw();
+	}
 
 	// プレイヤー
 	pl->Draw();
 
-	// エフェクト
-	EffectManager::Get().Draw(lib);
+	if (pl->GetState() != "Death")
+	{
+		// エフェクト
+		EffectManager::Get().Draw(lib);
+	}
 }
 
 // 処理

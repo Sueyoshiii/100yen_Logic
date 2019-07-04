@@ -56,6 +56,7 @@ void Enemy::CheckHit()
 						pl.lock()->KnockBack(dir);
 						pl.lock()->SetDamage(cParam.attackPow, pl.lock()->GetParam().defensePow);
 						pl.lock()->ChangeState("Damage");
+						cam.lock()->SetVibrationFlag(true);
 					}
 				}
 				break;

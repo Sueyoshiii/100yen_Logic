@@ -21,6 +21,9 @@ public:
 
 	// 対象を設定
 	void SetFocus(std::weak_ptr<Player> pl);
+
+	// 振動フラグを設定
+	void SetVibrationFlag(const bool flag);
 private:
 	// 座標
 	Vec2f pos;
@@ -33,4 +36,13 @@ private:
 
 	// プレイヤー
 	std::weak_ptr<Player> pl;
+
+	// 振動フラグ
+	bool vibrationFlag;
+
+	Vec2f fulcrum;
+
+	float speed;
+
+	unsigned int vibrationCnt;
 };

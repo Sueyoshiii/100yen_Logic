@@ -25,7 +25,7 @@ BackGround::BackGround(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	}
 
 	oldCamPos = cam.lock()->GetPos();
-	offset = 10.0f;
+	offset = 5.0f;
 }
 
 // デストラクタ
@@ -36,19 +36,15 @@ BackGround::~BackGround()
 // 更新
 void BackGround::Update()
 {
-	unsigned int index = 0;
-	for (auto& i : layer)
+	for (unsigned int i = 0; i < layer.size(); ++i)
 	{
-		for (unsigned int j = 0; j < i.tex.size(); ++j)
+		for (unsigned int j = 0; j < layer[i].tex.size(); ++j)
 		{
-			i.tex[j].pos.x = (i.tex[j].size.x * j) - int(cam.lock()->GetPos().x) % int(i.tex[j].size.x);
+			float v = i < 2 ? -cam.lock()->GetPos().x : (oldCamPos.x - cam.lock()->GetPos().x) / offset;
+			layer[i].tex[j].pos.x = (layer[i].tex[j].size.x * j) + int(v) % int(layer[i].tex[j].size.x);
 		}
-		++index;
 	}
 
-	float v = (oldCamPos.x - cam.lock()->GetPos().x) / 10;
-	layer[2].tex[0].pos.x = layer[2].oldPos[0].x + v;
-	layer[2].tex[1].pos.x = layer[2].oldPos[1].x + v;
 }
 
 // 描画
@@ -56,7 +52,9 @@ void BackGround::Draw()
 {
 	for (int i = int(layer.size() - 1); i >= 0; --i)
 	{
-		lib.lock()->Draw(layer[i].tex[0], 1.0f, turnFlag);
-		lib.lock()->Draw(layer[i].tex[1], 1.0f, turnFlag);
+		for (auto& t : layer[i].tex)
+		{
+			lib.lock()->Draw(t, 1.0f, turnFlag);
+		}
 	}
 }

@@ -16,14 +16,14 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	InitFunc();
 	ChangeState("Neutral");
 
-	tex.size *= 2.0f;
+	tex.size *= 3.0f;
 
 	tex.pos = Vec2f(0.0f, 0.0f);
 	worldPos = cam.lock()->Correction(tex.pos);
 
 	// hp, speed, attack, defense, dush, jump
 	cParam = CharacterParameter(3, 5.0f, 2, 2, 10.0f, -40.0f);
-	vel     = Vec2f(cParam.speed, 0.0f);
+	vel = Vec2f(cParam.speed, 0.0f);
 
 	knockBackRange = 4.0f;
 }

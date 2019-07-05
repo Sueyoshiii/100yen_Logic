@@ -29,6 +29,7 @@ struct MapchipData
 {
 	int data;
 	Texture tex;
+	Vec2f worldPos;
 	MapchipData() : data(0), tex(Texture()){}
 	MapchipData(const int data, const Texture& tex) :
 		data(data), tex(tex) {}
@@ -104,10 +105,10 @@ public:
 	static Stage& Get();
 
 	// ステージデータ読み込み
-	int Load(std::weak_ptr<Camera> cam, const std::string& jsonFilePath, const std::string& imgFilePath);
+	int Load(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam, const std::string& jsonFilePath, const std::string& imgFilePath);
 
 	// 描画
-	void Draw(std::weak_ptr<MyLib> lib);
+	void Draw(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam);
 
 	// ステージ範囲取得
 	StageRange GetRange()const;

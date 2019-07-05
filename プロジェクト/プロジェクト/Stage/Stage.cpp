@@ -12,7 +12,6 @@ const float Stage::ConstParam::GROUND = 1200.0f;
 // コンストラクタ
 Stage::Stage()
 {
-	range = Stage::Rect(Vec2f(0, 0), 1280 * 10, 640);
 	Init();
 }
 
@@ -44,7 +43,7 @@ Stage& Stage::Get()
 }
 
 // ステージデータ読み込み
-int Stage::Load(std::weak_ptr<Camera> cam, const std::string& jsonFilePath, const std::string& imgFilePath)
+int Stage::Load(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam, const std::string& jsonFilePath, const std::string& imgFilePath)
 {
 	// json読み込み
 	json_parser::read_json(jsonFilePath.c_str(), data);
@@ -129,7 +128,8 @@ int Stage::Load(std::weak_ptr<Camera> cam, const std::string& jsonFilePath, cons
 				float(index % layer.massNum.x) * chip.tex.size.x,
 				floorf(float(index / layer.massNum.y)) * chip.tex.size.y
 			};
-			chip.tex.pos.x -= int(cam.lock()->GetPos().x) % int(chip.tex.size.x);
+			chip.worldPos = cam.lock()->Correction(chip.tex.pos);
+			chip.worldPos.x -= lib.lock()->GetWinSize().x;
 
 			++index;
 		}
@@ -146,16 +146,20 @@ int Stage::Load(std::weak_ptr<Camera> cam, const std::string& jsonFilePath, cons
 	std::string str = GetValue<std::string>(data, "type");
 	stage.type = mapType[str];
 
+	// 範囲
+	range = Stage::Rect(Vec2f(), float(lib.lock()->GetWinSize().x * 10), float(lib.lock()->GetWinSize().y));
+
 	return 0;
 }
 
 // 描画
-void Stage::Draw(std::weak_ptr<MyLib> lib)
+void Stage::Draw(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam)
 {
 	for (auto& chip : stage.layers[0].chip)
 	{
 		if (chip.data > 0)
 		{
+			chip.tex.pos = cam.lock()->Correction(chip.worldPos);
 			lib.lock()->Draw(chip.tex);
 		}
 	}

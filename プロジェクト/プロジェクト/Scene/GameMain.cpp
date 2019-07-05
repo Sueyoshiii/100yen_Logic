@@ -18,7 +18,7 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 	pl  = std::make_shared<Player>(lib, cam);
 
 	// ステージデータの読み込み
-	Stage::Get().Load(cam, "data/stage/map.json", "img/Stage/tileset.png");
+	Stage::Get().Load(lib, cam, "data/stage/map.json", "img/Stage/tileset.png");
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);
@@ -52,7 +52,7 @@ void GameMain::Draw()
 		bg->Draw();
 
 		// ステージ
-		Stage::Get().Draw(lib);
+		Stage::Get().Draw(lib, cam);
 
 		// 敵
 		EnemyManager::Get().Draw();

@@ -88,6 +88,7 @@ void Flower::SuctionUpdate()
 {
 	Vec2f pHalf = pl.lock()->GetSize() / 4.0f;
 	Vec2f pCenter = pl.lock()->GetPos() + pHalf;
+
 	for (auto& t : texs)
 	{
 		Vec2f half = t.size / 4.0f;

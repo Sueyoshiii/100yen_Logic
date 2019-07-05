@@ -1,5 +1,10 @@
 #include "Wolf.h"
 
+namespace {
+	const float ATTACK_RANGE_MAX = 200.0f;
+	const float ATTACK_RANGE_MIN = 0.0f;
+}
+
 // コンストラクタ
 Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam, const Vec2f& pos) :
 	discovery(false), cnt(0), coolFlag(false), coolTime(0)
@@ -205,7 +210,7 @@ void Wolf::RunUpdate()
 	}
 
 	float dis = fabs(worldPos.x - pl.lock()->GetWorldPos().x);
-	if (0.0f < dis && dis < 150)
+	if (ATTACK_RANGE_MIN < dis && dis < ATTACK_RANGE_MAX)
 	{
 		CheckSave();
 	}

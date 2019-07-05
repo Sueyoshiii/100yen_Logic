@@ -10,22 +10,20 @@ namespace {
 BackGround::BackGround(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	lib(lib), cam(cam), turnFlag(false)
 {
-	path[0] = "img/Stage/kari/kari_1.png";
-	path[1] = "img/Stage/kari/kari_2.png";
-	path[2] = "img/Stage/kari/kari_3.png";
-	path[3] = "img/Stage/kari/kari_4.png";
+	std::string name = "img/Stage/back_";
+	unsigned int num = 1;
+	std::string type = ".png";
 
 	layer.resize(LAYER_MAX);
-	unsigned int index = 0;
 	for (auto& i : layer)
 	{
 		for (unsigned int j = 0; j < i.tex.size(); ++j)
 		{
-			i.tex[j].Load(path[index]);
+			i.tex[j].Load(name + std::to_string(num) + type);
 			i.tex[j].size = Vec2f(float(lib.lock()->GetWinSize().x), float(lib.lock()->GetWinSize().y) * 2.0f);
 			i.oldPos[j]   = i.tex[j].pos;
 		}
-		++index;
+		++num;
 	}
 
 	oldCamPos = cam.lock()->GetPos();

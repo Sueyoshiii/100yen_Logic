@@ -18,6 +18,12 @@ public:
 
 	// ワールド座標取得
 	Vec2f GetWorldPos()const;
+
+	// ヒットフラグ取得
+	bool GetHitFlag();
+
+	// ヒットフラグを設定
+	void SetHitFlag(const bool flag);
 private:
 	// 状態と関数をバインド
 	void InitFunc();
@@ -49,6 +55,9 @@ private:
 	// 死亡
 	void DeathUpdate();
 
+	// ヒットストップ処理
+	bool CheckHitStop();
+
 	// ジャンプフラグ
 	bool jumpFlag;
 
@@ -60,4 +69,10 @@ private:
 
 	// 攻撃カウント
 	unsigned int attackCnt;
+
+	// ヒットフラグ
+	bool hitFlag;
+
+	// ヒットストップカウント
+	unsigned int hitStopCnt;
 };

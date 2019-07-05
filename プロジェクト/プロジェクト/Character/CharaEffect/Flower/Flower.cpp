@@ -43,6 +43,11 @@ void Flower::Update()
 		return;
 	}
 
+	if (pl.lock()->GetHitFlag())
+	{
+		return;
+	}
+
 	stFunc[st]();
 }
 

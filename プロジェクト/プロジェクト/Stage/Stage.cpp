@@ -129,7 +129,7 @@ int Stage::Load(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam, const std::
 				floorf(float(index / layer.massNum.y)) * chip.tex.size.y
 			};
 			chip.worldPos = cam.lock()->Correction(chip.tex.pos);
-			chip.worldPos.x -= lib.lock()->GetWinSize().x;
+			chip.worldPos.x -= float(lib.lock()->GetWinSize().x);
 
 			++index;
 		}

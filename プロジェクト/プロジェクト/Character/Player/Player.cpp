@@ -3,9 +3,14 @@
 #include "../CharaEffect/EffectManager.h"
 #include <iostream>
 
+namespace {
+	const unsigned int HIT_STOP_CNT_MAX = 15;
+}
+
 // コンストラクタ
 Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
-	jumpFlag(false), dashFlag(false), attackFlag(false), attackCnt(0)
+	jumpFlag(false), dashFlag(false), attackFlag(false), attackCnt(0),
+	hitFlag(false), hitStopCnt(0)
 {
 	this->lib = lib;
 	this->cam = cam;
@@ -20,6 +25,8 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 
 	tex.pos = Vec2f(0.0f, 0.0f);
 	worldPos = cam.lock()->Correction(tex.pos);
+	worldPos.x -= float(lib.lock()->GetWinSize().x);
+	worldPos.y = Stage::Get().GetGround() - tex.size.y;
 
 	// hp, speed, attack, defense, dush, jump
 	cParam = CharacterParameter(3, 5.0f, 2, 2, 10.0f, -40.0f);
@@ -36,6 +43,11 @@ Player::~Player()
 // 更新
 void Player::Update()
 {
+	if (CheckHitStop())
+	{
+		return;
+	}
+
 	// 状態関数
 	func[state]();
 
@@ -48,15 +60,18 @@ void Player::Update()
 		CheckFall();
 	}
 
-	UpdateLocalPos();
-
 	InvicibleUpdate();
 }
 
 // 描画
 void Player::Draw()
 {
-	AnimationUpdate();
+	if (!hitFlag)
+	{
+		UpdateLocalPos();
+
+		AnimationUpdate();
+	}
 
 	DrawImage();
 
@@ -314,6 +329,21 @@ void Player::DeathUpdate()
 	}
 }
 
+// ヒットストップ処理
+bool Player::CheckHitStop()
+{
+	if (hitFlag)
+	{
+		if ((++hitStopCnt) > HIT_STOP_CNT_MAX)
+		{
+			hitStopCnt = 0;
+			hitFlag = false;
+		}
+	}
+
+	return hitFlag;
+}
+
 // 状態と関数をバインド
 void Player::InitFunc()
 {
@@ -335,4 +365,16 @@ void Player::InitFunc()
 Vec2f Player::GetWorldPos() const
 {
 	return worldPos;
+}
+
+// ヒットフラグ取得
+bool Player::GetHitFlag()
+{
+	return hitFlag;
+}
+
+// ヒットフラグを設定
+void Player::SetHitFlag(const bool flag)
+{
+	hitFlag = flag;
 }

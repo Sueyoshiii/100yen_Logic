@@ -18,13 +18,14 @@ void Enemy::CheckHit()
 	{
 		for (auto& e : GetRect())
 		{
-			// 攻撃矩形と当たり矩形で判定
+			// 攻撃矩形とダメージ矩形で判定
 			if ((p.type == HitType::Attack && e.type == HitType::Attack) ||
 				(p.type == HitType::Damage && e.type == HitType::Damage))
 			{
 				continue;
 			}
 
+			// 矩形情報
 			Box pBox = Box(p.rect.pos, p.rect.size);
 			Box eBox = Box(e.rect.pos, e.rect.size);
 
@@ -33,6 +34,7 @@ void Enemy::CheckHit()
 				Vec2f dir = pl.lock()->GetPos() - GetPos();
 				if (p.type == HitType::Attack)
 				{
+					pl.lock()->SetHitFlag(true);
 					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
 					KnockBack(-dir);
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
@@ -81,15 +83,19 @@ void Enemy::CheckHitEffect()
 		{
 			for (auto& em : GetRect())
 			{
+				// 敵のダメージ矩形と判定
 				if (em.type == HitType::Attack)
 				{
 					continue;
 				}
+
+				// 矩形情報
 				Box efBox = Box(ef.rect.pos, ef.rect.size);
 				Box emBox = Box(em.rect.pos, em.rect.size);
 
 				if (CheckColBox(efBox, emBox))
 				{
+					pl.lock()->SetHitFlag(true);
 					Vec2f dir = pl.lock()->GetPos() - GetPos();
 					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
 					KnockBack(-dir);

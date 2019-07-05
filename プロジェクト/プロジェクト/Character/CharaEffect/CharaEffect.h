@@ -19,9 +19,6 @@ public:
 	// •`‰æ
 	virtual void Draw(std::weak_ptr<MyLib> lib) = 0;
 
-	// íœ
-	virtual void Delete() = 0;
-
 	// íœƒtƒ‰ƒOæ“¾
 	bool GetDeleteFlag()const;
 protected:

@@ -51,12 +51,6 @@ void Slash::Draw(std::weak_ptr<MyLib> lib)
 #endif
 }
 
-// íœ
-void Slash::Delete()
-{
-	tex.Delete("img/Player/player_effect.png");
-}
-
 // ó‘Ô‰Šú‰»
 void Slash::InitState()
 {

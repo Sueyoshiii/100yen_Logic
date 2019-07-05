@@ -14,9 +14,6 @@ public:
 	// •`‰æ
 	void Draw();
 	void Draw(std::weak_ptr<MyLib> lib);
-
-	// íœ
-	void Delete();
 private:
 	void InitState();
 

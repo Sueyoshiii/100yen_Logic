@@ -14,7 +14,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	InitFunc();
 	ChangeState("Neutral");
 
-	tex.size *= 2.0f;
+	tex.size *= 3.0f;
 
 	// hp, speed, attack, defense, dush, jump
 	cParam = CharacterParameter(2, 2.0f, 2, 2, 10.0f, -30.0f);

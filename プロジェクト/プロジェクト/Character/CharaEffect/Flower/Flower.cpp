@@ -58,18 +58,6 @@ void Flower::Draw(std::weak_ptr<MyLib> lib)
 	}
 }
 
-// íœ
-void Flower::Delete()
-{
-	unsigned int index = 0;
-	for (auto& t : texs)
-	{
-		t.Delete(path[index]);
-		++index;
-	}
-	texs.clear();
-}
-
 // ƒhƒƒbƒv
 void Flower::DropUpdate()
 {

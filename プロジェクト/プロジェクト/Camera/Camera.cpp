@@ -3,7 +3,7 @@
 #include "../Character/Player/Player.h"
 
 namespace {
-	const unsigned int VIBRATION_CNT_MAX = 3;
+	const unsigned int VIBRATION_CNT_MAX = 4;
 	const float FULCRUM_RANGE = 5.0f;
 }
 

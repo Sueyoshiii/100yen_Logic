@@ -21,11 +21,12 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 
 	vel = Vec2f(cParam.speed, 0.0f);
 
-	turnFlag = false;
+	turnFlag = true;
 
-	tex.pos = pos;
-	worldPos = cam.lock()->Correction(tex.pos);
-	fulcrum = worldPos;
+	tex.pos    = pos;
+	worldPos   = cam.lock()->Correction(tex.pos);
+	worldPos.y = Stage::Get().GetGround() - tex.size.y;
+	fulcrum    = worldPos;
 
 	knockBackRange = 4.0f;
 
@@ -40,6 +41,11 @@ Wolf::~Wolf()
 // XV
 void Wolf::Update()
 {
+	if (pl.lock()->GetHitFlag())
+	{
+		return;
+	}
+
 	func[state]();
 
 	if (!jumpFlag && state != "Damage")
@@ -47,16 +53,19 @@ void Wolf::Update()
 		FallUpdate();
 	}
 
-	UpdateLocalPos();
-
 	//CheckHit();
-	//CheckHitEffect();
+	CheckHitEffect();
 }
 
 // •`‰æ
 void Wolf::Draw()
 {
-	AnimationUpdate();
+	if (!pl.lock()->GetHitFlag())
+	{
+		UpdateLocalPos();
+
+		AnimationUpdate();
+	}
 
 	DrawImage();
 
@@ -72,11 +81,6 @@ void Wolf::Draw()
 // ‘Ò‹@
 void Wolf::NeutralUpdate()
 {
-	if (GetFootPos().y < Stage::Get().GetGround())
-	{
-		return;
-	}
-
 	static unsigned int cnt = 0;
 	if (!CheckView())
 	{
@@ -89,7 +93,6 @@ void Wolf::NeutralUpdate()
 		{
 			cnt = 0;
 			turnFlag = !turnFlag;
-			vel.x = -vel.x;
 			CheckWalk();
 		}
 		++cnt;
@@ -110,6 +113,7 @@ void Wolf::WalkUpdate()
 	}
 	else
 	{
+		vel.x = turnFlag ? -cParam.speed : cParam.speed;
 		worldPos.x += vel.x;
 
 		float size = tex.size.x * 2.0f;
@@ -124,6 +128,7 @@ void Wolf::WalkUpdate()
 void Wolf::CheckWalk()
 {
 	ChangeState("walk");
+	cParam.speed = 2.0f;
 }
 
 // ™ôšK

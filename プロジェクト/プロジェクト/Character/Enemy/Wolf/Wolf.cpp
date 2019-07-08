@@ -1,8 +1,16 @@
 #include "Wolf.h"
 
 namespace {
-	const float ATTACK_RANGE_MAX = 200.0f;
+	const float WALK_SPEED = 2.0f;
+	const float DASH_SPEED = 6.0f;
+	const float ATTACK_RANGE_MAX = 180.0f;
 	const float ATTACK_RANGE_MIN = 0.0f;
+
+	const unsigned int WAIT_TIME_MAX    = 2;
+	const unsigned int HOWLING_TIME_MAX = 20;
+	const unsigned int THREAT_TIME_MAX  = 10;
+	const unsigned int COOL_TIME_MAX    = 120;
+	const unsigned int STUN_TIME_MAX    = 40;
 }
 
 // コンストラクタ
@@ -22,7 +30,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	tex.size *= 3.0f;
 
 	// hp, speed, attack, defense, dush, jump
-	cParam = CharacterParameter(2, 2.0f, 2, 2, 10.0f, -30.0f);
+	cParam = CharacterParameter(2, WALK_SPEED, 2, 2, 10.0f, -30.0f);
 
 	vel = Vec2f(cParam.speed, 0.0f);
 
@@ -34,8 +42,6 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	fulcrum    = worldPos;
 
 	knockBackRange = 4.0f;
-
-	viewRange = Vec2f(200.0f, 80.0f);
 }
 
 // デストラクタ
@@ -58,7 +64,7 @@ void Wolf::Update()
 		FallUpdate();
 	}
 
-	//CheckHit();
+	CheckHit();
 	CheckHitEffect();
 }
 
@@ -94,7 +100,7 @@ void Wolf::NeutralUpdate()
 			return;
 		}
 
-		if (cnt >= 2)
+		if (cnt >= WAIT_TIME_MAX)
 		{
 			cnt = 0;
 			turnFlag = !turnFlag;
@@ -133,13 +139,13 @@ void Wolf::WalkUpdate()
 void Wolf::CheckWalk()
 {
 	ChangeState("walk");
-	cParam.speed = 2.0f;
+	cParam.speed = WALK_SPEED;
 }
 
 // 咆哮
 void Wolf::HowlingUpdate()
 {	
-	if (cnt > 20)
+	if (cnt > HOWLING_TIME_MAX)
 	{
 		stopFlag = false;
 		if (CheckAnimEnd())
@@ -172,7 +178,7 @@ void Wolf::ThreatUpdate()
 			stopFlag = true;
 			++cnt;
 		}
-		if (cnt > 10)
+		if (cnt > THREAT_TIME_MAX)
 		{
 			stopFlag = false;
 			CheckRun();
@@ -181,7 +187,7 @@ void Wolf::ThreatUpdate()
 	else
 	{
 		turnFlag = worldPos.x > pl.lock()->GetWorldPos().x ? true : false;
-		if ((++coolTime) > 120)
+		if ((++coolTime) > COOL_TIME_MAX)
 		{
 			coolFlag = false;
 			coolTime = 0;
@@ -222,7 +228,7 @@ void Wolf::RunUpdate()
 void Wolf::CheckRun()
 {
 	cnt = 0;
-	cParam.speed = 6.0f;
+	cParam.speed = DASH_SPEED;
 	ChangeState("Run");
 }
 
@@ -282,7 +288,7 @@ void Wolf::DamageUpdate()
 	else
 	{
 		worldPos.y = Stage::Get().GetGround() - tex.size.y;
-		if ((++cnt) > 40)
+		if ((++cnt) > STUN_TIME_MAX)
 		{
 			cnt = 0;
 			if (cParam.hp > 0)
@@ -300,13 +306,11 @@ void Wolf::DamageUpdate()
 // 死亡
 void Wolf::DeathUpdate()
 {
-	static unsigned int cnt = 0;
 	if (CheckAnimEnd())
 	{
 		stopFlag = true;
-		if ((alpha < 0.0f) && (++cnt) > 10)
+		if ((alpha < 0.0f))
 		{
-			cnt = 0;
 			deleteFlag = true;
 		}
 		alpha -= 0.02f;

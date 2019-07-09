@@ -4,6 +4,22 @@
 
 class Player;
 
+struct ViewRange
+{
+	float left;
+	float right;
+
+	ViewRange() : left(0.0f), right(0.0f) {}
+	ViewRange(const Vec2f& pos, const Vec2f& size)
+	{
+		left  = pos.x - size.x;
+		right = pos.x + size.x;
+	}
+	
+	float GetLeft()const { return left; }
+	float GetRight()const { return right; }
+};
+
 class Camera
 {
 public:
@@ -18,6 +34,8 @@ public:
 
 	// À•Wæ“¾
 	Vec2f GetPos()const;
+
+	ViewRange GetRange()const;
 
 	// ‘ÎÛ‚ğİ’è
 	void SetFocus(std::weak_ptr<Player> pl);

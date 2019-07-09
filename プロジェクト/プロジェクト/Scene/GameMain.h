@@ -1,7 +1,6 @@
 #pragma once
 #include "Scene.h"
 #include <memory>
-#include <MyLib.h>
 
 class Camera;
 class BackGround;

@@ -4,19 +4,26 @@
 #include <iostream>
 
 namespace {
+	const unsigned int HP_MAX = 1;
 	const unsigned int HIT_STOP_CNT_MAX = 15;
+	const unsigned int DISAPPEAR_CNT_MAX = 60;
+	const unsigned int CRITICAL_CNT_MAX = 5;
 }
 
 // コンストラクタ
 Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	jumpFlag(false), dashFlag(false), attackFlag(false), attackCnt(0),
-	hitFlag(false), hitStopCnt(0)
+	hitFlag(false), hitStopCnt(0), disappearCnt(0), criticalAlpha(0.8f),
+	deadEndFlag(false)
 {
 	this->lib = lib;
 	this->cam = cam;
 
 	LoadData("data/chara/player.info");
 	LoadImage("img/Player/player.png");
+
+	critical.Load("img/Player/damage_critical.png");
+	critical.size.y *= 2.0f;
 
 	InitFunc();
 	ChangeState("Neutral");
@@ -29,7 +36,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	worldPos.y = Stage::Get().GetGround() - tex.size.y;
 
 	// hp, speed, attack, defense, dush, jump
-	cParam = CharacterParameter(3, 5.0f, 2, 2, 10.0f, -40.0f);
+	cParam = CharacterParameter(HP_MAX, 5.0f, 2, 2, 10.0f, -40.0f);
 	vel = Vec2f(cParam.speed, 0.0f);
 
 	knockBackRange = 4.0f;
@@ -72,6 +79,8 @@ void Player::Draw()
 
 		AnimationUpdate();
 	}
+
+	DamageDraw();
 
 	DrawImage();
 
@@ -320,11 +329,13 @@ void Player::DeathUpdate()
 	if (CheckAnimEnd())
 	{
 		stopFlag = true;
-		if (INPUT.IsTrigger(Key::A))
+		if ((++disappearCnt) > DISAPPEAR_CNT_MAX)
 		{
-			stopFlag = false;
-			cParam.hp = 3;
-			ChangeState("Neutral");
+			alpha -= 0.03f;
+		}
+		if (alpha <= 0.0f)
+		{
+			deadEndFlag = true;
 		}
 	}
 }
@@ -342,6 +353,20 @@ bool Player::CheckHitStop()
 	}
 
 	return hitFlag;
+}
+
+// ダメージ時の描画
+void Player::DamageDraw()
+{
+	if (state == "Damage")
+	{
+		lib.lock()->Draw(critical, criticalAlpha);
+		criticalAlpha -= 0.05f;
+	}
+	else
+	{
+		criticalAlpha = 0.8f;
+	}
 }
 
 // 状態と関数をバインド
@@ -371,6 +396,11 @@ Vec2f Player::GetWorldPos() const
 bool Player::GetHitFlag()
 {
 	return hitFlag;
+}
+
+bool Player::GetDeadEndFlag() const
+{
+	return deadEndFlag;
 }
 
 // ヒットフラグを設定

@@ -81,6 +81,7 @@ void Character::DrawImage()
 		tex.divSize.x * index,
 		info.lock()->at(state).rect[index].anim.pos.y
 	};
+
 	lib.lock()->Draw(tex, alpha, turnFlag);
 }
 

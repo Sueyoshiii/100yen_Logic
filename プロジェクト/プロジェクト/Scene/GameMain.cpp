@@ -5,6 +5,8 @@
 #include "../Character/Player/Player.h"
 #include "../Character/Enemy/EnemyManager.h"
 #include "../Character/CharaEffect/EffectManager.h"
+#include "../Game/Game.h"
+#include "Over.h"
 
 #include "../Json/JsonLoader.h"
 
@@ -85,4 +87,9 @@ void GameMain::UpData()
 
 	// エフェクト
 	EffectManager::Get().Update();
+
+	if (pl->GetDeadEndFlag())
+	{
+		Game::Get().ChangeScene(new Over(lib));
+	}
 }

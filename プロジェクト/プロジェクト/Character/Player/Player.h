@@ -22,6 +22,9 @@ public:
 	// ヒットフラグ取得
 	bool GetHitFlag();
 
+	// 死亡フラグ取得
+	bool GetDeadEndFlag()const;
+
 	// ヒットフラグを設定
 	void SetHitFlag(const bool flag);
 private:
@@ -58,6 +61,9 @@ private:
 	// ヒットストップ処理
 	bool CheckHitStop();
 
+	// ダメージ時の描画
+	void DamageDraw();
+
 	// ジャンプフラグ
 	bool jumpFlag;
 
@@ -75,4 +81,19 @@ private:
 
 	// ヒットストップカウント
 	unsigned int hitStopCnt;
+
+	// 消滅カウント
+	unsigned int disappearCnt;
+
+	// クリティカルダメージ
+	Texture critical;
+
+	// クリティカルダメージカウント
+	unsigned int criticalCnt;
+
+	// ダメージ演出のアルファ値
+	float criticalAlpha;
+
+	// 死亡フラグ
+	bool deadEndFlag;
 };

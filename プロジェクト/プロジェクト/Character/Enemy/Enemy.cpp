@@ -40,6 +40,7 @@ void Enemy::CheckHit()
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 					ChangeState("Damage");
 					EffectManager::Get().CreateFlower(tex.pos, pl);
+					cam.lock()->SetVibrationFlag(true);
 				}
 				else
 				{
@@ -102,6 +103,7 @@ void Enemy::CheckHitEffect()
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 					ChangeState("Damage");
 					EffectManager::Get().CreateFlower(tex.pos, pl);
+					cam.lock()->SetVibrationFlag(true);
 
 					break;
 				}

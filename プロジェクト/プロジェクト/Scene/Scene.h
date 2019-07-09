@@ -1,8 +1,7 @@
 #pragma once
+#include <MyLib.h>
 #include <memory>
 #include <iostream>
-
-class MyLib;
 
 class Scene
 {
@@ -21,4 +20,10 @@ public:
 protected:
 	// ライブラリ
 	std::weak_ptr<MyLib>lib;
+
+	// 画像
+	Texture tex;
+
+	// アルファ値
+	float alpha;
 };

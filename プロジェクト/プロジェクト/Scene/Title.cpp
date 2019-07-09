@@ -4,11 +4,19 @@
 #include "../Json/JsonLoader.h"
 
 // コンストラクタ
-Title::Title(std::weak_ptr<MyLib>lib)
+Title::Title(std::weak_ptr<MyLib>lib) :
+	checkNext(false)
 {
 	this->lib = lib;
 
-	JsonLoader::Get().Load("data/stage/untitled.json");
+	tex.Load("img/title.png");
+	tex.pos -= tex.size / 2.0f;
+	tex.pos += {
+		float(lib.lock()->GetWinSize().x) / 2.0f,
+			float(lib.lock()->GetWinSize().y)
+	};
+
+	alpha = 0.0f;
 
 #ifdef _DEBUG
 	std::cout << "Title Scene" << std::endl;
@@ -22,13 +30,28 @@ Title::~Title()
 // 描画
 void Title::Draw()
 {
+	lib.lock()->Draw(tex, alpha);
 }
 
 // 処理
 void Title::UpData()
 {
-	if (Input::Get().IsTrigger(Key::Space))
+	if (Input::Get().IsTrigger(Key::Return))
 	{
-		Game::Get().ChangeScene(new GameMain(lib));
+		checkNext = true;
+	}
+
+	alpha = std::min(alpha, 1.0f);
+	if (checkNext)
+	{
+		alpha -= 0.02f;
+		if (alpha <= 0.0f)
+		{
+			Game::Get().ChangeScene(new GameMain(lib));
+		}
+	}
+	else
+	{
+		alpha += 0.02f;
 	}
 }

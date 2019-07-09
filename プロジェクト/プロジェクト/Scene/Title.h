@@ -16,6 +16,6 @@ public:
 
 	// ˆ—
 	void UpData();
-
 private:
+	bool checkNext;
 };

@@ -73,6 +73,11 @@ Vec2f Camera::GetPos()const
 	return pos;
 }
 
+ViewRange Camera::GetRange() const
+{
+	return ViewRange(pos, size);
+}
+
 // ‘ÎÛ‚ğİ’è
 void Camera::SetFocus(std::weak_ptr<Player> pl)
 {

@@ -17,5 +17,5 @@ public:
 	void UpData();
 
 private:
-
+	bool checkNext;
 };

@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "../Stage/Stage.h"
+#include "../Stage/StageManager.h"
 #include "../Character/Player/Player.h"
 
 namespace {
@@ -45,8 +45,8 @@ void Camera::Update()
 		pos = pl.lock()->GetWorldPos();
 
 		//ƒJƒƒ‰À•W‚Ì•â³
-		float left = Stage::Get().GetRange().Left();
-		float right = Stage::Get().GetRange().Right();
+		float left = StageManager::Get().GetRange().Left();
+		float right = StageManager::Get().GetRange().Right();
 		if (pos.x - size.x / 2 < left) {
 			pos.x = left + size.x / 2;
 		}

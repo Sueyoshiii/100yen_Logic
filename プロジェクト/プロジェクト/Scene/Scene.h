@@ -24,6 +24,12 @@ protected:
 	// 画像
 	Texture tex;
 
-	// アルファ値
+	// 画像のアルファ値
 	float alpha;
+
+	// 遷移用ボックス
+	Primitive box;
+
+	// 遷移用ボックスのアルファ値
+	float boxAlpha;
 };

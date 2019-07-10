@@ -53,6 +53,9 @@
     <ClCompile Include="Character\CharaEffect\EffectManager.cpp" />
     <ClCompile Include="Character\CharaEffect\Slash\Slash.cpp" />
     <ClCompile Include="Character\CharaEffect\Flower\Flower.cpp" />
+    <ClCompile Include="Stage\FirstRoom\FirstRoom.cpp" />
+    <ClCompile Include="Stage\StageManager.cpp" />
+    <ClCompile Include="Stage\SecondRoom\SecondRoom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Info\Info.h">
@@ -111,6 +114,9 @@
     <ClInclude Include="Character\CharaEffect\EffectManager.h" />
     <ClInclude Include="Character\CharaEffect\Slash\Slash.h" />
     <ClInclude Include="Character\CharaEffect\Flower\Flower.h" />
+    <ClInclude Include="Stage\FirstRoom\FirstRoom.h" />
+    <ClInclude Include="Stage\StageManager.h" />
+    <ClInclude Include="Stage\SecondRoom\SecondRoom.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Info">

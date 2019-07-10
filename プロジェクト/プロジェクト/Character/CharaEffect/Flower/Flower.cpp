@@ -1,6 +1,6 @@
 #include "Flower.h"
 #include "../../Player/Player.h"
-#include "../../../Stage/Stage.h"
+#include "../../../Stage/StageManager.h"
 #include <random>
 
 // コンストラクタ
@@ -69,15 +69,15 @@ void Flower::DropUpdate()
 	texs[0].pos.x -= vel.x;
 	texs[1].pos.x += vel.x;
 
-	vel.y += Stage::Get().GetGravity();
+	vel.y += StageManager::Get().GetGravity();
 	for (auto& t : texs)
 	{
 		t.pos.y += vel.y;
 	}
 
-	if (texs[0].pos.y > Stage::Get().GetGround() + texs[0].size.y &&
-		texs[1].pos.y > Stage::Get().GetGround() + texs[1].size.y &&
-		texs[2].pos.y > Stage::Get().GetGround() + texs[2].size.y)
+	if (texs[0].pos.y > StageManager::Get().GetGround() + texs[0].size.y &&
+		texs[1].pos.y > StageManager::Get().GetGround() + texs[1].size.y &&
+		texs[2].pos.y > StageManager::Get().GetGround() + texs[2].size.y)
 	{
 		st = Status::Suction;
 	}

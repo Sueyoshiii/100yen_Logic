@@ -5,6 +5,7 @@
 class Camera;
 class BackGround;
 class Player;
+class Stage;
 
 class GameMain :
 	public Scene
@@ -22,6 +23,9 @@ public:
 	void UpData();
 
 private:
+	// シーン切り替え
+	void ChangeNextScene(Scene* scene);
+
 	// カメラ
 	std::shared_ptr<Camera> cam;
 
@@ -30,4 +34,7 @@ private:
 
 	// プレイヤー
 	std::shared_ptr<Player> pl;
+
+	// ステージ
+	std::shared_ptr<Stage> stage;
 };

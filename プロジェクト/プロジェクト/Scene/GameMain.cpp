@@ -1,12 +1,16 @@
 #include "GameMain.h"
 #include "../Camera/Camera.h"
 #include "../BackGround/BackGround.h"
-#include "../Stage/Stage.h"
+#include "../Stage/StageManager.h"
 #include "../Character/Player/Player.h"
 #include "../Character/Enemy/EnemyManager.h"
 #include "../Character/CharaEffect/EffectManager.h"
 #include "../Game/Game.h"
+#include "Clear.h"
 #include "Over.h"
+#include "../Stage/Stage.h"
+#include "../Stage/FirstRoom/FirstRoom.h"
+#include "../Stage/SecondRoom/SecondRoom.h"
 
 #include "../Json/JsonLoader.h"
 
@@ -15,12 +19,22 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 {
 	this->lib = lib;
 
+	// 遷移用ボックスの設定
+	box = Primitive(PrimitiveType::box);
+	box.pos[0] = Vec3f();
+	box.pos[1] = Vec3f(float(lib.lock()->GetWinSize().x), 0.0f, 0.0f);
+	box.pos[2] = Vec3f(0.0f, float(lib.lock()->GetWinSize().y*2), 0.0f);
+	box.pos[3] = Vec3f(float(lib.lock()->GetWinSize().x), float(lib.lock()->GetWinSize().y*2), 0.0f);
+	boxAlpha   = 1.0f;
+
+	// 生成
 	cam = std::make_shared<Camera>(lib);
 	bg  = std::make_shared <BackGround>(lib, cam);
 	pl  = std::make_shared<Player>(lib, cam);
 
 	// ステージデータの読み込み
-	Stage::Get().Load(lib, cam, "data/stage/map.json", "img/Stage/tileset.png");
+	StageManager::Get().SetRange(lib.lock()->GetWinSize());
+	stage.reset(new FirstRoom(lib, cam));
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);
@@ -54,7 +68,7 @@ void GameMain::Draw()
 		bg->Draw();
 
 		// ステージ
-		Stage::Get().Draw(lib, cam);
+		stage->Draw(lib, cam);
 
 		// 敵
 		EnemyManager::Get().Draw();
@@ -68,6 +82,11 @@ void GameMain::Draw()
 		// エフェクト
 		EffectManager::Get().Draw(lib);
 	}
+
+	// 遷移用のボックス描画
+	lib.lock()->Draw(box, Vec3f(), boxAlpha);
+	boxAlpha = std::max(boxAlpha, 0.0f);
+	boxAlpha -= 0.05f;
 }
 
 // 処理
@@ -88,8 +107,26 @@ void GameMain::UpData()
 	// エフェクト
 	EffectManager::Get().Update();
 
+	// 死亡時はゲームオーバーへ
 	if (pl->GetDeadEndFlag())
 	{
-		Game::Get().ChangeScene(new Over(lib));
+		ChangeNextScene(new Over(lib));
 	}
+
+	if (INPUT.IsTrigger(Key::Q))
+	{
+		pl->SetPos(pl->GetFirstPos());
+		//stage.reset(new SecondRoom(lib, cam));
+	}
+}
+
+// シーン切り替え
+void GameMain::ChangeNextScene(Scene* scene)
+{
+	// 登録されているオブジェクトの解放
+	EnemyManager::Get().Delete();
+	EffectManager::Get().Delete();
+
+	// シーン切り替え
+	Game::Get().ChangeScene(scene);
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "../Typedef.h"
 #include "../Info/Info.h"
-#include "../Stage/Stage.h"
+#include "../Stage/StageManager.h"
 #include "../Camera/Camera.h"
 #include <MyLib.h>
 #include <memory>

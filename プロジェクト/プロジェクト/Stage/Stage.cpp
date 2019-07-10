@@ -6,9 +6,6 @@
 
 using namespace boost::property_tree;
 
-const float Stage::ConstParam::GR = 1.9f;
-const float Stage::ConstParam::GROUND = 1200.0f;
-
 // コンストラクタ
 Stage::Stage()
 {
@@ -33,13 +30,6 @@ int Stage::Init()
 // デストラクタ
 Stage::~Stage()
 {
-}
-
-// インスタンス
-Stage& Stage::Get()
-{
-	static Stage instance;
-	return instance;
 }
 
 // ステージデータ読み込み
@@ -146,15 +136,17 @@ int Stage::Load(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam, const std::
 	std::string str = GetValue<std::string>(data, "type");
 	stage.type = mapType[str];
 
-	// 範囲
-	range = Stage::Rect(Vec2f(), float(lib.lock()->GetWinSize().x * 10), float(lib.lock()->GetWinSize().y));
-
 	return 0;
 }
 
 // 描画
 void Stage::Draw(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam)
 {
+	if (stage.layers.size() <= 0)
+	{
+		return;
+	}
+
 	for (auto& chip : stage.layers[0].chip)
 	{
 		if (chip.data > 0)
@@ -163,23 +155,4 @@ void Stage::Draw(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam)
 			lib.lock()->Draw(chip.tex);
 		}
 	}
-}
-
-// 範囲取得
-StageRange Stage::GetRange() const
-{
-	StageRange stRange = StageRange(range.Top(), range.Bottom(), range.Left() / 10, range.Right());
-	return stRange;
-}
-
-// 地面取得
-float Stage::GetGround() const
-{
-	return ConstParam::GROUND;
-}
-
-// 重力取得
-float Stage::GetGravity() const
-{
-	return ConstParam::GR;
 }

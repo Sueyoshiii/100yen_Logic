@@ -61,6 +61,12 @@ void EffectManager::CreateSlash(const std::string& state, const Vec2f& pos, cons
 	list.push_back(ListParameter(EffectType::Slashing, map[EffectType::Slashing]));
 }
 
+// 削除
+void EffectManager::Delete()
+{
+	list.clear();
+}
+
 // エフェクトリスト取得
 std::list<ListParameter> EffectManager::GetEffectList()
 {

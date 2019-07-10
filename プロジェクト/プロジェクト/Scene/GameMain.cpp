@@ -68,7 +68,7 @@ void GameMain::Draw()
 		bg->Draw();
 
 		// ステージ
-		stage->Draw(lib, cam);
+		stage->Draw();
 
 		// 敵
 		EnemyManager::Get().Draw();
@@ -83,10 +83,7 @@ void GameMain::Draw()
 		EffectManager::Get().Draw(lib);
 	}
 
-	// 遷移用のボックス描画
-	lib.lock()->Draw(box, Vec3f(), boxAlpha);
-	boxAlpha = std::max(boxAlpha, 0.0f);
-	boxAlpha -= 0.05f;
+	stage->DrawBox();
 }
 
 // 処理
@@ -116,7 +113,12 @@ void GameMain::UpData()
 	if (INPUT.IsTrigger(Key::Q))
 	{
 		pl->SetPos(pl->GetFirstPos());
-		//stage.reset(new SecondRoom(lib, cam));
+		stage.reset(new SecondRoom(lib, cam));
+	}
+	if (INPUT.IsTrigger(Key::W))
+	{
+		pl->SetPos(pl->GetFirstPos());
+		stage.reset(new FirstRoom(lib, cam));
 	}
 }
 

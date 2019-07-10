@@ -1,4 +1,5 @@
 #pragma once
+#include "../Camera/Camera.h"
 #include <string>
 #include <boost/property_tree/ptree.hpp>
 #include <MyLib.h>
@@ -6,7 +7,6 @@
 #include <vector>
 #include <memory>
 
-class Camera;
 
 // マップタイプ
 enum class MapType
@@ -68,14 +68,20 @@ public:
 	~Stage();
 
 	// ステージデータ読み込み
-	int Load(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam, const std::string& jsonFilePath, const std::string& imgFilePath);
+	int Load(const std::string& jsonFilePath, const std::string& imgFilePath);
 
 	// 更新
 	virtual void Update() = 0;
 
 	// 描画
-	virtual void Draw(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam);
+	virtual void Draw() = 0;
+
+	// 遷移ボックス描画
+	virtual void DrawBox();
 protected:
+	// マップデータ描画
+	void DrawMapData();
+
 	// .jsonデータ
 	boost::property_tree::ptree data;
 
@@ -87,6 +93,16 @@ protected:
 
 	// レイヤータイプ
 	std::unordered_map<std::string, LayerType> layerType;
+
+	std::weak_ptr<MyLib> lib;
+
+	std::weak_ptr<Camera> cam;
+
+	// 遷移用ボックス
+	Primitive box;
+
+	// 遷移用ボックスのアルファ値
+	float boxAlpha;
 private:
 	// 文字列を数値に変換
 	template<typename T>

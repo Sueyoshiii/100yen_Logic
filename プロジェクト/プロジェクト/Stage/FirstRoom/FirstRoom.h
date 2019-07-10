@@ -9,5 +9,7 @@ public:
 	~FirstRoom();
 
 	void Update();
+
+	void Draw();
 private:
 };

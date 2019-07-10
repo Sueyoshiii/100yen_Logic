@@ -9,4 +9,6 @@ public:
 	~SecondRoom();
 
 	void Update();
+
+	void Draw();
 };

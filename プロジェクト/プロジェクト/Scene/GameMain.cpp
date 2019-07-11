@@ -34,20 +34,10 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 
 	// ステージデータの読み込み
 	StageManager::Get().SetRange(lib.lock()->GetWinSize());
-	stage.reset(new FirstRoom(lib, cam));
+	stage.reset(new FirstRoom(lib, pl, cam));
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);
-	
-	// 敵さん達
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(800.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1000.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
-
-	// test
-	//JsonLoader::Get().Load("data/stage/map.json");
 
 #ifdef _DEBUG
 	std::cout << "GameMain Scene" << std::endl;
@@ -69,9 +59,6 @@ void GameMain::Draw()
 
 		// ステージ
 		stage->Draw();
-
-		// 敵
-		EnemyManager::Get().Draw();
 	}
 
 	// プレイヤー
@@ -95,8 +82,7 @@ void GameMain::UpData()
 	// 背景
 	bg->Update();
 
-	// 敵
-	EnemyManager::Get().Update();
+	//stage->Update();
 
 	// プレイヤー
 	pl->Update();
@@ -109,26 +95,43 @@ void GameMain::UpData()
 	{
 		ChangeNextScene(new Over(lib));
 	}
-
-	if (INPUT.IsTrigger(Key::Q))
-	{
-		pl->SetPos(pl->GetFirstPos());
-		stage.reset(new SecondRoom(lib, cam));
-	}
-	if (INPUT.IsTrigger(Key::W))
-	{
-		pl->SetPos(pl->GetFirstPos());
-		stage.reset(new FirstRoom(lib, cam));
-	}
+	ChangeRoom();
 }
 
 // シーン切り替え
 void GameMain::ChangeNextScene(Scene* scene)
 {
 	// 登録されているオブジェクトの解放
-	EnemyManager::Get().Delete();
-	EffectManager::Get().Delete();
+	DeleteObject();
 
 	// シーン切り替え
 	Game::Get().ChangeScene(scene);
+}
+
+// ルーム切り替え
+void GameMain::ChangeRoom()
+{
+	if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f > StageManager::Get().GetRange().Right())
+	{
+		DeleteObject();
+		pl->SetPos(pl->GetFirstPos());
+		cam->SetPos(pl->GetWorldPos());
+		stage.reset(stage->GetNextRoom());
+	}
+	//else if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f < StageManager::Get().GetRange().Left())
+	//{
+	//	DeleteObject();
+	//	float lastPosX = StageManager::Get().GetRange().Right() - pl->GetSize().x;
+	//	//pl->SetPos(pl->GetFirstPos());
+	//	pl->SetPos(Vec2f(lastPosX, pl->GetWorldPos().y));
+	//	cam->SetPos(pl->GetWorldPos());
+	//	stage.reset(stage->GetPrevRoom());
+	//}
+}
+
+// 登録されているオブジェクトの解放
+void GameMain::DeleteObject()
+{
+	EnemyManager::Get().Delete();
+	EffectManager::Get().Delete();
 }

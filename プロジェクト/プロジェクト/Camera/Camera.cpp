@@ -42,22 +42,7 @@ void Camera::Update()
 	}
 	else
 	{
-		pos = pl.lock()->GetWorldPos();
-
-		//ƒJƒƒ‰À•W‚Ì•â³
-		float left = StageManager::Get().GetRange().Left();
-		float right = StageManager::Get().GetRange().Right();
-		if (pos.x - size.x / 2 < left) {
-			pos.x = left + size.x / 2;
-		}
-		else if (pos.x + size.x / 2 > right) {
-			pos.x = right - size.x / 2;
-		}
-
-		if (pos.x < 0.0f)
-		{
-			pos.x = 0.0f;
-		}
+		SetPos(pl.lock()->GetWorldPos());
 	}
 }
 
@@ -89,4 +74,24 @@ void Camera::SetVibrationFlag(const bool flag)
 {
 	vibrationFlag = flag;
 	fulcrum = pos;
+}
+
+// À•W‚Ìİ’è
+void Camera::SetPos(const Vec2f& pos)
+{
+	this->pos = pos;
+
+	float left = StageManager::Get().GetRange().Left();
+	float right = StageManager::Get().GetRange().Right();
+	if (this->pos.x - size.x / 2 < left) {
+		this->pos.x = left + size.x / 2;
+	}
+	else if (this->pos.x + size.x / 2 > right) {
+		this->pos.x = right - size.x / 2;
+	}
+
+	if (this->pos.x < 0.0f)
+	{
+		this->pos.x = 0.0f;
+	}
 }

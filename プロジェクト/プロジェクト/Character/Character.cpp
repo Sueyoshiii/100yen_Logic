@@ -20,7 +20,8 @@ void Character::CorrectPosInStage()
 	float left  = StageManager::Get().GetRange().Left();
 	float right = StageManager::Get().GetRange().Right();
 
-	worldPos.x = std::min(std::max(worldPos.x, left), right - tex.size.x);
+	worldPos.x = std::max(worldPos.x, left);
+	//worldPos.x = std::min(std::max(worldPos.x, left), right - tex.size.x);
 }
 
 // —Ž‰º

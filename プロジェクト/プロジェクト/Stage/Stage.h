@@ -78,6 +78,9 @@ public:
 
 	// 遷移ボックス描画
 	virtual void DrawBox();
+
+	virtual Stage* GetNextRoom() = 0;
+	virtual Stage* GetPrevRoom() = 0;
 protected:
 	// マップデータ描画
 	void DrawMapData();

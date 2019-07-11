@@ -34,6 +34,9 @@ public:
 	// 斬撃生成
 	void CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 
+	// 削除
+	void Delete();
+
 	// エフェクトリスト取得
 	std::list<ListParameter> GetEffectList();
 private:

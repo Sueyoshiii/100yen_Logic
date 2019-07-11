@@ -55,3 +55,9 @@ void EnemyManager::Summons(const Enemies& em, const Vec2f& pos, std::weak_ptr<My
 		list.emplace_back(map[em]);
 	}
 }
+
+// íœ
+void EnemyManager::Delete()
+{
+	list.clear();
+}

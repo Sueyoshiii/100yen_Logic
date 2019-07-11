@@ -17,18 +17,19 @@ Character::~Character()
 // ステージ内に座標を補正
 void Character::CorrectPosInStage()
 {
-	float left  = Stage::Get().GetRange().Left();
-	float right = Stage::Get().GetRange().Right();
+	float left  = StageManager::Get().GetRange().Left();
+	float right = StageManager::Get().GetRange().Right();
 
-	worldPos.x = std::min(std::max(worldPos.x, left), right - tex.size.x);
+	worldPos.x = std::max(worldPos.x, left);
+	//worldPos.x = std::min(std::max(worldPos.x, left), right - tex.size.x);
 }
 
 // 落下
 void Character::FallUpdate()
 {
-	vel.y += Stage::Get().GetGravity();
+	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	worldPos.y = std::min(GetFootPos().y, Stage::Get().GetGround() - tex.size.y);
+	worldPos.y = std::min(GetFootPos().y, StageManager::Get().GetGround() - tex.size.y);
 }
 
 // 状態遷移

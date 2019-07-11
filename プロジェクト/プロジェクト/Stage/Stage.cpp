@@ -1,16 +1,13 @@
 #include "Stage.h"
-#include "../Camera/Camera.h"
 #include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 #include <iterator>
 
 using namespace boost::property_tree;
 
-const float Stage::ConstParam::GR = 1.9f;
-const float Stage::ConstParam::GROUND = 1200.0f;
-
 // コンストラクタ
-Stage::Stage()
+Stage::Stage() :
+	box(Primitive(PrimitiveType::box)), boxAlpha(1.0f)
 {
 	Init();
 }
@@ -35,15 +32,8 @@ Stage::~Stage()
 {
 }
 
-// インスタンス
-Stage& Stage::Get()
-{
-	static Stage instance;
-	return instance;
-}
-
 // ステージデータ読み込み
-int Stage::Load(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam, const std::string& jsonFilePath, const std::string& imgFilePath)
+int Stage::Load(const std::string& jsonFilePath, const std::string& imgFilePath)
 {
 	// json読み込み
 	json_parser::read_json(jsonFilePath.c_str(), data);
@@ -117,16 +107,16 @@ int Stage::Load(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam, const std::
 			// 分割位置
 			chip.tex.offsetPos = {
 				float(chipNum % chipMax) * chip.tex.divSize.x,
-					floorf(float(chipNum / chipMax)) * chip.tex.divSize.y
+				floorf(float(chipNum / chipMax)) * chip.tex.divSize.y
 			};
 
 			// サイズ
-			chip.tex.size = Vec2f(64.0f, 64.0f);
+			chip.tex.size = Vec2f(64.0f);
 
 			// 描画位置
 			chip.tex.pos = {
 				float(index % layer.massNum.x) * chip.tex.size.x,
-				floorf(float(index / layer.massNum.y)) * chip.tex.size.y
+				floorf(float(index / layer.massNum.x)) * chip.tex.size.y
 			};
 			chip.worldPos = cam.lock()->Correction(chip.tex.pos);
 			chip.worldPos.x -= float(lib.lock()->GetWinSize().x);
@@ -146,15 +136,25 @@ int Stage::Load(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam, const std::
 	std::string str = GetValue<std::string>(data, "type");
 	stage.type = mapType[str];
 
-	// 範囲
-	range = Stage::Rect(Vec2f(), float(lib.lock()->GetWinSize().x * 10), float(lib.lock()->GetWinSize().y));
-
 	return 0;
 }
 
-// 描画
-void Stage::Draw(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam)
+// 遷移ボックス描画
+void Stage::DrawBox()
 {
+	lib.lock()->Draw(box, Vec3f(), boxAlpha);
+	boxAlpha = std::max(boxAlpha, 0.0f);
+	boxAlpha -= 0.05f;
+}
+
+// マップデータ描画
+void Stage::DrawMapData()
+{
+	if (stage.layers.size() <= 0)
+	{
+		return;
+	}
+
 	for (auto& chip : stage.layers[0].chip)
 	{
 		if (chip.data > 0)
@@ -163,23 +163,4 @@ void Stage::Draw(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam)
 			lib.lock()->Draw(chip.tex);
 		}
 	}
-}
-
-// 範囲取得
-StageRange Stage::GetRange() const
-{
-	StageRange stRange = StageRange(range.Top(), range.Bottom(), range.Left() / 10, range.Right());
-	return stRange;
-}
-
-// 地面取得
-float Stage::GetGround() const
-{
-	return ConstParam::GROUND;
-}
-
-// 重力取得
-float Stage::GetGravity() const
-{
-	return ConstParam::GR;
 }

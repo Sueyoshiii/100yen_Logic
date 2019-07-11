@@ -38,7 +38,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 
 	tex.pos    = pos;
 	worldPos   = cam.lock()->Correction(tex.pos);
-	worldPos.y = Stage::Get().GetGround() - tex.size.y;
+	worldPos.y = StageManager::Get().GetGround() - tex.size.y;
 	fulcrum    = worldPos;
 
 	knockBackRange = 4.0f;
@@ -252,11 +252,11 @@ void Wolf::CheckSave()
 void Wolf::AttackUpdate()
 {
 	worldPos.x += vel.x;
-	vel.y += Stage::Get().GetGravity();
+	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	if (GetFootPos().y > Stage::Get().GetGround())
+	if (GetFootPos().y > StageManager::Get().GetGround())
 	{
-		worldPos.y = Stage::Get().GetGround() - tex.size.y;
+		worldPos.y = StageManager::Get().GetGround() - tex.size.y;
 		jumpFlag = false;
 		coolFlag = true;
 		coolTime = 0;
@@ -278,16 +278,16 @@ void Wolf::DamageUpdate()
 	static unsigned int cnt = 0;
 	stopFlag = false;
 
-	vel.y += Stage::Get().GetGravity();
+	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
 
-	if (GetFootPos().y < Stage::Get().GetGround())
+	if (GetFootPos().y < StageManager::Get().GetGround())
 	{
 		worldPos.x += vel.x;
 	}
 	else
 	{
-		worldPos.y = Stage::Get().GetGround() - tex.size.y;
+		worldPos.y = StageManager::Get().GetGround() - tex.size.y;
 		if ((++cnt) > STUN_TIME_MAX)
 		{
 			cnt = 0;

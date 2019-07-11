@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "../../Stage/Stage.h"
 #include "../CharaEffect/EffectManager.h"
 #include <iostream>
 
@@ -33,10 +32,12 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	tex.pos = Vec2f(0.0f, 0.0f);
 	worldPos = cam.lock()->Correction(tex.pos);
 	worldPos.x -= float(lib.lock()->GetWinSize().x);
-	worldPos.y = Stage::Get().GetGround() - tex.size.y;
+	worldPos.y = StageManager::Get().GetGround() - tex.size.y;
+
+	firstPos = worldPos;
 
 	// hp, speed, attack, defense, dush, jump
-	cParam = CharacterParameter(HP_MAX, 5.0f, 2, 2, 10.0f, -40.0f);
+	cParam = CharacterParameter(HP_MAX, 20.0f, 2, 2, 10.0f, -40.0f);
 	vel = Vec2f(cParam.speed, 0.0f);
 
 	knockBackRange = 4.0f;
@@ -61,7 +62,7 @@ void Player::Update()
 	CorrectPosInStage();
 
 	if (!jumpFlag && 
-		GetFootPos().y < Stage::Get().GetGround() &&
+		GetFootPos().y < StageManager::Get().GetGround() &&
 		state != "Damage")
 	{
 		CheckFall();
@@ -150,7 +151,7 @@ void Player::JumpUpdate()
 
 	if (vel.y <= 0)
 	{
-		vel.y += Stage::Get().GetGravity();
+		vel.y += StageManager::Get().GetGravity();
 		worldPos.y += vel.y;
 	}
 	else
@@ -183,11 +184,11 @@ void Player::FallUpdate()
 		worldPos.x += vel.x;
 	}
 
-	vel.y += Stage::Get().GetGravity();
+	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	if (GetFootPos().y > Stage::Get().GetGround())
+	if (GetFootPos().y > StageManager::Get().GetGround())
 	{
-		worldPos.y = Stage::Get().GetGround() - tex.size.y;
+		worldPos.y = StageManager::Get().GetGround() - tex.size.y;
 		ChangeState("Neutral");
 	}
 }
@@ -293,16 +294,16 @@ void Player::DamageUpdate()
 	static unsigned int cnt = 0;
 	stopFlag = false;
 
-	vel.y += Stage::Get().GetGravity();
+	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
 
-	if (GetFootPos().y < Stage::Get().GetGround())
+	if (GetFootPos().y < StageManager::Get().GetGround())
 	{
 		worldPos.x += vel.x;
 	}
 	else
 	{
-		worldPos.y = Stage::Get().GetGround() - tex.size.y;
+		worldPos.y = StageManager::Get().GetGround() - tex.size.y;
 		if ((++cnt) > 40)
 		{
 			cnt = 0;
@@ -398,13 +399,26 @@ bool Player::GetHitFlag()
 	return hitFlag;
 }
 
+// 死亡フラグ取得
 bool Player::GetDeadEndFlag() const
 {
 	return deadEndFlag;
+}
+
+// 初期座標取得
+Vec2f Player::GetFirstPos() const
+{
+	return firstPos;
 }
 
 // ヒットフラグを設定
 void Player::SetHitFlag(const bool flag)
 {
 	hitFlag = flag;
+}
+
+// 座標を設定
+void Player::SetPos(const Vec2f& pos)
+{
+	worldPos = pos;
 }

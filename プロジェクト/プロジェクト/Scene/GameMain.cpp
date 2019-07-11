@@ -1,12 +1,16 @@
 #include "GameMain.h"
 #include "../Camera/Camera.h"
 #include "../BackGround/BackGround.h"
-#include "../Stage/Stage.h"
+#include "../Stage/StageManager.h"
 #include "../Character/Player/Player.h"
 #include "../Character/Enemy/EnemyManager.h"
 #include "../Character/CharaEffect/EffectManager.h"
 #include "../Game/Game.h"
+#include "Clear.h"
 #include "Over.h"
+#include "../Stage/Stage.h"
+#include "../Stage/FirstRoom/FirstRoom.h"
+#include "../Stage/SecondRoom/SecondRoom.h"
 
 #include "../Json/JsonLoader.h"
 
@@ -15,25 +19,25 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 {
 	this->lib = lib;
 
+	// 遷移用ボックスの設定
+	box = Primitive(PrimitiveType::box);
+	box.pos[0] = Vec3f();
+	box.pos[1] = Vec3f(float(lib.lock()->GetWinSize().x), 0.0f, 0.0f);
+	box.pos[2] = Vec3f(0.0f, float(lib.lock()->GetWinSize().y*2), 0.0f);
+	box.pos[3] = Vec3f(float(lib.lock()->GetWinSize().x), float(lib.lock()->GetWinSize().y*2), 0.0f);
+	boxAlpha   = 1.0f;
+
+	// 生成
 	cam = std::make_shared<Camera>(lib);
 	bg  = std::make_shared <BackGround>(lib, cam);
 	pl  = std::make_shared<Player>(lib, cam);
 
 	// ステージデータの読み込み
-	Stage::Get().Load(lib, cam, "data/stage/map.json", "img/Stage/tileset.png");
+	StageManager::Get().SetRange(lib.lock()->GetWinSize());
+	stage.reset(new FirstRoom(lib, pl, cam));
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);
-	
-	// 敵さん達
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(800.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1000.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
-
-	// test
-	//JsonLoader::Get().Load("data/stage/map.json");
 
 #ifdef _DEBUG
 	std::cout << "GameMain Scene" << std::endl;
@@ -54,10 +58,7 @@ void GameMain::Draw()
 		bg->Draw();
 
 		// ステージ
-		Stage::Get().Draw(lib, cam);
-
-		// 敵
-		EnemyManager::Get().Draw();
+		stage->Draw();
 	}
 
 	// プレイヤー
@@ -68,6 +69,8 @@ void GameMain::Draw()
 		// エフェクト
 		EffectManager::Get().Draw(lib);
 	}
+
+	stage->DrawBox();
 }
 
 // 処理
@@ -79,8 +82,7 @@ void GameMain::UpData()
 	// 背景
 	bg->Update();
 
-	// 敵
-	EnemyManager::Get().Update();
+	//stage->Update();
 
 	// プレイヤー
 	pl->Update();
@@ -88,8 +90,48 @@ void GameMain::UpData()
 	// エフェクト
 	EffectManager::Get().Update();
 
+	// 死亡時はゲームオーバーへ
 	if (pl->GetDeadEndFlag())
 	{
-		Game::Get().ChangeScene(new Over(lib));
+		ChangeNextScene(new Over(lib));
 	}
+	ChangeRoom();
+}
+
+// シーン切り替え
+void GameMain::ChangeNextScene(Scene* scene)
+{
+	// 登録されているオブジェクトの解放
+	DeleteObject();
+
+	// シーン切り替え
+	Game::Get().ChangeScene(scene);
+}
+
+// ルーム切り替え
+void GameMain::ChangeRoom()
+{
+	if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f > StageManager::Get().GetRange().Right())
+	{
+		DeleteObject();
+		pl->SetPos(pl->GetFirstPos());
+		cam->SetPos(pl->GetWorldPos());
+		stage.reset(stage->GetNextRoom());
+	}
+	//else if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f < StageManager::Get().GetRange().Left())
+	//{
+	//	DeleteObject();
+	//	float lastPosX = StageManager::Get().GetRange().Right() - pl->GetSize().x;
+	//	//pl->SetPos(pl->GetFirstPos());
+	//	pl->SetPos(Vec2f(lastPosX, pl->GetWorldPos().y));
+	//	cam->SetPos(pl->GetWorldPos());
+	//	stage.reset(stage->GetPrevRoom());
+	//}
+}
+
+// 登録されているオブジェクトの解放
+void GameMain::DeleteObject()
+{
+	EnemyManager::Get().Delete();
+	EffectManager::Get().Delete();
 }

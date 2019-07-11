@@ -25,8 +25,14 @@ public:
 	// 死亡フラグ取得
 	bool GetDeadEndFlag()const;
 
+	// 初期座標取得
+	Vec2f GetFirstPos()const;
+
 	// ヒットフラグを設定
 	void SetHitFlag(const bool flag);
+
+	// 座標を設定
+	void SetPos(const Vec2f& pos);
 private:
 	// 状態と関数をバインド
 	void InitFunc();
@@ -96,4 +102,7 @@ private:
 
 	// 死亡フラグ
 	bool deadEndFlag;
+
+	// 初期座標
+	Vec2f firstPos;
 };

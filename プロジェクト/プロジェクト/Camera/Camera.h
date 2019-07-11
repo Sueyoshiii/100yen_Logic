@@ -42,6 +42,9 @@ public:
 
 	// 振動フラグを設定
 	void SetVibrationFlag(const bool flag);
+
+	// 座標の設定
+	void SetPos(const Vec2f& pos);
 private:
 	// 座標
 	Vec2f pos;

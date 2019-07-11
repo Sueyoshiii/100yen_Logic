@@ -17,6 +17,9 @@ public:
 
 	// ¢Š«
 	void Summons(const Enemies& em, const Vec2f& pos, std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam);
+
+	// íœ
+	void Delete();
 private:
 	EnemyManager();
 	EnemyManager(const EnemyManager&) = delete;

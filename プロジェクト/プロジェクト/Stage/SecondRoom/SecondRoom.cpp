@@ -1,5 +1,5 @@
 #include "SecondRoom.h"
-#include "../FirstRoom/FirstRoom.h"
+#include "../ThirdRoom/ThirdRoom.h"
 #include "../../Character/Player/Player.h"
 #include "../../Character/Enemy/EnemyManager.h"
 #include <iostream>
@@ -10,6 +10,8 @@ SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::
 	this->pl = pl;
 	this->cam = cam;
 
+	nextRoomFlag = false;
+
 	Load("data/stage/map.json", "img/Stage/tileset.png");
 
 	box.pos[0] = Vec3f();
@@ -19,9 +21,6 @@ SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::
 
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(800.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1000.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
 
 	std::cout << "SecondRoom" << std::endl;
 }
@@ -43,10 +42,5 @@ void SecondRoom::Draw()
 
 Stage* SecondRoom::GetNextRoom()
 {
-	return nullptr;
-}
-
-Stage* SecondRoom::GetPrevRoom()
-{
-	return new FirstRoom(lib, pl, cam);
+	return new ThirdRoom(lib, pl, cam);
 }

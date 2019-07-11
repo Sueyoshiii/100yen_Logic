@@ -32,4 +32,7 @@ protected:
 
 	// 遷移用ボックスのアルファ値
 	float boxAlpha;
+
+	// 遷移確認フラグ
+	bool checkNext;
 };

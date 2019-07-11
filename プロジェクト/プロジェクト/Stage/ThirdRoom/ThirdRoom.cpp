@@ -1,18 +1,16 @@
-#include "FirstRoom.h"
-#include "../SecondRoom/SecondRoom.h"
+#include "ThirdRoom.h"
+#include "../../Camera/Camera.h"
 #include "../../Character/Player/Player.h"
 #include "../../Character/Enemy/EnemyManager.h"
-#include "../../Scene/GameMain.h"
+#include <iostream>
 
-FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
+ThirdRoom::ThirdRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
 {
 	this->lib = lib;
 	this->pl = pl;
 	this->cam = cam;
 
 	nextRoomFlag = false;
-
-	Load("data/stage/kimoiii.json", "img/Stage/kimoiii.png");
 
 	box.pos[0] = Vec3f();
 	box.pos[1] = Vec3f(float(lib.lock()->GetWinSize().x), 0.0f, 0.0f);
@@ -24,26 +22,24 @@ FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(800.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1000.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
-	
-	std::cout << "FirstRoom" << std::endl;
+
+	std::cout << "ThirdRoom" << std::endl;
 }
 
-FirstRoom::~FirstRoom()
+ThirdRoom::~ThirdRoom()
 {
 }
 
-void FirstRoom::Update()
+void ThirdRoom::Update()
 {
+	Vec2f plPos = pl.lock()->GetWorldPos();
+	float right = StageManager::Get().GetRange().Right() - pl.lock()->GetSize().x;
+	pl.lock()->SetPos(Vec2f(std::min(plPos.x, right), plPos.y));
+
 	EnemyManager::Get().Update();
 }
 
-void FirstRoom::Draw()
+void ThirdRoom::Draw()
 {
-	DrawMapData();
 	EnemyManager::Get().Draw();
-}
-
-Stage* FirstRoom::GetNextRoom()
-{
-	return new SecondRoom(lib, pl, cam);
 }

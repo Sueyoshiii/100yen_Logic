@@ -189,6 +189,7 @@
     <ClCompile Include="Stage\SecondRoom\SecondRoom.cpp" />
     <ClCompile Include="Stage\Stage.cpp" />
     <ClCompile Include="Stage\StageManager.cpp" />
+    <ClCompile Include="Stage\ThirdRoom\ThirdRoom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround\BackGround.h" />
@@ -213,6 +214,7 @@
     <ClInclude Include="Stage\SecondRoom\SecondRoom.h" />
     <ClInclude Include="Stage\Stage.h" />
     <ClInclude Include="Stage\StageManager.h" />
+    <ClInclude Include="Stage\ThirdRoom\ThirdRoom.h" />
     <ClInclude Include="Typedef.h" />
     <ClInclude Include="utility\Utility.h" />
   </ItemGroup>

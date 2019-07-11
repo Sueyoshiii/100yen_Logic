@@ -37,7 +37,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	firstPos = worldPos;
 
 	// hp, speed, attack, defense, dush, jump
-	cParam = CharacterParameter(HP_MAX, 20.0f, 2, 2, 10.0f, -40.0f);
+	cParam = CharacterParameter(HP_MAX, 8.0f, 2, 2, 15.0f, -40.0f);
 	vel = Vec2f(cParam.speed, 0.0f);
 
 	knockBackRange = 4.0f;

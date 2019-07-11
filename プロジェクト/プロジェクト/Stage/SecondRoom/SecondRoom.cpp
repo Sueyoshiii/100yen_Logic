@@ -7,7 +7,7 @@
 SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
 {
 	this->lib = lib;
-	this->pl = pl;
+	this->pl  = pl;
 	this->cam = cam;
 
 	nextRoomFlag = false;

@@ -162,14 +162,7 @@ void Stage::DrawBox()
 {
 	lib.lock()->Draw(box, Vec3f(), boxAlpha);
 	boxAlpha = std::min(std::max(boxAlpha, 0.0f), 1.0f);
-	if (nextRoomFlag)
-	{
-		boxAlpha += 0.05f;
-	}
-	else
-	{
-		boxAlpha -= 0.05f;
-	}
+	boxAlpha += nextRoomFlag ? 0.05f : -0.05f;
 }
 
 // Ÿ‚Ìƒ‹[ƒ€‚ğæ“¾

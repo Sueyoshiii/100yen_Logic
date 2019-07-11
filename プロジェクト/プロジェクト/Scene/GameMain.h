@@ -26,7 +26,7 @@ private:
 	void ChangeNextScene(Scene* scene);
 
 	// ルーム切り替え
-	void ChangeRoom();
+	void CheckChangeRoom();
 
 	// 登録されているオブジェクトの解放
 	void DeleteObject();

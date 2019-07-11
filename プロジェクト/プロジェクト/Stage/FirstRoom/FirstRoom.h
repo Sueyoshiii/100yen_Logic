@@ -15,7 +15,6 @@ public:
 	void Draw();
 
 	Stage* GetNextRoom();
-	Stage* GetPrevRoom();
 private:
 	std::weak_ptr<Player> pl;
 };

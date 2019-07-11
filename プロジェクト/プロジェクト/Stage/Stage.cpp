@@ -7,7 +7,7 @@ using namespace boost::property_tree;
 
 // コンストラクタ
 Stage::Stage() :
-	box(Primitive(PrimitiveType::box)), boxAlpha(1.0f)
+	box(Primitive(PrimitiveType::box)), boxAlpha(1.0f), nextRoomFlag(false)
 {
 	Init();
 }
@@ -139,14 +139,6 @@ int Stage::Load(const std::string& jsonFilePath, const std::string& imgFilePath)
 	return 0;
 }
 
-// 遷移ボックス描画
-void Stage::DrawBox()
-{
-	lib.lock()->Draw(box, Vec3f(), boxAlpha);
-	boxAlpha = std::max(boxAlpha, 0.0f);
-	boxAlpha -= 0.05f;
-}
-
 // マップデータ描画
 void Stage::DrawMapData()
 {
@@ -163,4 +155,41 @@ void Stage::DrawMapData()
 			lib.lock()->Draw(chip.tex);
 		}
 	}
+}
+
+// 遷移ボックス描画
+void Stage::DrawBox()
+{
+	lib.lock()->Draw(box, Vec3f(), boxAlpha);
+	boxAlpha = std::min(std::max(boxAlpha, 0.0f), 1.0f);
+	if (nextRoomFlag)
+	{
+		boxAlpha += 0.05f;
+	}
+	else
+	{
+		boxAlpha -= 0.05f;
+	}
+}
+
+// 次のルームを取得
+Stage* Stage::GetNextRoom()
+{
+	return nullptr;
+}
+
+// ボックスのアルファ値を取得
+float Stage::GetBoxAlpha() const
+{
+	return boxAlpha;
+}
+
+bool Stage::GetNextRoomFlag() const
+{
+	return nextRoomFlag;
+}
+
+void Stage::SetNextRoomFlag(const bool flag)
+{
+	nextRoomFlag = flag;
 }

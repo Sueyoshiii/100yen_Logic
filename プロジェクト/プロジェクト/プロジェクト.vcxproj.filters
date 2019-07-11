@@ -56,6 +56,7 @@
     <ClCompile Include="Stage\FirstRoom\FirstRoom.cpp" />
     <ClCompile Include="Stage\StageManager.cpp" />
     <ClCompile Include="Stage\SecondRoom\SecondRoom.cpp" />
+    <ClCompile Include="Stage\ThirdRoom\ThirdRoom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Info\Info.h">
@@ -117,6 +118,7 @@
     <ClInclude Include="Stage\FirstRoom\FirstRoom.h" />
     <ClInclude Include="Stage\StageManager.h" />
     <ClInclude Include="Stage\SecondRoom\SecondRoom.h" />
+    <ClInclude Include="Stage\ThirdRoom\ThirdRoom.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Info">

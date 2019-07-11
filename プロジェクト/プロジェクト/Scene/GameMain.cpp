@@ -70,32 +70,44 @@ void GameMain::Draw()
 		EffectManager::Get().Draw(lib);
 	}
 
+	// 遷移用ボックス描画
 	stage->DrawBox();
 }
 
 // 処理
 void GameMain::UpData()
 {
-	// カメラ
-	cam->Update();
+	if (!stage->GetNextRoomFlag())
+	{
+		// カメラ
+		cam->Update();
 
-	// 背景
-	bg->Update();
+		// 背景
+		bg->Update();
 
-	//stage->Update();
+		// ルーム
+		stage->Update();
 
-	// プレイヤー
-	pl->Update();
+		// プレイヤー
+		pl->Update();
 
-	// エフェクト
-	EffectManager::Get().Update();
+		// エフェクト
+		EffectManager::Get().Update();
+	}
 
-	// 死亡時はゲームオーバーへ
-	if (pl->GetDeadEndFlag())
+	// ルーム切り替えチェック
+	CheckChangeRoom();
+
+	// クリア時はクリアシーンへ
+	if (INPUT.IsTrigger(Key::P))
+	{
+		ChangeNextScene(new Clear(lib));
+	}
+	// 死亡時はゲームオーバーシーンへ
+	else if (pl->GetDeadEndFlag())
 	{
 		ChangeNextScene(new Over(lib));
 	}
-	ChangeRoom();
 }
 
 // シーン切り替え
@@ -109,24 +121,19 @@ void GameMain::ChangeNextScene(Scene* scene)
 }
 
 // ルーム切り替え
-void GameMain::ChangeRoom()
+void GameMain::CheckChangeRoom()
 {
 	if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f > StageManager::Get().GetRange().Right())
 	{
-		DeleteObject();
-		pl->SetPos(pl->GetFirstPos());
-		cam->SetPos(pl->GetWorldPos());
-		stage.reset(stage->GetNextRoom());
+		stage->SetNextRoomFlag(true);
+		if (stage->GetBoxAlpha() >= 1.0f)
+		{
+			DeleteObject();
+			pl->SetPos(pl->GetFirstPos());
+			cam->SetPos(pl->GetWorldPos());
+			stage.reset(stage->GetNextRoom());
+		}
 	}
-	//else if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f < StageManager::Get().GetRange().Left())
-	//{
-	//	DeleteObject();
-	//	float lastPosX = StageManager::Get().GetRange().Right() - pl->GetSize().x;
-	//	//pl->SetPos(pl->GetFirstPos());
-	//	pl->SetPos(Vec2f(lastPosX, pl->GetWorldPos().y));
-	//	cam->SetPos(pl->GetWorldPos());
-	//	stage.reset(stage->GetPrevRoom());
-	//}
 }
 
 // 登録されているオブジェクトの解放

@@ -79,8 +79,15 @@ public:
 	// 遷移ボックス描画
 	virtual void DrawBox();
 
-	virtual Stage* GetNextRoom() = 0;
-	virtual Stage* GetPrevRoom() = 0;
+	// 次のルームを取得
+	virtual Stage* GetNextRoom();
+
+	// ボックスのアルファ値を取得
+	virtual float GetBoxAlpha()const;
+
+	virtual bool GetNextRoomFlag()const;
+
+	virtual void SetNextRoomFlag(const bool flag);
 protected:
 	// マップデータ描画
 	void DrawMapData();
@@ -106,6 +113,9 @@ protected:
 
 	// 遷移用ボックスのアルファ値
 	float boxAlpha;
+
+	// 次のルームに行けるかの確認フラグ
+	bool nextRoomFlag;
 private:
 	// 文字列を数値に変換
 	template<typename T>

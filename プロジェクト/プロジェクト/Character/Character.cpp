@@ -29,7 +29,7 @@ void Character::FallUpdate()
 {
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	worldPos.y = std::min(GetFootPos().y, StageManager::Get().GetGround() - tex.size.y);
+	worldPos.y = std::min(GetFootPos().y, StageManager::Get().GetGround() - tex[type].size.y);
 }
 
 // 状態遷移
@@ -49,12 +49,13 @@ void Character::ChangeState(const std::string& state)
 		cParam.hp -= damage;
 	}
 
-	if (box.find(this->state) == box.end())
+	if (box.find(this->state) == box.end() || type != oldType)
 	{
-		box[this->state].resize(info.lock()->at(this->state).rect.size());
+		box.clear();
+		box[this->state].resize(info[type].lock()->at(this->state).rect.size());
 		for (unsigned int i = 0; i < box[this->state].size(); ++i)
 		{
-			box[this->state][i].resize(info.lock()->at(this->state).rect[i].hit.size());
+			box[this->state][i].resize(info[type].lock()->at(this->state).rect[i].hit.size());
 			std::fill(box[this->state][i].begin(), box[this->state][i].end(), Primitive(PrimitiveType::box));
 		}
 	}
@@ -64,46 +65,46 @@ void Character::ChangeState(const std::string& state)
 void Character::LoadData(const std::string& filePath)
 {
 	Info::Get().Load(filePath);
-	info = Info::Get().GetData(filePath);
+	info[type] = Info::Get().GetData(filePath);
 }
 
 // キャラクター画像読み込み
 void Character::LoadImage(const std::string& filePath)
 {
-	tex.Load(filePath);
-	tex.size    = info.lock()->at(state).rect[index].anim.size;
-	tex.divSize = info.lock()->at(state).rect[index].anim.size;
+	tex[type].Load(filePath);
+	tex[type].size    = info[type].lock()->at(state).rect[index].anim.size;
+	tex[type].divSize = info[type].lock()->at(state).rect[index].anim.size;
 }
 
 // 画像描画
 void Character::DrawImage()
 {
-	tex.offsetPos = {
-		tex.divSize.x * index,
-		info.lock()->at(state).rect[index].anim.pos.y
+	tex[type].offsetPos = {
+		tex[type].divSize.x * index,
+		info[type].lock()->at(state).rect[index].anim.pos.y
 	};
 
-	lib.lock()->Draw(tex, alpha, turnFlag);
+	lib.lock()->Draw(tex[type], alpha, turnFlag);
 }
 
 // 衝突矩形描画
 void Character::DrawRect()
 {
 	unsigned int id = 0;
-	for (auto& i : info.lock()->at(state).rect[index].hit)
+	for (auto& i : info[type].lock()->at(state).rect[index].hit)
 	{
 		Vec2f pos;
 		Vec2f size;
-		Vec2f animSize = info.lock()->at(state).rect[index].anim.size;
+		Vec2f animSize = info[type].lock()->at(state).rect[index].anim.size;
 		if (turnFlag)
 		{
-			pos  = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-i.rect.pos.x, i.rect.pos.y) * tex.size / animSize;
-			size = Vec2f(-i.rect.size.x, i.rect.size.y) * tex.size / animSize;
+			pos  = Vec2f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y) + Vec2f(-i.rect.pos.x, i.rect.pos.y) * tex[type].size / animSize;
+			size = Vec2f(-i.rect.size.x, i.rect.size.y) * tex[type].size / animSize;
 		}
 		else
 		{
-			pos  = tex.pos + i.rect.pos * tex.size / animSize;
-			size = i.rect.size * tex.size / animSize;
+			pos  = tex[type].pos + i.rect.pos * tex[type].size / animSize;
+			size = i.rect.size * tex[type].size / animSize;
 		}
 
 		Vec3f color = 0.0f;
@@ -135,9 +136,9 @@ void Character::AnimationUpdate()
 		return;
 	}
 	++frame;
-	if (frame > info.lock()->at(state).animTime)
+	if (frame > info[type].lock()->at(state).animTime)
 	{
-		index = (index + 1 >= info.lock()->at(state).rect.size()) ? 0 : ++index;
+		index = (index + 1 >= info[type].lock()->at(state).rect.size()) ? 0 : ++index;
 		frame = 0;
 	}
 }
@@ -145,8 +146,8 @@ void Character::AnimationUpdate()
 // アニメーションの終了を調べる
 bool Character::CheckAnimEnd(const unsigned int num)
 {
-	if (index >= info.lock()->at(state).rect.size() - num &&
-		frame >= info.lock()->at(state).animTime - (num -1))
+	if (index >= info[type].lock()->at(state).rect.size() - num &&
+		frame >= info[type].lock()->at(state).animTime - (num -1))
 	{
 		return true;
 	}
@@ -157,7 +158,7 @@ bool Character::CheckAnimEnd(const unsigned int num)
 // ローカル座標の更新
 void Character::UpdateLocalPos()
 {
-	tex.pos = cam.lock()->Correction(worldPos);
+	tex[type].pos = cam.lock()->Correction(worldPos);
 }
 
 // 無敵処理
@@ -190,19 +191,19 @@ void Character::KnockBack(const Vec2f& vec)
 // 衝突矩形を取得
 std::vector<HitRect<Vec2f>> Character::GetRect()
 {
-	auto hit = info.lock()->at(state).rect[index].hit;
+	auto hit = info[type].lock()->at(state).rect[index].hit;
 	std::for_each(hit.begin(), hit.end(), [&](HitRect<Vec2f> & rect)->void
 	{
-		Vec2f animSize = info.lock()->at(state).rect[index].anim.size;
+		Vec2f animSize = info[type].lock()->at(state).rect[index].anim.size;
 		if (turnFlag)
 		{
-			rect.rect.pos = Vec2f(tex.pos.x + tex.size.x, tex.pos.y) + Vec2f(-rect.rect.pos.x, rect.rect.pos.y) * tex.size / animSize;
-			rect.rect.size = Vec2f(-rect.rect.size.x, rect.rect.size.y) * tex.size / animSize;
+			rect.rect.pos = Vec2f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y) + Vec2f(-rect.rect.pos.x, rect.rect.pos.y) * tex[type].size / animSize;
+			rect.rect.size = Vec2f(-rect.rect.size.x, rect.rect.size.y) * tex[type].size / animSize;
 		}
 		else
 		{
-			rect.rect.pos = tex.pos + rect.rect.pos * tex.size / animSize;
-			rect.rect.size = rect.rect.size * tex.size / animSize;
+			rect.rect.pos = tex[type].pos + rect.rect.pos * tex[type].size / animSize;
+			rect.rect.size = rect.rect.size * tex[type].size / animSize;
 		}
 	});
 
@@ -210,15 +211,15 @@ std::vector<HitRect<Vec2f>> Character::GetRect()
 }
 
 // 座標取得
-Vec2f Character::GetPos() const
+Vec2f Character::GetPos()
 {
-	return tex.pos;
+	return tex[type].pos;
 }
 
 // サイズ取得
-Vec2f Character::GetSize() const
+Vec2f Character::GetSize()
 {
-	return tex.size;
+	return tex[type].size;
 }
 
 // 反転フラグ取得
@@ -248,7 +249,7 @@ CharacterParameter Character::GetParam() const
 // 足元取得
 Vec2f Character::GetFootPos()
 {
-	return Vec2f(worldPos.x + tex.size.x / 2, worldPos.y + tex.size.y);
+	return Vec2f(worldPos.x + tex[type].size.x / 2, worldPos.y + tex[type].size.y);
 }
 
 // 反転フラグセット

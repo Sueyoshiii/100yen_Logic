@@ -32,7 +32,7 @@ public:
 	// â‘ê∂ê¨
 	void CreateFlower(const Vec2f& pos, std::weak_ptr<Player> pl);
 	// éaåÇê∂ê¨
-	void CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
+	void CreateSlash(const std::string& state, const CharacterType& plType, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 
 	// çÌèú
 	void Delete();

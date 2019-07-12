@@ -21,13 +21,15 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	this->pl  = pl;
 	this->cam = cam;
 
+	type = CharacterType::EM_WEAK_WOLF;
+
 	LoadData("data/chara/enemy_1.info");
 	LoadImage("img/Enemy/Enemy_1.png");
 
 	InitFunc();
 	ChangeState("Neutral");
 
-	tex.size *= 3.0f;
+	tex[type].size *= 3.0f;
 
 	// hp, speed, attack, defense, dush, jump
 	cParam = CharacterParameter(2, WALK_SPEED, 2, 2, 10.0f, -30.0f);
@@ -36,9 +38,9 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 
 	turnFlag = true;
 
-	tex.pos    = pos;
-	worldPos   = cam.lock()->Correction(tex.pos);
-	worldPos.y = StageManager::Get().GetGround() - tex.size.y;
+	tex[type].pos    = pos;
+	worldPos   = cam.lock()->Correction(tex[type].pos);
+	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 	fulcrum    = worldPos;
 
 	knockBackRange = 4.0f;
@@ -127,7 +129,7 @@ void Wolf::WalkUpdate()
 		vel.x = turnFlag ? -cParam.speed : cParam.speed;
 		worldPos.x += vel.x;
 
-		float size = tex.size.x * 2.0f;
+		float size = tex[type].size.x * 2.0f;
 		if (fulcrum.x - size >= worldPos.x ||
 			worldPos.x >= fulcrum.x + size)
 		{
@@ -256,7 +258,7 @@ void Wolf::AttackUpdate()
 	worldPos.y += vel.y;
 	if (GetFootPos().y > StageManager::Get().GetGround())
 	{
-		worldPos.y = StageManager::Get().GetGround() - tex.size.y;
+		worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 		jumpFlag = false;
 		coolFlag = true;
 		coolTime = 0;
@@ -287,7 +289,7 @@ void Wolf::DamageUpdate()
 	}
 	else
 	{
-		worldPos.y = StageManager::Get().GetGround() - tex.size.y;
+		worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 		if ((++cnt) > STUN_TIME_MAX)
 		{
 			cnt = 0;

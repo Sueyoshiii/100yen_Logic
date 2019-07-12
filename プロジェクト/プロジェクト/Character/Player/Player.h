@@ -70,6 +70,10 @@ private:
 	// ダメージ時の描画
 	void DamageDraw();
 
+	// 形態変更
+	void ChangeNormal();
+	void ChangeWolf();
+
 	// ジャンプフラグ
 	bool jumpFlag;
 

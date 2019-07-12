@@ -5,7 +5,7 @@ class Slash :
 	public CharaEffect
 {
 public:
-	Slash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
+	Slash(const std::string& state, const CharacterType& plType, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 	~Slash();
 
 	// 更新
@@ -16,6 +16,11 @@ public:
 	void Draw(std::weak_ptr<MyLib> lib);
 private:
 	void InitState();
+
+	void InitType();
+
+	void TypeNormal();
+	void TypeWolf();
 
 	// 初撃
 	void FirstAttackUpdate();
@@ -31,4 +36,6 @@ private:
 
 	// 状態コンテナ
 	std::unordered_map<std::string, std::string> stateMap;
+
+	std::unordered_map<CharacterType, std::function<void()>> typeFunc;
 };

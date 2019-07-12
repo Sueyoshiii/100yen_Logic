@@ -1,22 +1,22 @@
 #include "Slash.h"
 
 // コンストラクタ
-Slash::Slash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag) :
+Slash::Slash(const std::string& state, const CharacterType& plType, const Vec2f& pos, const Vec2f& size, const bool turnFlag) :
 	attackCnt(0)
 {
 	InitState();
 
 	this->state = stateMap[state];
 
-	LoadData("data/chara/player_effect.info");
-	LoadImage("img/Player/player_effect.png");
+	InitType();
+	typeFunc[plType]();
 
 	ChangeState(this->state);
 
 	this->turnFlag = turnFlag;
-	float x  = this->turnFlag ? pos.x - size.x / 1.5f : pos.x + size.x / 1.5f;
-	tex.pos  = Vec2f(x, pos.y);
-	tex.size = size;
+	float x  = this->turnFlag ? pos.x - size.x / 2.0f : pos.x + size.x / 2.0f;
+	tex[type].pos  = Vec2f(x, pos.y);
+	tex[type].size = size;
 }
 
 // デストラクタ
@@ -62,6 +62,27 @@ void Slash::InitState()
 	func["first"]  = std::bind(&Slash::FirstAttackUpdate, this);
 	func["second"] = std::bind(&Slash::SecondAttackUpdate, this);
 	func["third"]  = std::bind(&Slash::ThirdAttackUpdate, this);
+}
+
+void Slash::InitType()
+{
+	typeFunc.clear();
+	typeFunc[CharacterType::PL_NORMAL] = std::bind(&Slash::TypeNormal, this);
+	typeFunc[CharacterType::PL_WOLF] = std::bind(&Slash::TypeWolf, this);
+}
+
+void Slash::TypeNormal()
+{
+	type = CharacterType::EF_PL_NORMAL_SLASH;
+	LoadData("data/chara/player_effect.info");
+	LoadImage("img/Player/player_effect.png");
+}
+
+void Slash::TypeWolf()
+{
+	type = CharacterType::EF_PL_WOLF_SLASH;
+	LoadData("data/chara/player_wolf_effect.info");
+	LoadImage("img/Player/player_wolf_effect.png");
 }
 
 // 初撃

@@ -13,6 +13,18 @@
 
 #define INPUT Input::Get()
 
+enum class CharacterType
+{
+	// プレイヤー
+	PL_NORMAL,
+	PL_WOLF,
+	// 敵
+	EM_WEAK_WOLF,
+	// エフェクト
+	EF_PL_NORMAL_SLASH,
+	EF_PL_WOLF_SLASH
+};
+
 // キャラクターのパラメータ
 struct CharacterParameter
 {
@@ -71,10 +83,10 @@ public:
 	std::vector<HitRect<Vec2f>> GetRect();
 
 	// 座標取得
-	Vec2f GetPos()const;
+	Vec2f GetPos();
 
 	// サイズ取得
-	Vec2f GetSize()const;
+	Vec2f GetSize();
 
 	// 反転フラグ取得
 	bool GetTurnFlag()const;
@@ -134,7 +146,7 @@ protected:
 	std::weak_ptr<Camera> cam;
 
 	// キャラハンドル
-	Texture tex;
+	std::unordered_map<CharacterType, Texture> tex;
 
 	// 状態
 	std::string state;
@@ -167,7 +179,7 @@ protected:
 	std::unordered_map<std::string, std::function<void(void)>> func;
 
 	// データ
-	std::weak_ptr<std::unordered_map<std::string, Data>> info;
+	std::unordered_map<CharacterType, std::weak_ptr<std::unordered_map<std::string, Data>>> info;
 
 	// アニメーション止める
 	bool stopFlag;
@@ -186,6 +198,12 @@ protected:
 
 	// ジャンプフラグ
 	bool jumpFlag;
+
+	// キャラタイプ
+	CharacterType type;
+
+	// 前のキャラタイプ
+	CharacterType oldType;
 private:
 	// 矩形
 	std::unordered_map<std::string, std::vector<std::vector<Primitive>>> box;

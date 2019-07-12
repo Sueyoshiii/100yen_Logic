@@ -39,7 +39,7 @@ void Enemy::CheckHit()
 					KnockBack(-dir);
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 					ChangeState("Damage");
-					EffectManager::Get().CreateFlower(tex.pos, pl);
+					EffectManager::Get().CreateFlower(tex[type].pos, pl);
 					cam.lock()->SetVibrationFlag(true);
 				}
 				else
@@ -102,7 +102,7 @@ void Enemy::CheckHitEffect()
 					KnockBack(-dir);
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 					ChangeState("Damage");
-					EffectManager::Get().CreateFlower(tex.pos, pl);
+					EffectManager::Get().CreateFlower(tex[type].pos, pl);
 					cam.lock()->SetVibrationFlag(true);
 
 					break;
@@ -126,7 +126,7 @@ bool Enemy::CheckView()
 
 	// ‹ŠEü
 	seg = Segment();
-	seg.begin = tex.pos + tex.size / 2.0f;
+	seg.begin = tex[type].pos + tex[type].size / 2.0f;
 	seg.end   = Vec2f(seg.begin.x + (length), seg.begin.y);
 	seg.vec   = seg.end - seg.begin;
 

@@ -55,9 +55,9 @@ void EffectManager::CreateFlower(const Vec2f& pos, std::weak_ptr<Player> pl)
 	list.push_back(ListParameter(EffectType::Flower, map[EffectType::Flower]));
 }
 // éaåÇê∂ê¨
-void EffectManager::CreateSlash(const std::string& state, const Vec2f& pos, const Vec2f& size, const bool turnFlag)
+void EffectManager::CreateSlash(const std::string& state, const CharacterType& plType, const Vec2f& pos, const Vec2f& size, const bool turnFlag)
 {
-	map[EffectType::Slashing] = std::make_shared<Slash>(state, pos, size, turnFlag);
+	map[EffectType::Slashing] = std::make_shared<Slash>(state, plType, pos, size, turnFlag);
 	list.push_back(ListParameter(EffectType::Slashing, map[EffectType::Slashing]));
 }
 

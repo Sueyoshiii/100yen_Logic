@@ -4,6 +4,19 @@
 
 namespace {
 	const unsigned int HP_MAX = 1;
+
+	const float NORMAL_WALK_SPEED = 8.0f;
+	const int NORMAL_ATTACK_POW = 2;
+	const int NORMAL_DEFENCE_POW = 2;
+	const float NORMAL_DASH_POW = 15.0f;
+	const float NORMAL_JUMP_POW = -40.0f;
+
+	const float WOLF_WALK_SPEED = 12.0f;
+	const int WOLF_ATTACK_POW = 4;
+	const int WOLF_DEFENCE_POW = 0;
+	const float WOLF_DASH_POW = 15.0f;
+	const float WOLF_JUMP_POW = -40.0f;
+
 	const unsigned int HIT_STOP_CNT_MAX = 15;
 	const unsigned int DISAPPEAR_CNT_MAX = 60;
 	const unsigned int CRITICAL_CNT_MAX = 5;
@@ -18,6 +31,12 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	this->lib = lib;
 	this->cam = cam;
 
+	type = CharacterType::PL_WOLF;
+	LoadData("data/chara/player_wolf.info");
+	LoadImage("img/Player/player_wolf.png");
+
+
+	type = CharacterType::PL_NORMAL;
 	LoadData("data/chara/player.info");
 	LoadImage("img/Player/player.png");
 
@@ -27,17 +46,18 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	InitFunc();
 	ChangeState("Neutral");
 
-	tex.size *= 3.0f;
+	tex[type].size *= 3.0f;
+	tex[CharacterType::PL_WOLF].size = tex[type].size;
 
-	tex.pos = Vec2f(0.0f, 0.0f);
-	worldPos = cam.lock()->Correction(tex.pos);
+	tex[type].pos = Vec2f(0.0f, 0.0f);
+	worldPos = cam.lock()->Correction(tex[type].pos);
 	worldPos.x -= float(lib.lock()->GetWinSize().x);
-	worldPos.y = StageManager::Get().GetGround() - tex.size.y;
+	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 
 	firstPos = worldPos;
 
 	// hp, speed, attack, defense, dush, jump
-	cParam = CharacterParameter(HP_MAX, 8.0f, 2, 2, 15.0f, -40.0f);
+	cParam = CharacterParameter(HP_MAX, NORMAL_WALK_SPEED, NORMAL_ATTACK_POW, NORMAL_DEFENCE_POW, NORMAL_DASH_POW, NORMAL_JUMP_POW);
 	vel = Vec2f(cParam.speed, 0.0f);
 
 	knockBackRange = 4.0f;
@@ -100,6 +120,18 @@ void Player::NeutralUpdate()
 	CheckDash();
 
 	CheckFirstAttack();
+
+	if (INPUT.IsTrigger(Key::F))
+	{
+		if (type == CharacterType::PL_NORMAL)
+		{
+			ChangeWolf();
+		}
+		else
+		{
+			ChangeNormal();
+		}
+	}
 }
 
 // 歩行
@@ -188,7 +220,7 @@ void Player::FallUpdate()
 	worldPos.y += vel.y;
 	if (GetFootPos().y > StageManager::Get().GetGround())
 	{
-		worldPos.y = StageManager::Get().GetGround() - tex.size.y;
+		worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 		ChangeState("Neutral");
 	}
 }
@@ -235,7 +267,7 @@ void Player::CheckFirstAttack()
 		attackFlag = true;
 		attackCnt  = 0;
 		ChangeState("Attack1");
-		EffectManager::Get().CreateSlash(state, tex.pos, tex.size, turnFlag);
+		EffectManager::Get().CreateSlash(state, type, tex[type].pos, tex[type].size, turnFlag);
 	}
 }
 
@@ -270,7 +302,7 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 				std::string next = "Attack" + std::to_string(++num);
 
 				ChangeState(next);
-				EffectManager::Get().CreateSlash(next, tex.pos, tex.size, turnFlag);
+				EffectManager::Get().CreateSlash(next, type, tex[type].pos, tex[type].size, turnFlag);
 			}
 			CheckDash();
 		}
@@ -303,7 +335,7 @@ void Player::DamageUpdate()
 	}
 	else
 	{
-		worldPos.y = StageManager::Get().GetGround() - tex.size.y;
+		worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 		if ((++cnt) > 40)
 		{
 			cnt = 0;
@@ -368,6 +400,30 @@ void Player::DamageDraw()
 	{
 		criticalAlpha = 0.8f;
 	}
+}
+
+void Player::ChangeNormal()
+{
+	oldType = type;
+	type = CharacterType::PL_NORMAL;
+	
+	tex[type].pos = tex[CharacterType::PL_WOLF].pos;
+
+	cParam = CharacterParameter(cParam.hp, NORMAL_WALK_SPEED, NORMAL_ATTACK_POW, NORMAL_DEFENCE_POW, NORMAL_DASH_POW, NORMAL_JUMP_POW);
+
+	ChangeState(state);
+}
+
+void Player::ChangeWolf()
+{
+	oldType = type;
+	type = CharacterType::PL_WOLF;
+
+	tex[type].pos = tex[CharacterType::PL_NORMAL].pos;
+
+	cParam = CharacterParameter(cParam.hp, WOLF_WALK_SPEED, WOLF_ATTACK_POW, WOLF_DEFENCE_POW, WOLF_DASH_POW, WOLF_JUMP_POW);
+
+	ChangeState(state);
 }
 
 // 状態と関数をバインド

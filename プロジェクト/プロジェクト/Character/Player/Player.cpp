@@ -6,20 +6,20 @@ namespace {
 	const unsigned int HP_MAX = 1;
 
 	const float NORMAL_WALK_SPEED = 8.0f;
-	const int NORMAL_ATTACK_POW = 2;
-	const int NORMAL_DEFENCE_POW = 2;
-	const float NORMAL_DASH_POW = 15.0f;
-	const float NORMAL_JUMP_POW = -40.0f;
+	const int NORMAL_ATTACK_POW   = 2;
+	const int NORMAL_DEFENCE_POW  = 2;
+	const float NORMAL_DASH_POW   = 15.0f;
+	const float NORMAL_JUMP_POW   = -40.0f;
 
 	const float WOLF_WALK_SPEED = 12.0f;
-	const int WOLF_ATTACK_POW = 4;
-	const int WOLF_DEFENCE_POW = 0;
-	const float WOLF_DASH_POW = 15.0f;
-	const float WOLF_JUMP_POW = -40.0f;
+	const int WOLF_ATTACK_POW   = 4;
+	const int WOLF_DEFENCE_POW  = 0;
+	const float WOLF_DASH_POW   = 20.0f;
+	const float WOLF_JUMP_POW   = -50.0f;
 
-	const unsigned int HIT_STOP_CNT_MAX = 15;
+	const unsigned int HIT_STOP_CNT_MAX  = 15;
 	const unsigned int DISAPPEAR_CNT_MAX = 60;
-	const unsigned int CRITICAL_CNT_MAX = 5;
+	const unsigned int CRITICAL_CNT_MAX  = 5;
 }
 
 // コンストラクタ
@@ -76,9 +76,6 @@ void Player::Update()
 		return;
 	}
 
-	// 状態関数
-	func[state]();
-
 	CorrectPosInStage();
 
 	if (!jumpFlag && 
@@ -89,6 +86,9 @@ void Player::Update()
 	}
 
 	InvicibleUpdate();
+
+	// 状態関数
+	func[state]();
 }
 
 // 描画
@@ -250,7 +250,7 @@ void Player::CheckDash()
 		stopFlag = true;
 		attackCnt = 0;
 		attackFlag = false;
-		vel.x = turnFlag ? -cParam.dushPow : cParam.dushPow;
+		vel.x = turnFlag ? -cParam.dashPow : cParam.dashPow;
 		ChangeState("Dash");
 	}
 }
@@ -283,13 +283,21 @@ void Player::ThirdAttackUpdate()
 	CheckNextAttack(25);
 }
 
+// 4段目の攻撃
+void Player::FourthAttackUpdate()
+{
+	CheckNextAttack(25);
+}
+
 // 次の攻撃へ移る
 void Player::CheckNextAttack(const unsigned int attackInterval)
 {
 	if (CheckAnimEnd())
 	{
 		stopFlag = true;
-		if (state != "Attack3")
+		std::string lastAttack = type == CharacterType::PL_NORMAL ? "Attack3" : "Attack4";
+
+		if (state != lastAttack)
 		{
 			if (INPUT.IsTrigger(Key::Z))
 			{
@@ -439,6 +447,7 @@ void Player::InitFunc()
 	func["Attack1"] = std::bind(&Player::FirstAttackUpdate, this);
 	func["Attack2"] = std::bind(&Player::SecondAttackUpdate, this);
 	func["Attack3"] = std::bind(&Player::ThirdAttackUpdate, this);
+	func["Attack4"] = std::bind(&Player::FourthAttackUpdate, this);
 	func["Damage"]  = std::bind(&Player::DamageUpdate, this);
 	func["Death"]   = std::bind(&Player::DeathUpdate, this);
 }

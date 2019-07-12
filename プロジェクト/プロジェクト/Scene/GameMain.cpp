@@ -38,10 +38,6 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);
-
-#ifdef _DEBUG
-	std::cout << "GameMain Scene" << std::endl;
-#endif
 }
 
 // デストラクタ
@@ -75,7 +71,7 @@ void GameMain::Draw()
 }
 
 // 処理
-void GameMain::UpData()
+void GameMain::Update()
 {
 	if (!stage->GetNextRoomFlag())
 	{

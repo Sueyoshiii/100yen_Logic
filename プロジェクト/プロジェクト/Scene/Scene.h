@@ -15,7 +15,7 @@ public:
 	virtual void Draw() = 0;
 
 	// ˆ—
-	virtual void UpData() = 0;
+	virtual void Update() = 0;
 
 protected:
 	// ƒ‰ƒCƒuƒ‰ƒŠ

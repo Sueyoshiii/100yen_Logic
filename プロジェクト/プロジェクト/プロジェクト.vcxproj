@@ -155,7 +155,7 @@
       <AdditionalIncludeDirectories>..\..\..\dx12Lib\Lib\Lib\MyLib;C:\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\;C:\boost</AdditionalLibraryDirectories>

@@ -44,7 +44,7 @@ void Enemy::CheckHit()
 				}
 				else
 				{
-					if (!pl.lock()->GetInvincibleFlag())
+					if (!pl.lock()->GetInvincibleFlag() && state != "Damage")
 					{
 						bool nextTurn = turnFlag;
 						if (dir.x < 0)

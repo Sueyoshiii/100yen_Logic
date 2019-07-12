@@ -17,10 +17,6 @@ Title::Title(std::weak_ptr<MyLib>lib) :
 	};
 
 	alpha = 0.0f;
-
-#ifdef _DEBUG
-	std::cout << "Title Scene" << std::endl;
-#endif
 }
 
 // デストラクタ
@@ -34,7 +30,7 @@ void Title::Draw()
 }
 
 // 処理
-void Title::UpData()
+void Title::Update()
 {
 	if (Input::Get().IsTrigger(Key::Return))
 	{

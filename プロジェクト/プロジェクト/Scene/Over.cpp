@@ -17,10 +17,6 @@ Over::Over(std::weak_ptr<MyLib> lib) :
 	};
 
 	alpha = 0.0f;
-
-#ifdef _DEBUG
-	std::cout << "GameOver Scene" << std::endl;
-#endif
 }
 
 // デストラクタ
@@ -35,7 +31,7 @@ void Over::Draw()
 }
 
 // 処理
-void Over::UpData()
+void Over::Update()
 {
 	if (Input::Get().IsTrigger(Key::Return))
 	{

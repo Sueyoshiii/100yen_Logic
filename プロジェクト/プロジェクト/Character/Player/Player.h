@@ -57,6 +57,8 @@ private:
 	void SecondAttackUpdate();
 	// 3段目の攻撃
 	void ThirdAttackUpdate();
+	// 4段目の攻撃
+	void FourthAttackUpdate();
 	// 次の攻撃へ移る
 	void CheckNextAttack(const unsigned int attackInterval);
 	// ダメージ

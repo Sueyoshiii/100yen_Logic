@@ -15,7 +15,7 @@ public:
 	void Draw();
 
 	// ˆ—
-	void UpData();
+	void Update();
 private:
 	bool checkNext;
 };

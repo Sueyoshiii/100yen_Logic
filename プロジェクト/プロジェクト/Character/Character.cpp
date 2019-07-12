@@ -12,6 +12,8 @@ Character::Character() :
 // デストラクタ
 Character::~Character()
 {
+	tex.clear();
+	info.clear();
 }
 
 // ステージ内に座標を補正

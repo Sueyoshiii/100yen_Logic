@@ -2,7 +2,7 @@
 
 namespace {
 	const float WALK_SPEED = 2.0f;
-	const float DASH_SPEED = 6.0f;
+	const float DASH_SPEED = 8.0f;
 	const float ATTACK_RANGE_MAX = 180.0f;
 	const float ATTACK_RANGE_MIN = 0.0f;
 
@@ -31,14 +31,14 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 
 	tex[type].size *= 3.0f;
 
-	// hp, speed, attack, defense, dush, jump
+	// hp, speed, attack, defense, dash, jump
 	cParam = CharacterParameter(2, WALK_SPEED, 2, 2, 10.0f, -30.0f);
 
 	vel = Vec2f(cParam.speed, 0.0f);
 
 	turnFlag = true;
 
-	tex[type].pos    = pos;
+	tex[type].pos = pos;
 	worldPos   = cam.lock()->Correction(tex[type].pos);
 	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 	fulcrum    = worldPos;
@@ -311,7 +311,7 @@ void Wolf::DeathUpdate()
 	if (CheckAnimEnd())
 	{
 		stopFlag = true;
-		if ((alpha < 0.0f))
+		if (alpha < 0.0f)
 		{
 			deleteFlag = true;
 		}

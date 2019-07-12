@@ -28,6 +28,8 @@ private:
 	void SecondAttackUpdate();
 	// 三撃
 	void ThirdAttackUpdate();
+	// 四撃
+	void FourthAttackUpdate();
 	// 攻撃処理
 	void AttackUpdate(const unsigned int attackInterval);
 
@@ -37,5 +39,6 @@ private:
 	// 状態コンテナ
 	std::unordered_map<std::string, std::string> stateMap;
 
+	// 形態関数
 	std::unordered_map<CharacterType, std::function<void()>> typeFunc;
 };

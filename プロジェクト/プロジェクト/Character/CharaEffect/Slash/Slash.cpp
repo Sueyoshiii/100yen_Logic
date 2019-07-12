@@ -57,11 +57,13 @@ void Slash::InitState()
 	stateMap["Attack1"] = "first";
 	stateMap["Attack2"] = "second";
 	stateMap["Attack3"] = "third";
+	stateMap["Attack4"] = "fourth";
 
 	func.clear();
 	func["first"]  = std::bind(&Slash::FirstAttackUpdate, this);
 	func["second"] = std::bind(&Slash::SecondAttackUpdate, this);
 	func["third"]  = std::bind(&Slash::ThirdAttackUpdate, this);
+	func["fourth"] = std::bind(&Slash::FourthAttackUpdate, this);
 }
 
 void Slash::InitType()
@@ -99,6 +101,12 @@ void Slash::SecondAttackUpdate()
 
 // ŽOŒ‚
 void Slash::ThirdAttackUpdate()
+{
+	AttackUpdate(25);
+}
+
+// ŽlŒ‚
+void Slash::FourthAttackUpdate()
 {
 	AttackUpdate(25);
 }

@@ -17,10 +17,6 @@ Clear::Clear(std::weak_ptr<MyLib> lib)
 	};
 
 	alpha = 0.0f;
-
-#ifdef _DEBUG
-	std::cout << "GameClear Scene" << std::endl;
-#endif
 }
 
 // デストラクタ
@@ -35,7 +31,7 @@ void Clear::Draw()
 }
 
 // 処理
-void Clear::UpData()
+void Clear::Update()
 {
 	if (Input::Get().IsTrigger(Key::Return))
 	{

@@ -20,7 +20,7 @@ public:
 	void Draw();
 	
 	// ˆ—
-	void UpData();
+	void Update();
 private:
 	// ƒV[ƒ“Ø‚è‘Ö‚¦
 	void ChangeNextScene(Scene* scene);

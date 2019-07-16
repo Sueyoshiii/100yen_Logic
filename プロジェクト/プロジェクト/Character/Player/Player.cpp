@@ -35,7 +35,6 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	LoadData("data/chara/player_wolf.info");
 	LoadImage("img/Player/player_wolf.png");
 
-
 	type = CharacterType::PL_NORMAL;
 	LoadData("data/chara/player.info");
 	LoadImage("img/Player/player.png");
@@ -410,6 +409,7 @@ void Player::DamageDraw()
 	}
 }
 
+// Ô‚¸‚«‚ñ‚É•Ïg
 void Player::ChangeNormal()
 {
 	oldType = type;
@@ -422,6 +422,7 @@ void Player::ChangeNormal()
 	ChangeState(state);
 }
 
+// Œ¢‚¸‚«‚ñ‚É•Ïg
 void Player::ChangeWolf()
 {
 	oldType = type;

@@ -48,7 +48,7 @@ GameMain::~GameMain()
 // 描画
 void GameMain::Draw()
 {
-	if (pl->GetState() != "Death")
+	if (pl->CheckAlive())
 	{
 		// 背景
 		bg->Draw();
@@ -60,7 +60,7 @@ void GameMain::Draw()
 	// プレイヤー
 	pl->Draw();
 
-	if (pl->GetState() != "Death")
+	if (pl->CheckAlive())
 	{
 		// エフェクト
 		EffectManager::Get().Draw(lib);

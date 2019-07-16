@@ -190,6 +190,17 @@ void Character::KnockBack(const Vec2f& vec)
 	vel = Vec2f(knockBackRange / 2.0f * v, -25.0f);
 }
 
+// ¶‘¶î•ñæ“¾
+bool Character::CheckAlive()
+{
+	if (state != "Death")
+	{
+		return true;
+	}
+
+	return false;
+}
+
 // Õ“Ë‹éŒ`‚ğæ“¾
 std::vector<HitRect<Vec2f>> Character::GetRect()
 {

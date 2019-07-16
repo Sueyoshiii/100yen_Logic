@@ -85,8 +85,10 @@ public:
 	// ボックスのアルファ値を取得
 	virtual float GetBoxAlpha()const;
 
+	// 部屋移動フラグを取得
 	virtual bool GetNextRoomFlag()const;
 
+	// 部屋移動フラグを設定
 	virtual void SetNextRoomFlag(const bool flag);
 protected:
 	// マップデータ描画
@@ -126,6 +128,4 @@ private:
 
 	// 初期化
 	int Init();
-
-	Vec2f pos;
 };

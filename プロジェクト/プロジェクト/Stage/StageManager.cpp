@@ -19,6 +19,14 @@ StageManager& StageManager::Get()
 	return instance;
 }
 
+void StageManager::Update()
+{
+}
+
+void StageManager::Draw()
+{
+}
+
 // �͈͎擾
 StageRange StageManager::GetRange()
 {

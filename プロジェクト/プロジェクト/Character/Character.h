@@ -79,6 +79,9 @@ public:
 	// ノックバック
 	void KnockBack(const Vec2f& vec);
 
+	// 生存情報取得
+	bool CheckAlive();
+
 	// 衝突矩形を取得
 	std::vector<HitRect<Vec2f>> GetRect();
 

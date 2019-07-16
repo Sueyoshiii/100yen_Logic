@@ -34,6 +34,9 @@ public:
 	~StageManager();
 	static StageManager& Get();
 
+	void Update();
+	void Draw();
+
 	// ステージ範囲取得
 	StageRange GetRange();
 

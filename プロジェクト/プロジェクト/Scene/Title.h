@@ -1,6 +1,9 @@
 #pragma once
 #include "Scene.h"
 #include <MyLib.h>
+#include <wrl.h>
+
+class Okdio;
 
 class Title :
 	public Scene
@@ -18,4 +21,5 @@ public:
 	void Update();
 private:
 	bool checkNext;
+	Okdio* okdio;
 };

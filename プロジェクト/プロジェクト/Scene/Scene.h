@@ -9,7 +9,7 @@ public:
 	// コンストラクタ
 	Scene() {}
 	// デストラクタ
-	~Scene() {}
+	virtual ~Scene() {}
 
 	// 描画
 	virtual void Draw() = 0;

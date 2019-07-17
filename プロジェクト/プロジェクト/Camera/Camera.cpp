@@ -79,10 +79,24 @@ void Camera::SetVibrationFlag(const bool flag)
 // À•W‚ÌÝ’è
 void Camera::SetPos(const Vec2f& pos)
 {
-	this->pos = pos;
+	if (this->pos.x < pos.x)
+	{
+		this->pos.x += 4.0f;
+	}
+	else if (this->pos.x > pos.x)
+	{
+		this->pos.x -= 4.0f;
+	}
+	else
+	{
+		this->pos = pos;
+	}
 
-	float left = StageManager::Get().GetRange().Left();
-	float right = StageManager::Get().GetRange().Right();
+	float left   = StageManager::Get().GetRange().Left();
+	float right  = StageManager::Get().GetRange().Right();
+	float top    = StageManager::Get().GetRange().Top();
+	float bottom = StageManager::Get().GetRange().Bottom();
+
 	if (this->pos.x - size.x / 2 < left) {
 		this->pos.x = left + size.x / 2;
 	}
@@ -93,5 +107,17 @@ void Camera::SetPos(const Vec2f& pos)
 	if (this->pos.x < 0.0f)
 	{
 		this->pos.x = 0.0f;
+	}
+
+	if (this->pos.y - size.y / 2 < top) {
+		this->pos.y = top + size.y / 2;
+	}
+	else if (this->pos.y + size.y / 2 > bottom) {
+		this->pos.y = bottom - size.y / 2;
+	}
+
+	if (this->pos.y < 0.0f)
+	{
+		this->pos.y = 0.0f;
 	}
 }

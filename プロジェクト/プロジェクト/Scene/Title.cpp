@@ -2,6 +2,10 @@
 #include "GameMain.h"
 #include "../Game/Game.h"
 #include "../Json/JsonLoader.h"
+#include <Okdio.h>
+#include <crtdbg.h>
+
+#pragma comment(lib, "Okdio.lib")
 
 // コンストラクタ
 Title::Title(std::weak_ptr<MyLib>lib) :
@@ -17,11 +21,20 @@ Title::Title(std::weak_ptr<MyLib>lib) :
 	};
 
 	alpha = 0.0f;
+
+	//auto hr = okmonn::CreateObj(IID_PPV_ARGS(&okdio));
+	//_ASSERT(hr == S_OK);
+	//hr = okdio->Load("bgm/INSIDE.wav");
+	//_ASSERT(hr == S_OK);
+	//hr = okdio->Play(true);
+	//_ASSERT(hr == S_OK);
 }
 
 // デストラクタ
 Title::~Title()
 {
+	//okdio->Stop();
+	//okdio->Release();
 }
 // 描画
 void Title::Draw()
@@ -37,7 +50,7 @@ void Title::Update()
 		checkNext = true;
 	}
 
-	alpha = std::min(alpha, 1.0f);
+	alpha = std::fmin(alpha, 1.0f);
 	if (checkNext)
 	{
 		alpha -= 0.02f;

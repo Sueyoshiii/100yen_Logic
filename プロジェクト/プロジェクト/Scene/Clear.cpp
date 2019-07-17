@@ -38,7 +38,7 @@ void Clear::Update()
 		checkNext = true;
 	}
 
-	alpha = std::min(alpha, 1.0f);
+	alpha = std::fmin(alpha, 1.0f);
 	if (checkNext)
 	{
 		alpha -= 0.02f;

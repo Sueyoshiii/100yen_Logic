@@ -96,7 +96,7 @@
       <AdditionalIncludeDirectories>..\..\..\dx12Lib\Lib\Lib\MyLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
       <AdditionalLibraryDirectories>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -110,11 +110,11 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\..\dx12Lib\Lib\Lib\MyLib;C:\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\1601296\Documents\GitHub\Okdio\Okdio\Okdio\Okdio;..\..\..\dx12Lib\Lib\Lib\MyLib;C:\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\;C:\boost</AdditionalLibraryDirectories>
+      <SubSystem>NotSet</SubSystem>
+      <AdditionalLibraryDirectories>C:\Users\1601296\Documents\GitHub\Okdio\Okdio\lib\x64\Debug;..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\;C:\boost</AdditionalLibraryDirectories>
       <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Manifest />
@@ -132,7 +132,7 @@
       <AdditionalIncludeDirectories>..\..\..\dx12Lib\Lib\Lib\MyLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\</AdditionalLibraryDirectories>
@@ -152,13 +152,13 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\..\dx12Lib\Lib\Lib\MyLib;C:\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\1601296\Documents\GitHub\Okdio\Okdio\Okdio\Okdio;..\..\..\dx12Lib\Lib\Lib\MyLib;C:\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\;C:\boost</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\1601296\Documents\GitHub\Okdio\Okdio\lib\x64\Release;..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\;C:\boost</AdditionalLibraryDirectories>
       <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Manifest>

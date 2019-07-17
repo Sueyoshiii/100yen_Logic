@@ -33,7 +33,6 @@ Title::Title(std::weak_ptr<MyLib>lib) :
 // デストラクタ
 Title::~Title()
 {
-	//okdio->Stop();
 	//okdio->Release();
 }
 // 描画

@@ -57,6 +57,7 @@ void Game::Draw()
 
 void Game::Finish(void)
 {
+	scene.reset();
 	okmonn::EnginEnd();
 }
 

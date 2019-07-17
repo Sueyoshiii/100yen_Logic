@@ -79,18 +79,7 @@ void Camera::SetVibrationFlag(const bool flag)
 // À•W‚ÌÝ’è
 void Camera::SetPos(const Vec2f& pos)
 {
-	if (this->pos.x < pos.x)
-	{
-		this->pos.x += 4.0f;
-	}
-	else if (this->pos.x > pos.x)
-	{
-		this->pos.x -= 4.0f;
-	}
-	else
-	{
-		this->pos = pos;
-	}
+	this->pos = pos;
 
 	float left   = StageManager::Get().GetRange().Left();
 	float right  = StageManager::Get().GetRange().Right();

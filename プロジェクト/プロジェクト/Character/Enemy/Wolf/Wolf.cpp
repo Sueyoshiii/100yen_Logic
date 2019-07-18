@@ -146,7 +146,7 @@ void Wolf::WalkUpdate()
 }
 void Wolf::CheckWalk()
 {
-	ChangeState("walk");
+	ChangeState("Walk");
 	cParam.speed = WALK_SPEED;
 }
 

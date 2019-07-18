@@ -8,6 +8,13 @@
 #include <memory>
 
 
+// チップの種類
+enum class ChipType
+{
+	None,
+	Wall
+};
+
 // マップタイプ
 enum class MapType
 {
@@ -65,7 +72,7 @@ class Stage
 {
 public:
 	Stage();
-	~Stage();
+	virtual ~Stage();
 
 	// ステージデータ読み込み
 	int Load(const std::string& jsonFilePath, const std::string& imgFilePath);
@@ -79,17 +86,19 @@ public:
 	// 遷移ボックス描画
 	virtual void DrawBox();
 
+	bool CheckWall(Vec2f& pos);
+
 	// 次のルームを取得
 	virtual Stage* GetNextRoom();
 
 	// ボックスのアルファ値を取得
-	virtual float GetBoxAlpha()const;
+	float GetBoxAlpha()const;
 
 	// 部屋移動フラグを取得
-	virtual bool GetNextRoomFlag()const;
+	bool GetNextRoomFlag()const;
 
 	// 部屋移動フラグを設定
-	virtual void SetNextRoomFlag(const bool flag);
+	void SetNextRoomFlag(const bool flag);
 protected:
 	// マップデータ描画
 	void DrawMapData();
@@ -128,4 +137,6 @@ private:
 
 	// 初期化
 	int Init();
+
+	int chipMax;
 };

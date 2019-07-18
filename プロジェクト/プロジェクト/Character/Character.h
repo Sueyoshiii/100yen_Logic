@@ -65,7 +65,7 @@ class Character
 {
 public:
 	Character();
-	~Character();
+	virtual ~Character();
 
 	// XV
 	virtual void Update() = 0;

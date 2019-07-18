@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace {
-	const unsigned int HP_MAX = 1;
+	const unsigned int HP_MAX = 10;
 
 	const float NORMAL_WALK_SPEED = 8.0f;
 	const int NORMAL_ATTACK_POW   = 2;
@@ -120,17 +120,7 @@ void Player::NeutralUpdate()
 
 	CheckFirstAttack();
 
-	if (INPUT.IsTrigger(Key::F))
-	{
-		if (type == CharacterType::PL_NORMAL)
-		{
-			ChangeWolf();
-		}
-		else
-		{
-			ChangeNormal();
-		}
-	}
+	CheckTransform();
 }
 
 // 歩行
@@ -156,6 +146,8 @@ void Player::WalkUpdate()
 	CheckDash();
 
 	CheckFirstAttack();
+
+	CheckTransform();
 }
 void Player::CheckWalk()
 {
@@ -172,14 +164,15 @@ void Player::JumpUpdate()
 	if (INPUT.IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		worldPos.x -= vel.x;
+		vel.x = -cParam.speed;
 	}
 	else if (INPUT.IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		worldPos.x += vel.x;
+		vel.x = cParam.speed;
 	}
 
+	worldPos.x += vel.x;
 	if (vel.y <= 0)
 	{
 		vel.y += StageManager::Get().GetGravity();
@@ -195,6 +188,21 @@ void Player::CheckJump()
 {
 	if (!jumpFlag && INPUT.IsTrigger(Key::Space))
 	{
+		if (INPUT.IsKey(Key::Num4))
+		{
+			turnFlag = true;
+			vel.x = -cParam.speed;
+		}
+		else if (INPUT.IsKey(Key::Num6))
+		{
+			turnFlag = false;
+			vel.x = cParam.speed;
+		}
+		else
+		{
+			vel.x = 0.0f;
+		}
+
 		jumpFlag = true;
 		vel.y = cParam.jumpPow;
 		ChangeState("Jump");
@@ -207,13 +215,15 @@ void Player::FallUpdate()
 	if (INPUT.IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		worldPos.x -= vel.x;
+		vel.x = -cParam.speed;
 	}
 	else if (INPUT.IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		worldPos.x += vel.x;
+		vel.x = cParam.speed;
 	}
+
+	worldPos.x += vel.x;
 
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
@@ -313,6 +323,7 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 			}
 			CheckDash();
 		}
+
 		if ((++attackCnt) > attackInterval)
 		{
 			attackCnt = 0;
@@ -360,7 +371,6 @@ void Player::DamageUpdate()
 			}
 		}
 	}
-
 }
 
 // 死亡
@@ -378,6 +388,40 @@ void Player::DeathUpdate()
 			deadEndFlag = true;
 		}
 	}
+}
+
+// 変身
+void Player::TransformUpdate()
+{
+	if (CheckAnimEnd())
+	{
+		if (type == CharacterType::PL_NORMAL)
+		{
+			Transform(CharacterType::PL_WOLF, type, CharacterParameter(cParam.hp, WOLF_WALK_SPEED, WOLF_ATTACK_POW, WOLF_DEFENCE_POW, WOLF_DASH_POW, WOLF_JUMP_POW));
+		}
+		else
+		{
+			Transform(CharacterType::PL_NORMAL, type, CharacterParameter(cParam.hp, NORMAL_WALK_SPEED, NORMAL_ATTACK_POW, NORMAL_DEFENCE_POW, NORMAL_DASH_POW, NORMAL_JUMP_POW));
+		}
+	}
+}
+void Player::CheckTransform()
+{
+	if (Input::Get().IsTrigger(Key::F))
+	{
+		ChangeState("Change");
+	}
+}
+void Player::Transform(const CharacterType& next, const CharacterType& now, const CharacterParameter& param)
+{
+	oldType = type;
+	type = next;
+
+	tex[type].pos = tex[now].pos;
+
+	cParam = param;
+
+	ChangeState("Neutral");
 }
 
 // ヒットストップ処理
@@ -409,32 +453,6 @@ void Player::DamageDraw()
 	}
 }
 
-// 赤ずきんに変身
-void Player::ChangeNormal()
-{
-	oldType = type;
-	type = CharacterType::PL_NORMAL;
-	
-	tex[type].pos = tex[CharacterType::PL_WOLF].pos;
-
-	cParam = CharacterParameter(cParam.hp, NORMAL_WALK_SPEED, NORMAL_ATTACK_POW, NORMAL_DEFENCE_POW, NORMAL_DASH_POW, NORMAL_JUMP_POW);
-
-	ChangeState(state);
-}
-
-// 犬ずきんに変身
-void Player::ChangeWolf()
-{
-	oldType = type;
-	type = CharacterType::PL_WOLF;
-
-	tex[type].pos = tex[CharacterType::PL_NORMAL].pos;
-
-	cParam = CharacterParameter(cParam.hp, WOLF_WALK_SPEED, WOLF_ATTACK_POW, WOLF_DEFENCE_POW, WOLF_DASH_POW, WOLF_JUMP_POW);
-
-	ChangeState(state);
-}
-
 // 状態と関数をバインド
 void Player::InitFunc()
 {
@@ -451,6 +469,7 @@ void Player::InitFunc()
 	func["Attack4"] = std::bind(&Player::FourthAttackUpdate, this);
 	func["Damage"]  = std::bind(&Player::DamageUpdate, this);
 	func["Death"]   = std::bind(&Player::DeathUpdate, this);
+	func["Change"]  = std::bind(&Player::TransformUpdate, this);
 }
 
 // ローカル座標取得

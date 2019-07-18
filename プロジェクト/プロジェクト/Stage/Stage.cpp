@@ -102,7 +102,7 @@ int Stage::Load(const std::string& jsonFilePath, const std::string& imgFilePath)
 			--chipNum;
 
 			// 横の分割数
-			int chipMax = int(chip.tex.size.x / chip.tex.divSize.x);
+			chipMax = int(chip.tex.size.x / chip.tex.divSize.x);
 
 			// 分割位置
 			chip.tex.offsetPos = {
@@ -163,6 +163,26 @@ void Stage::DrawBox()
 	lib.lock()->Draw(box, Vec3f(), boxAlpha);
 	boxAlpha = std::min(std::max(boxAlpha, 0.0f), 1.0f);
 	boxAlpha += nextRoomFlag ? 0.05f : -0.05f;
+}
+
+// 壁チェック
+bool Stage::CheckWall(Vec2f& pos)
+{
+	Vec2f chipSize(64.0f);
+
+	auto chips = stage.layers[0].chip;
+
+	int index = int((pos.x / chipSize.x + pos.y / chipSize.y) * chipMax);
+
+	switch (ChipType(chips[index].data))
+	{
+	case ChipType::None:
+		return false;
+	case ChipType::Wall:
+		return true;
+	default:
+		return true;
+	}
 }
 
 // 次のルームを取得

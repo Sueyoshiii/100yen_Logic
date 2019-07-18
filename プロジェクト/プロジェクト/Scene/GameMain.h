@@ -39,7 +39,4 @@ private:
 
 	// プレイヤー
 	std::shared_ptr<Player> pl;
-
-	// ステージ
-	std::shared_ptr<Stage> stage;
 };

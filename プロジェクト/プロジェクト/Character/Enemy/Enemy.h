@@ -54,7 +54,7 @@ class Enemy :
 {
 public:
 	Enemy();
-	~Enemy();
+	virtual ~Enemy();
 
 	// íœƒtƒ‰ƒOæ“¾
 	bool GetDeleteFlag()const;

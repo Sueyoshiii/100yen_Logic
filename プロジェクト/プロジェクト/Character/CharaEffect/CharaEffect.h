@@ -14,7 +14,7 @@ class CharaEffect :
 {
 public:
 	CharaEffect();
-	~CharaEffect();
+	virtual ~CharaEffect();
 
 	// •`‰æ
 	virtual void Draw(std::weak_ptr<MyLib> lib) = 0;

@@ -65,16 +65,16 @@ private:
 	void DamageUpdate();
 	// 死亡
 	void DeathUpdate();
+	// 変身
+	void TransformUpdate();
+	void CheckTransform();
+	void Transform(const CharacterType& next, const CharacterType& now, const CharacterParameter& param);
 
 	// ヒットストップ処理
 	bool CheckHitStop();
 
 	// ダメージ時の描画
 	void DamageDraw();
-
-	// 形態変更
-	void ChangeNormal();
-	void ChangeWolf();
 
 	// ジャンプフラグ
 	bool jumpFlag;

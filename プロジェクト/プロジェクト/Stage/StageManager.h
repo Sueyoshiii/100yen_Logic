@@ -36,11 +36,19 @@ public:
 
 	void Update();
 	void Draw();
+	void DrawBox();
+
+	void SetRoom();
+	void SetRoom(Stage* room);
 
 	// ステージ範囲取得
 	StageRange GetRange();
 
+	bool GetNextRoomFlag()const;
+	float GetBoxAlpha()const;
+
 	void SetRange(const Vec2& size);
+	void SetNextRoomFlag(const bool flag = true);
 
 	float GetGround()const;
 	float GetGravity()const;
@@ -51,4 +59,6 @@ private:
 
 	//範囲
 	Rect range;
+
+	std::shared_ptr<Stage> stage;
 };

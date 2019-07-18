@@ -34,7 +34,7 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 
 	// ステージデータの読み込み
 	StageManager::Get().SetRange(lib.lock()->GetWinSize());
-	stage.reset(new FirstRoom(lib, pl, cam));
+	StageManager::Get().SetRoom(new FirstRoom(lib, pl, cam));
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);
@@ -54,7 +54,8 @@ void GameMain::Draw()
 		bg->Draw();
 
 		// ステージ
-		stage->Draw();
+		//stage->Draw();
+		StageManager::Get().Draw();
 	}
 
 	// プレイヤー
@@ -67,13 +68,13 @@ void GameMain::Draw()
 	}
 
 	// 遷移用ボックス描画
-	stage->DrawBox();
+	StageManager::Get().DrawBox();
 }
 
 // 処理
 void GameMain::Update()
 {
-	if (!stage->GetNextRoomFlag())
+	if (!StageManager::Get().GetNextRoomFlag())
 	{
 		// カメラ
 		cam->Update();
@@ -82,7 +83,7 @@ void GameMain::Update()
 		bg->Update();
 
 		// ルーム
-		stage->Update();
+		StageManager::Get().Update();
 
 		// プレイヤー
 		pl->Update();
@@ -121,13 +122,13 @@ void GameMain::CheckChangeRoom()
 {
 	if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f > StageManager::Get().GetRange().Right())
 	{
-		stage->SetNextRoomFlag(true);
-		if (stage->GetBoxAlpha() >= 1.0f)
+		StageManager::Get().SetNextRoomFlag();
+		if (StageManager::Get().GetBoxAlpha() >= 1.0f)
 		{
 			DeleteObject();
 			pl->SetPos(pl->GetFirstPos());
 			cam->SetPos(pl->GetWorldPos());
-			stage.reset(stage->GetNextRoom());
+			StageManager::Get().SetRoom();
 		}
 	}
 }

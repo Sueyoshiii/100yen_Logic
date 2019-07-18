@@ -21,10 +21,27 @@ StageManager& StageManager::Get()
 
 void StageManager::Update()
 {
+	stage->Update();
 }
 
 void StageManager::Draw()
 {
+	stage->Draw();
+}
+
+void StageManager::DrawBox()
+{
+	stage->DrawBox();
+}
+
+void StageManager::SetRoom()
+{
+	stage.reset(stage->GetNextRoom());
+}
+
+void StageManager::SetRoom(Stage* room)
+{
+	stage.reset(room);
 }
 
 // �͈͎擾
@@ -34,9 +51,24 @@ StageRange StageManager::GetRange()
 	return stRange;
 }
 
+bool StageManager::GetNextRoomFlag() const
+{
+	return stage->GetNextRoomFlag();
+}
+
+float StageManager::GetBoxAlpha() const
+{
+	return stage->GetBoxAlpha();
+}
+
 void StageManager::SetRange(const Vec2& size)
 {
 	range = StageManager::Rect(Vec2f(), float(size.x * 10), float(size.y));
+}
+
+void StageManager::SetNextRoomFlag(const bool flag)
+{
+	stage->SetNextRoomFlag(flag);
 }
 
 float StageManager::GetGround() const

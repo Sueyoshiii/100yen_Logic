@@ -86,7 +86,7 @@ public:
 	// 遷移ボックス描画
 	virtual void DrawBox();
 
-	bool CheckWall(Vec2f& pos);
+	bool CheckWall(const Vec2f& pos, const Vec2f& size);
 
 	// 次のルームを取得
 	virtual Stage* GetNextRoom();

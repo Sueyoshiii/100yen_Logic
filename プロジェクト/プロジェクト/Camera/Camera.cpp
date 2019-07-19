@@ -82,8 +82,8 @@ void Camera::SetPos(const Vec2f& pos)
 {
 	this->pos = pos;
 
-	float left   = StageManager::Get().GetRange().Left();
-	float right  = StageManager::Get().GetRange().Right();
+	float left  = StageManager::Get().GetRange().Left();
+	float right = StageManager::Get().GetRange().Right();
 
 	if (this->pos.x - size.x / 2 < left) {
 		this->pos.x = left + size.x / 2;

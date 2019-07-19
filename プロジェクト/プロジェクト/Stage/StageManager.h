@@ -41,6 +41,8 @@ public:
 	void SetRoom();
 	void SetRoom(Stage* room);
 
+	bool CheckWall(const Vec2f& pos, const Vec2f& size);
+
 	// ステージ範囲取得
 	StageRange GetRange();
 

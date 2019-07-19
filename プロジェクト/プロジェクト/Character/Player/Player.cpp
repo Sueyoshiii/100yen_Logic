@@ -46,18 +46,19 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	ChangeState("Neutral");
 
 	tex[type].size *= 3.0f;
+	tex[type].size.y *= 2.0f;
 	tex[CharacterType::PL_WOLF].size = tex[type].size;
 
 	tex[type].pos = Vec2f(0.0f, 0.0f);
 	worldPos = cam.lock()->Correction(tex[type].pos);
 	worldPos.x -= float(lib.lock()->GetWinSize().x);
-	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
+	//worldPos.y = StageManager::Get().GetGround() - tex[type].size.y - 10.0f;
 
 	firstPos = worldPos;
 
 	// hp, speed, attack, defense, dush, jump
 	cParam = CharacterParameter(HP_MAX, NORMAL_WALK_SPEED, NORMAL_ATTACK_POW, NORMAL_DEFENCE_POW, NORMAL_DASH_POW, NORMAL_JUMP_POW);
-	vel = Vec2f(cParam.speed, 0.0f);
+	vel = Vec2f();
 
 	knockBackRange = 4.0f;
 }
@@ -78,7 +79,7 @@ void Player::Update()
 	CorrectPosInStage();
 
 	if (!jumpFlag && 
-		GetFootPos().y < StageManager::Get().GetGround() &&
+		//!StageManager::Get().CheckWall(Vec2f(GetFootPos().x, GetFootPos().y + 1.0f)) &&
 		state != "Damage")
 	{
 		CheckFall();
@@ -227,9 +228,10 @@ void Player::FallUpdate()
 
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	if (GetFootPos().y > StageManager::Get().GetGround())
+	if (StageManager::Get().CheckWall(worldPos, tex[type].size))
+	//if (GetFootPos().y > StageManager::Get().GetGround())
 	{
-		worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
+		worldPos.y = GetFootPos().y - tex[type].size.y;
 		ChangeState("Neutral");
 	}
 }

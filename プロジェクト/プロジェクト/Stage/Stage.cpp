@@ -166,23 +166,31 @@ void Stage::DrawBox()
 }
 
 // 壁チェック
-bool Stage::CheckWall(Vec2f& pos)
+bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size)
 {
 	Vec2f chipSize(64.0f);
 
-	auto chips = stage.layers[0].chip;
+	Vec2f plHalf = size / 2.0f;
+	Vec2f plCentor = pos + plHalf;
 
-	int index = int((pos.x / chipSize.x + pos.y / chipSize.y) * chipMax);
-
-	switch (ChipType(chips[index].data))
+	for (auto& chips : stage.layers[0].chip)
 	{
-	case ChipType::None:
-		return false;
-	case ChipType::Wall:
-		return true;
-	default:
-		return true;
+		if (chips.data == 0)
+		{
+			continue;
+		}
+
+		Vec2f blHalf = chipSize / 2.0f;
+		Vec2f blCentor = chips.worldPos + blHalf;
+
+		if (fabs(plCentor.x - blCentor.x) < fabs(plHalf.x + blHalf.x) &&
+			fabs(plCentor.y - blCentor.y) < fabs(plHalf.y + blHalf.y))
+		{
+			return true;
+		}
 	}
+
+	return false;
 }
 
 // 次のルームを取得

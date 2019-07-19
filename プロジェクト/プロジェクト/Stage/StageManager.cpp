@@ -44,6 +44,11 @@ void StageManager::SetRoom(Stage* room)
 	stage.reset(room);
 }
 
+bool StageManager::CheckWall(const Vec2f& pos, const Vec2f& size)
+{
+	return stage->CheckWall(pos, size);
+}
+
 // �͈͎擾
 StageRange StageManager::GetRange()
 {

@@ -52,7 +52,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	tex[type].pos = Vec2f(0.0f, 0.0f);
 	worldPos = cam.lock()->Correction(tex[type].pos);
 	worldPos.x -= float(lib.lock()->GetWinSize().x);
-	//worldPos.y = StageManager::Get().GetGround() - tex[type].size.y - 10.0f;
+	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 
 	firstPos = worldPos;
 
@@ -79,8 +79,9 @@ void Player::Update()
 	CorrectPosInStage();
 
 	if (!jumpFlag && 
-		//!StageManager::Get().CheckWall(Vec2f(GetFootPos().x, GetFootPos().y + 1.0f)) &&
-		state != "Damage")
+		StageManager::Get().GetGround() > GetFootPos().y &&
+		state != "Damage" &&
+		state != "JumpAttack")
 	{
 		CheckFall();
 	}
@@ -184,6 +185,8 @@ void Player::JumpUpdate()
 		jumpFlag = false;
 		ChangeState("Fall");
 	}
+
+	CheckJumpAttack();
 }
 void Player::CheckJump()
 {
@@ -228,12 +231,14 @@ void Player::FallUpdate()
 
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	if (StageManager::Get().CheckWall(worldPos, tex[type].size))
-	//if (GetFootPos().y > StageManager::Get().GetGround())
+	//if (StageManager::Get().CheckWall(worldPos, tex[type].size))
+	if (GetFootPos().y > StageManager::Get().GetGround())
 	{
 		worldPos.y = GetFootPos().y - tex[type].size.y;
 		ChangeState("Neutral");
 	}
+
+	CheckJumpAttack();
 }
 void Player::CheckFall()
 {
@@ -337,6 +342,50 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 	else
 	{
 		CheckDash();
+	}
+}
+
+// ÉWÉÉÉìÉvçUåÇ
+void Player::JumpAttackUpdate()
+{
+	if (!CheckAnimEnd())
+	{
+		if (INPUT.IsKey(Key::Num4))
+		{
+			turnFlag = true;
+			vel.x = -cParam.speed;
+		}
+		else if (INPUT.IsKey(Key::Num6))
+		{
+			turnFlag = false;
+			vel.x = cParam.speed;
+		}
+
+		worldPos.x += vel.x;
+
+		vel.y += StageManager::Get().GetGravity();
+		worldPos.y += vel.y;
+	}
+	else
+	{
+		if (GetFootPos().y < StageManager::Get().GetGround())
+		{
+			ChangeState("Fall");
+		}
+	}
+
+	if (GetFootPos().y > StageManager::Get().GetGround())
+	{
+		worldPos.y = GetFootPos().y - tex[type].size.y;
+		ChangeState("Neutral");
+	}
+}
+void Player::CheckJumpAttack()
+{
+	if (Input::Get().IsTrigger(Key::Z))
+	{
+		jumpFlag = false;
+		ChangeState("JumpAttack");
 	}
 }
 
@@ -469,6 +518,7 @@ void Player::InitFunc()
 	func["Attack2"] = std::bind(&Player::SecondAttackUpdate, this);
 	func["Attack3"] = std::bind(&Player::ThirdAttackUpdate, this);
 	func["Attack4"] = std::bind(&Player::FourthAttackUpdate, this);
+	func["JumpAttack"] = std::bind(&Player::JumpAttackUpdate, this);
 	func["Damage"]  = std::bind(&Player::DamageUpdate, this);
 	func["Death"]   = std::bind(&Player::DeathUpdate, this);
 	func["Change"]  = std::bind(&Player::TransformUpdate, this);

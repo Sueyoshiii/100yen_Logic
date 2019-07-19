@@ -61,6 +61,9 @@ private:
 	void FourthAttackUpdate();
 	// 次の攻撃へ移る
 	void CheckNextAttack(const unsigned int attackInterval);
+	// ジャンプ攻撃
+	void JumpAttackUpdate();
+	void CheckJumpAttack();
 	// ダメージ
 	void DamageUpdate();
 	// 死亡

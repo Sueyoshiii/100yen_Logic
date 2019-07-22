@@ -63,6 +63,11 @@ void Flower::Draw(std::weak_ptr<MyLib> lib)
 	}
 }
 
+void Flower::SetPos(const Vec2f& pos)
+{
+	tex[type].pos = pos;
+}
+
 // ÉhÉçÉbÉv
 void Flower::DropUpdate()
 {

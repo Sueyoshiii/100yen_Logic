@@ -14,6 +14,8 @@ public:
 	// •`‰æ
 	void Draw();
 	void Draw(std::weak_ptr<MyLib> lib);
+
+	void SetPos(const Vec2f& pos);
 private:
 	void InitState();
 
@@ -32,6 +34,8 @@ private:
 	void FourthAttackUpdate();
 	// UŒ‚ˆ—
 	void AttackUpdate(const unsigned int attackInterval);
+	// ƒWƒƒƒ“ƒvUŒ‚
+	void JumpAttackUpdate();
 
 	// UŒ‚ƒtƒŒ[ƒ€
 	unsigned int attackCnt;

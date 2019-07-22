@@ -365,6 +365,8 @@ void Player::JumpAttackUpdate()
 
 		vel.y += StageManager::Get().GetGravity();
 		worldPos.y += vel.y;
+
+		EffectManager::Get().SetPos(tex[type].pos);
 	}
 	else
 	{
@@ -386,6 +388,7 @@ void Player::CheckJumpAttack()
 	{
 		jumpFlag = false;
 		ChangeState("JumpAttack");
+		EffectManager::Get().CreateSlash(state, type, tex[type].pos, tex[type].size, turnFlag);
 	}
 }
 

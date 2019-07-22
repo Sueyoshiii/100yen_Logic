@@ -2,10 +2,10 @@
 #include "GameMain.h"
 #include "../Game/Game.h"
 #include "../Json/JsonLoader.h"
-#include <Okdio.h>
+//#include <Okdio.h>
 #include <crtdbg.h>
-
-#pragma comment(lib, "Okdio.lib")
+//
+//#pragma comment(lib, "Okdio.lib")
 
 // コンストラクタ
 Title::Title(std::weak_ptr<MyLib>lib) :
@@ -17,7 +17,7 @@ Title::Title(std::weak_ptr<MyLib>lib) :
 	tex.pos -= tex.size / 2.0f;
 	tex.pos += {
 		float(lib.lock()->GetWinSize().x) / 2.0f,
-			float(lib.lock()->GetWinSize().y)
+		float(lib.lock()->GetWinSize().y)
 	};
 
 	alpha = 0.0f;

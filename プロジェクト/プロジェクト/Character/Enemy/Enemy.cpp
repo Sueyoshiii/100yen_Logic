@@ -39,6 +39,7 @@ void Enemy::CheckHit()
 					KnockBack(-dir);
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 					ChangeState("Damage");
+					EffectManager::Get().CreateBloodSplash(tex[type].pos, tex[type].size, pl.lock()->GetTurnFlag());
 					EffectManager::Get().CreateFlower(tex[type].pos, pl);
 					cam.lock()->SetVibrationFlag(true);
 				}
@@ -75,7 +76,9 @@ void Enemy::CheckHitEffect()
 	for (auto itr = list.begin(); itr != list.end(); ++itr)
 	{
 		// �ԁA�폜�ς݂͑ΏۊO
-		if ((*itr).type == EffectType::Flower || (*itr).ptr->GetDeleteFlag())
+		if ((*itr).type == EffectType::Flower || 
+			(*itr).type == EffectType::BloodSplash ||
+			(*itr).ptr->GetDeleteFlag())
 		{
 			continue;
 		}
@@ -102,6 +105,7 @@ void Enemy::CheckHitEffect()
 					KnockBack(-dir);
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 					ChangeState("Damage");
+					EffectManager::Get().CreateBloodSplash(tex[type].pos, tex[type].size, pl.lock()->GetTurnFlag());
 					EffectManager::Get().CreateFlower(tex[type].pos, pl);
 					cam.lock()->SetVibrationFlag(true);
 

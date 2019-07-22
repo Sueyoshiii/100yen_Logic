@@ -34,11 +34,16 @@ public:
 	// 斬撃生成
 	void CreateSlash(const std::string& state, const CharacterType& plType, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 
+	// 血しぶき生成
+	void CreateBloodSplash(const Vec2f& pos, const Vec2f& size, const bool turnFlag);
+
 	// 削除
 	void Delete();
 
 	// エフェクトリスト取得
 	std::list<ListParameter> GetEffectList();
+
+	void SetPos(const Vec2f& pos);
 private:
 	EffectManager();
 	EffectManager(const EffectManager&) = delete;

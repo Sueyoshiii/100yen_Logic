@@ -22,7 +22,8 @@ enum class CharacterType
 	EM_WEAK_WOLF,
 	// エフェクト
 	EF_PL_NORMAL_SLASH,
-	EF_PL_WOLF_SLASH
+	EF_PL_WOLF_SLASH,
+	EF_BLOOD_SPLASH
 };
 
 // キャラクターのパラメータ

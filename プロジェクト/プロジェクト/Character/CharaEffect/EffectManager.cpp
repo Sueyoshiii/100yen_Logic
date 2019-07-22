@@ -2,6 +2,7 @@
 #include "../Player/Player.h"
 #include "Flower/Flower.h"
 #include "Slash/Slash.h"
+#include "BloodSplash/BloodSplash.h"
 
 // コンストラクタ
 EffectManager::EffectManager()
@@ -61,6 +62,13 @@ void EffectManager::CreateSlash(const std::string& state, const CharacterType& p
 	list.push_back(ListParameter(EffectType::Slashing, map[EffectType::Slashing]));
 }
 
+// 血しぶき生成
+void EffectManager::CreateBloodSplash(const Vec2f& pos, const Vec2f& size, const bool turnFlag)
+{
+	map[EffectType::BloodSplash] = std::make_shared<BloodSplash>(pos, size, turnFlag);
+	list.push_back(ListParameter(EffectType::BloodSplash, map[EffectType::BloodSplash]));
+}
+
 // 削除
 void EffectManager::Delete()
 {
@@ -71,4 +79,16 @@ void EffectManager::Delete()
 std::list<ListParameter> EffectManager::GetEffectList()
 {
 	return list;
+}
+
+// 座標設定
+void EffectManager::SetPos(const Vec2f& pos)
+{
+	for (auto itr = list.begin(); itr != list.end(); ++itr)
+	{
+		if ((*itr).type == EffectType::Slashing)
+		{
+			(*itr).ptr->SetPos(pos);
+		}
+	}
 }

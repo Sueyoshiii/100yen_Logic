@@ -29,6 +29,11 @@ void StageManager::Draw()
 	stage->Draw();
 }
 
+void StageManager::DrawFront()
+{
+	stage->DrawFront();
+}
+
 void StageManager::DrawBox()
 {
 	stage->DrawBox();

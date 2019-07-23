@@ -12,7 +12,9 @@ FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 
 	nextRoomFlag = false;
 
-	Load("data/stage/kimoiii.json", "img/Stage/kimoiii.png");
+	Load(back, "data/stage/kimoiii.json", "img/Stage/kimoiii.png");
+	//Load(back, "data/stage/Ground_Back.json", "img/Stage/kimoiii.png");
+	//Load(front, "data/stage/Ground_Front.json", "img/Stage/kimoiii.png");
 
 	box.pos[0] = Vec3f();
 	box.pos[1] = Vec3f(float(lib.lock()->GetWinSize().x), 0.0f, 0.0f);
@@ -39,8 +41,13 @@ void FirstRoom::Update()
 
 void FirstRoom::Draw()
 {
-	DrawMapData();
+	DrawMapData(cam);
 	EnemyManager::Get().Draw();
+}
+
+void FirstRoom::DrawFront()
+{
+	DrawMapDataFront(cam);
 }
 
 Stage* FirstRoom::GetNextRoom()

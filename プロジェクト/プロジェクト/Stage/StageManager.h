@@ -36,6 +36,7 @@ public:
 
 	void Update();
 	void Draw();
+	void DrawFront();
 	void DrawBox();
 
 	void SetRoom();

@@ -53,8 +53,7 @@ void GameMain::Draw()
 		// 背景
 		bg->Draw();
 
-		// ステージ
-		//stage->Draw();
+		// ステージ（奥）
 		StageManager::Get().Draw();
 	}
 
@@ -65,6 +64,8 @@ void GameMain::Draw()
 	{
 		// エフェクト
 		EffectManager::Get().Draw(lib);
+		// ステージ（手前）
+		StageManager::Get().DrawFront();
 	}
 
 	// 遷移用ボックス描画

@@ -43,3 +43,8 @@ void ThirdRoom::Draw()
 {
 	EnemyManager::Get().Draw();
 }
+
+void ThirdRoom::DrawFront()
+{
+	//DrawMapDataFront(cam);
+}

@@ -13,6 +13,7 @@ public:
 	void Update();
 
 	void Draw();
+	void DrawFront();
 
 	Stage* GetNextRoom();
 private:

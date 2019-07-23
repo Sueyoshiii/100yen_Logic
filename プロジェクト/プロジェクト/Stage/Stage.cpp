@@ -33,7 +33,7 @@ Stage::~Stage()
 }
 
 // ステージデータ読み込み
-int Stage::Load(const std::string& jsonFilePath, const std::string& imgFilePath)
+int Stage::Load(StageData& stage, const std::string& jsonFilePath, const std::string& imgFilePath)
 {
 	// json読み込み
 	json_parser::read_json(jsonFilePath.c_str(), data);
@@ -140,19 +140,23 @@ int Stage::Load(const std::string& jsonFilePath, const std::string& imgFilePath)
 }
 
 // マップデータ描画
-void Stage::DrawMapData()
+void Stage::DrawMapData(std::weak_ptr<Camera> cam)
 {
-	if (stage.layers.size() <= 0)
+	if (back.layers.size() <= 0)
 	{
 		return;
 	}
 
-	for (auto& chip : stage.layers[0].chip)
+	auto camRange = cam.lock()->GetRange();
+	for (auto& chip : back.layers[0].chip)
 	{
 		if (chip.data > 0)
 		{
 			chip.tex.pos = cam.lock()->Correction(chip.worldPos);
-			lib.lock()->Draw(chip.tex);
+			if (chip.tex.pos.x > camRange.GetLeft() && chip.tex.pos.x < camRange.GetRight())
+			{
+				lib.lock()->Draw(chip.tex);
+			}
 		}
 	}
 }
@@ -165,6 +169,27 @@ void Stage::DrawBox()
 	boxAlpha += nextRoomFlag ? 0.05f : -0.05f;
 }
 
+void Stage::DrawMapDataFront(std::weak_ptr<Camera> cam)
+{
+	if (front.layers.size() <= 0)
+	{
+		return;
+	}
+
+	auto camRange = cam.lock()->GetRange();
+	for (auto& chip : front.layers[0].chip)
+	{
+		if (chip.data > 0)
+		{
+			chip.tex.pos = cam.lock()->Correction(chip.worldPos);
+			if (chip.tex.pos.x > camRange.GetLeft() && chip.tex.pos.x < camRange.GetRight())
+			{
+				lib.lock()->Draw(chip.tex);
+			}
+		}
+	}
+}
+
 // 壁チェック
 bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size)
 {
@@ -173,7 +198,7 @@ bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size)
 	Vec2f plHalf = size / 2.0f;
 	Vec2f plCentor = pos + plHalf;
 
-	for (auto& chips : stage.layers[0].chip)
+	for (auto& chips : back.layers[0].chip)
 	{
 		if (chips.data == 0)
 		{

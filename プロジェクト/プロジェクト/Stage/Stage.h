@@ -75,13 +75,15 @@ public:
 	virtual ~Stage();
 
 	// ステージデータ読み込み
-	int Load(const std::string& jsonFilePath, const std::string& imgFilePath);
+	int Load(StageData& stage, const std::string& jsonFilePath, const std::string& imgFilePath);
 
 	// 更新
 	virtual void Update() = 0;
 
 	// 描画
 	virtual void Draw() = 0;
+
+	virtual void DrawFront() = 0;
 
 	// 遷移ボックス描画
 	virtual void DrawBox();
@@ -101,13 +103,16 @@ public:
 	void SetNextRoomFlag(const bool flag);
 protected:
 	// マップデータ描画
-	void DrawMapData();
+	void DrawMapData(std::weak_ptr<Camera> cam);
+	void DrawMapDataFront(std::weak_ptr<Camera> cam);
 
 	// .jsonデータ
 	boost::property_tree::ptree data;
 
 	// ステージ
-	StageData stage;
+	StageData back;
+	// 手前
+	StageData front;
 
 	// マップタイプ
 	std::unordered_map<std::string, MapType> mapType;

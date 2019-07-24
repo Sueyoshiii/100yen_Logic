@@ -3,7 +3,7 @@
 #include "../../Character/Player/Player.h"
 #include "../../Character/Enemy/EnemyManager.h"
 #include "../../Scene/GameMain.h"
-#include <Okdio.h>
+//#include <Okdio.h>
 
 FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
 {
@@ -27,9 +27,9 @@ FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1000.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
 	
-	okmonn::CreateObj(IID_PPV_ARGS(&bgm));
-	bgm->Load("data/sound/bgm_stage.wav");
-	bgm->Play(true);
+	//okmonn::CreateObj(IID_PPV_ARGS(&bgm));
+	//bgm->Load("data/sound/bgm_stage.wav");
+	//bgm->Play(true);
 
 	std::cout << "FirstRoom" << std::endl;
 }

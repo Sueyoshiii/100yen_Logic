@@ -1,8 +1,8 @@
 #pragma once
 #include "../Stage.h"
 
-class Okdio;
 class Player;
+//class Okdio;
 
 class FirstRoom :
 	public Stage
@@ -19,5 +19,5 @@ public:
 	Stage* GetNextRoom();
 private:
 	std::weak_ptr<Player> pl;
-	Okdio* bgm;
+	//Okdio* bgm;
 };

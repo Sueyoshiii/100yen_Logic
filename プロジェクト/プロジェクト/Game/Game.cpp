@@ -5,7 +5,7 @@
 #include <Okdio.h>
 #include <Windows.h>
 
-#pragma comment(lib, "Okdio.lib")
+//#pragma comment(lib, "Okdio.lib")
 
 Game::Game()
 {
@@ -24,10 +24,10 @@ Game& Game::Get()
 // èâä˙âª
 void Game::Init()
 {
-	if (okmonn::EnginStart() != true)
-	{
-		return;
-	}
+	//if (okmonn::EnginStart() != true)
+	//{
+	//	return;
+	//}
 
 	Vec2 screenSize = Vec2(1280, 640);
 	//Vec2 screenSize = Vec2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
@@ -60,7 +60,7 @@ void Game::Draw()
 void Game::Finish(void)
 {
 	scene.reset();
-	okmonn::EnginEnd();
+	//okmonn::EnginEnd();
 }
 
 void Game::ChangeScene(Scene* scene)

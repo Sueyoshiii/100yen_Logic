@@ -152,9 +152,9 @@ void Stage::DrawMapData(std::weak_ptr<Camera> cam)
 	{
 		if (chip.data > 0)
 		{
-			chip.tex.pos = cam.lock()->Correction(chip.worldPos);
-			if (chip.tex.pos.x > camRange.GetLeft() && chip.tex.pos.x < camRange.GetRight())
+			if (chip.worldPos.x > camRange.GetLeft() && chip.worldPos.x < camRange.GetRight())
 			{
+				chip.tex.pos = cam.lock()->Correction(chip.worldPos);
 				lib.lock()->Draw(chip.tex);
 			}
 		}
@@ -181,9 +181,9 @@ void Stage::DrawMapDataFront(std::weak_ptr<Camera> cam)
 	{
 		if (chip.data > 0)
 		{
-			chip.tex.pos = cam.lock()->Correction(chip.worldPos);
-			if (chip.tex.pos.x > camRange.GetLeft() && chip.tex.pos.x < camRange.GetRight())
+			if (chip.worldPos.x > camRange.GetLeft() && chip.worldPos.x < camRange.GetRight())
 			{
+				chip.tex.pos = cam.lock()->Correction(chip.worldPos);
 				lib.lock()->Draw(chip.tex);
 			}
 		}

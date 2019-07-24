@@ -1,7 +1,7 @@
 #include "BloodSplash.h"
 
 namespace {
-	const unsigned int ANIM_NUM_MAX = 5;
+	const unsigned int ANIM_NUM_MAX  = 5;
 	const unsigned int ANIM_TIME_MAX = 6;
 }
 
@@ -11,7 +11,7 @@ BloodSplash::BloodSplash(const Vec2f& pos, const Vec2f& size, const bool turnFla
 	blood.Load("img/Blood/Blood_all.png");
 	this->turnFlag = turnFlag;
 	blood.size = size / 2.0f;
-	blood.pos = this->turnFlag ? Vec2f(pos.x + size.x, pos.y) : pos;
+	blood.pos  = this->turnFlag ? Vec2f(pos.x + size.x - blood.size.x, pos.y) : pos;
 	blood.divSize = Vec2f(64.0f);
 }
 

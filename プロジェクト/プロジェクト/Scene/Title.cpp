@@ -44,9 +44,12 @@ void Title::Draw()
 // ˆ—
 void Title::Update()
 {
-	if (Input::Get().IsTrigger(Key::Return))
+	for (unsigned int button = 1; button <= unsigned int(Key::Ome_102); ++button)
 	{
-		checkNext = true;
+		if (Input::Get().IsTrigger(Key(button)))
+		{
+			checkNext = true;
+		}
 	}
 
 	alpha = std::fmin(alpha, 1.0f);

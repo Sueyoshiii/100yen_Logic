@@ -2,10 +2,7 @@
 #include "GameMain.h"
 #include "../Game/Game.h"
 #include "../Json/JsonLoader.h"
-//#include <Okdio.h>
 #include <crtdbg.h>
-//
-//#pragma comment(lib, "Okdio.lib")
 
 // コンストラクタ
 Title::Title(std::weak_ptr<MyLib>lib) :
@@ -21,13 +18,6 @@ Title::Title(std::weak_ptr<MyLib>lib) :
 	};
 
 	alpha = 0.0f;
-
-	//auto hr = okmonn::CreateObj(IID_PPV_ARGS(&okdio));
-	//_ASSERT(hr == S_OK);
-	//hr = okdio->Load("bgm/INSIDE.wav");
-	//_ASSERT(hr == S_OK);
-	//hr = okdio->Play(true);
-	//_ASSERT(hr == S_OK);
 }
 
 // デストラクタ
@@ -44,7 +34,7 @@ void Title::Draw()
 // 処理
 void Title::Update()
 {
-	for (unsigned int button = 1; button <= unsigned int(Key::Ome_102); ++button)
+	for (unsigned int button = unsigned int(Key::LButton); button <= unsigned int(Key::Ome_102); ++button)
 	{
 		if (Input::Get().IsTrigger(Key(button)))
 		{

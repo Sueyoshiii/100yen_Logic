@@ -9,7 +9,7 @@ namespace {
 	const int NORMAL_ATTACK_POW   = 2;
 	const int NORMAL_DEFENCE_POW  = 2;
 	const float NORMAL_DASH_POW   = 15.0f;
-	const float NORMAL_JUMP_POW   = -40.0f;
+	const float NORMAL_JUMP_POW   = -30.0f;
 
 	const float WOLF_WALK_SPEED = 12.0f;
 	const int WOLF_ATTACK_POW   = 4;

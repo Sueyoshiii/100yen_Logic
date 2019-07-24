@@ -9,7 +9,7 @@ namespace {
 	const int NORMAL_ATTACK_POW   = 2;
 	const int NORMAL_DEFENCE_POW  = 2;
 	const float NORMAL_DASH_POW   = 15.0f;
-	const float NORMAL_JUMP_POW   = -30.0f;
+	const float NORMAL_JUMP_POW   = -35.0f;
 
 	const float WOLF_WALK_SPEED = 12.0f;
 	const int WOLF_ATTACK_POW   = 4;
@@ -128,12 +128,12 @@ void Player::NeutralUpdate()
 // ï‡çs
 void Player::WalkUpdate()
 {
-	if (INPUT.IsKey(Key::Num4))
+	if (Input::Get().IsKey(Key::Num4))
 	{
 		turnFlag = true;
 		worldPos.x -= vel.x;
 	}
-	else if (INPUT.IsKey(Key::Num6))
+	else if (Input::Get().IsKey(Key::Num6))
 	{
 		turnFlag = false;
 		worldPos.x += vel.x;
@@ -153,7 +153,7 @@ void Player::WalkUpdate()
 }
 void Player::CheckWalk()
 {
-	if (INPUT.IsKey(Key::Num4) || INPUT.IsKey(Key::Num6))
+	if (Input::Get().IsKey(Key::Num4) || Input::Get().IsKey(Key::Num6))
 	{
 		vel.x = cParam.speed;
 		ChangeState("Walk");
@@ -163,12 +163,12 @@ void Player::CheckWalk()
 // ÉWÉÉÉìÉv
 void Player::JumpUpdate()
 {
-	if (INPUT.IsKey(Key::Num4))
+	if (Input::Get().IsKey(Key::Num4))
 	{
 		turnFlag = true;
 		vel.x = -cParam.speed;
 	}
-	else if (INPUT.IsKey(Key::Num6))
+	else if (Input::Get().IsKey(Key::Num6))
 	{
 		turnFlag = false;
 		vel.x = cParam.speed;
@@ -190,14 +190,14 @@ void Player::JumpUpdate()
 }
 void Player::CheckJump()
 {
-	if (!jumpFlag && INPUT.IsTrigger(Key::Space))
+	if (!jumpFlag && Input::Get().IsTrigger(Key::Space))
 	{
-		if (INPUT.IsKey(Key::Num4))
+		if (Input::Get().IsKey(Key::Num4))
 		{
 			turnFlag = true;
 			vel.x = -cParam.speed;
 		}
-		else if (INPUT.IsKey(Key::Num6))
+		else if (Input::Get().IsKey(Key::Num6))
 		{
 			turnFlag = false;
 			vel.x = cParam.speed;
@@ -216,12 +216,12 @@ void Player::CheckJump()
 // óéâ∫
 void Player::FallUpdate()
 {
-	if (INPUT.IsKey(Key::Num4))
+	if (Input::Get().IsKey(Key::Num4))
 	{
 		turnFlag = true;
 		vel.x = -cParam.speed;
 	}
-	else if (INPUT.IsKey(Key::Num6))
+	else if (Input::Get().IsKey(Key::Num6))
 	{
 		turnFlag = false;
 		vel.x = cParam.speed;
@@ -260,7 +260,7 @@ void Player::DashUpdate()
 }
 void Player::CheckDash()
 {
-	if (!dashFlag && INPUT.IsTrigger(Key::X))
+	if (!dashFlag && Input::Get().IsTrigger(Key::X))
 	{
 		dashFlag = true;
 		stopFlag = true;
@@ -278,7 +278,7 @@ void Player::FirstAttackUpdate()
 }
 void Player::CheckFirstAttack()
 {
-	if (!attackFlag && INPUT.IsTrigger(Key::Z))
+	if (!attackFlag && Input::Get().IsTrigger(Key::Z))
 	{
 		attackFlag = true;
 		attackCnt  = 0;
@@ -315,7 +315,7 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 
 		if (state != lastAttack)
 		{
-			if (INPUT.IsTrigger(Key::Z))
+			if (Input::Get().IsTrigger(Key::Z))
 			{
 				attackCnt = 0;
 				stopFlag = false;
@@ -350,12 +350,12 @@ void Player::JumpAttackUpdate()
 {
 	if (!CheckAnimEnd())
 	{
-		if (INPUT.IsKey(Key::Num4))
+		if (Input::Get().IsKey(Key::Num4))
 		{
 			turnFlag = true;
 			vel.x = -cParam.speed;
 		}
-		else if (INPUT.IsKey(Key::Num6))
+		else if (Input::Get().IsKey(Key::Num6))
 		{
 			turnFlag = false;
 			vel.x = cParam.speed;

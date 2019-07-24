@@ -4,6 +4,7 @@
 #include "../../Character/Enemy/EnemyManager.h"
 #include "../../Scene/GameMain.h"
 //#include <Okdio.h>
+//#pragma comment(lib, "Okdio.lib")
 
 FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
 {

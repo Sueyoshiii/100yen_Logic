@@ -17,6 +17,8 @@ namespace {
 	const unsigned int THREAT_TIME_MAX  = 10;
 	const unsigned int COOL_TIME_MAX    = 120;
 	const unsigned int STUN_TIME_MAX    = 40;
+
+	const float KNOCK_BACK_RANGE = 8.0f;
 }
 
 // コンストラクタ
@@ -50,7 +52,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 	fulcrum    = worldPos;
 
-	knockBackRange = 4.0f;
+	knockBackRange = KNOCK_BACK_RANGE;
 }
 
 // デストラクタ

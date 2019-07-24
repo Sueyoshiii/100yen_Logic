@@ -11,8 +11,6 @@
 #include <functional>
 #include <algorithm>
 
-#define INPUT Input::Get()
-
 enum class CharacterType
 {
 	// ƒvƒŒƒCƒ„[

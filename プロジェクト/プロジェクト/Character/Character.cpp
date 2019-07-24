@@ -86,7 +86,11 @@ void Character::DrawImage()
 		info[type].lock()->at(state).rect[index].anim.pos.y
 	};
 
-	lib.lock()->Draw(tex[type], alpha, turnFlag);
+	auto range = cam.lock()->GetRange();
+	if (range.GetLeft() < worldPos.x && worldPos.x < range.GetRight())
+	{
+		lib.lock()->Draw(tex[type], alpha, turnFlag);
+	}
 }
 
 // Õ“Ë‹éŒ`•`‰æ

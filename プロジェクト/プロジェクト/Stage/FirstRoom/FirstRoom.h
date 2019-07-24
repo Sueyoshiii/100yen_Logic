@@ -2,7 +2,7 @@
 #include "../Stage.h"
 
 class Player;
-//class Okdio;
+class Okdio;
 
 class FirstRoom :
 	public Stage
@@ -19,5 +19,5 @@ public:
 	Stage* GetNextRoom();
 private:
 	std::weak_ptr<Player> pl;
-	//Okdio* bgm;
+	Okdio* bgm;
 };

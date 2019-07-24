@@ -69,6 +69,7 @@ protected:
 
 	// ‹éŒ`“¯m‚ÌÕ“Ë”»’è
 	bool CheckColBox(const Box& box1, const Box& box2);
+	bool CheckColBox(const Vec2f& pos1, const Vec2f& size1, const Vec2f& pos2, const Vec2f& size2);
 
 	// ü•ª“¯m‚ÌÕ“Ë”»’è
 	bool CheckColSegments(const Segment& seg1, const Segment& seg2);

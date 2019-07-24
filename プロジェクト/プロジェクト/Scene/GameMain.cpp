@@ -10,7 +10,7 @@
 #include "Over.h"
 #include "../Stage/Stage.h"
 #include "../Stage/FirstRoom/FirstRoom.h"
-#include "../Stage/SecondRoom/SecondRoom.h"
+//#include "../Stage/SecondRoom/SecondRoom.h"
 
 #include "../Json/JsonLoader.h"
 
@@ -97,7 +97,7 @@ void GameMain::Update()
 	CheckChangeRoom();
 
 	// クリア時はクリアシーンへ
-	if (INPUT.IsTrigger(Key::P))
+	if (Input::Get().IsTrigger(Key::P))
 	{
 		ChangeNextScene(new Clear(lib));
 	}

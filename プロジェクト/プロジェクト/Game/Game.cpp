@@ -2,10 +2,9 @@
 #include "../Scene/Scene.h"
 #include "../Scene/Title.h"
 #include "../Scene/GameMain.h"
-#include <Okdio.h>
+//#include <Okdio.h>
 #include <Windows.h>
 
-//#pragma comment(lib, "Okdio.lib")
 
 Game::Game()
 {
@@ -24,6 +23,8 @@ Game& Game::Get()
 // èâä˙âª
 void Game::Init()
 {
+	//auto hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
+	//_ASSERT(hr == S_OK);
 	//if (okmonn::EnginStart() != true)
 	//{
 	//	return;
@@ -61,6 +62,7 @@ void Game::Finish(void)
 {
 	scene.reset();
 	//okmonn::EnginEnd();
+	//CoUninitialize();
 }
 
 void Game::ChangeScene(Scene* scene)

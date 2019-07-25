@@ -7,7 +7,8 @@
 // 敵さん達のお名前
 enum class Enemies
 {
-	Wolf
+	Wolf,
+	BOSS_WOLF
 };
 
 // 矩形構造体

@@ -42,7 +42,11 @@ public:
 	void SetRoom();
 	void SetRoom(Stage* room);
 
-	bool CheckWall(const Vec2f& pos, const Vec2f& size);
+	bool CheckWall(const Vec2f& pos, const Vec2f& size, const bool turnFlag, const Dir& obj);
+
+	bool CheckMapChip(const Vec2f& pos);
+
+	void CheckMapCol(Vec2f& pos, const Vec2f& size, const Vec2f& vel);
 
 	// ステージ範囲取得
 	StageRange GetRange();

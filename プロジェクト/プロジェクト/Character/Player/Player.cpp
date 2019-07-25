@@ -52,7 +52,8 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	tex[type].pos = Vec2f(0.0f, 0.0f);
 	worldPos = cam.lock()->Correction(tex[type].pos);
 	worldPos.x -= float(lib.lock()->GetWinSize().x);
-	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
+	worldPos.y = 0.0f;
+	//worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 
 	firstPos = worldPos;
 
@@ -78,13 +79,7 @@ void Player::Update()
 
 	CorrectPosInStage();
 
-	if (!jumpFlag && 
-		StageManager::Get().GetGround() > GetFootPos().y &&
-		state != "Damage" &&
-		state != "JumpAttack")
-	{
-		CheckFall();
-	}
+	CheckFall();
 
 	InvicibleUpdate();
 
@@ -105,6 +100,12 @@ void Player::Draw()
 	DamageDraw();
 
 	DrawImage();
+	static Primitive b(PrimitiveType::box);
+	b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y, 0);
+	b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x/4, tex[type].pos.y, 0);
+	b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
+	b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
+	lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
 
 #ifdef _DEBUG
 	DrawRect();
@@ -131,12 +132,32 @@ void Player::WalkUpdate()
 	if (Input::Get().IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		worldPos.x -= vel.x;
+		vel.x = -cParam.speed;
+		//worldPos.x += vel.x;
+		//StageManager::Get().CheckMapCol(worldPos, tex[type].size, vel);
+		if (StageManager::Get().CheckWall(worldPos, tex[type].size, turnFlag, Dir::Right))
+		{
+			worldPos.x = worldPos.x / 64 * 64 - 64;
+		}
+		else
+		{
+			worldPos.x += vel.x;
+		}
 	}
 	else if (Input::Get().IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		worldPos.x += vel.x;
+		vel.x = cParam.speed;
+		//worldPos.x += vel.x;
+		//StageManager::Get().CheckMapCol(worldPos, tex[type].size, vel);
+		if (StageManager::Get().CheckWall(worldPos, tex[type].size, turnFlag, Dir::Right))
+		{
+			worldPos.x = worldPos.x / 64 * 64;
+		}
+		else
+		{
+			worldPos.x += vel.x;
+		}
 	}
 	else
 	{
@@ -153,7 +174,12 @@ void Player::WalkUpdate()
 }
 void Player::CheckWalk()
 {
-	if (Input::Get().IsKey(Key::Num4) || Input::Get().IsKey(Key::Num6))
+	if (Input::Get().IsKey(Key::Num4))
+	{
+		vel.x = -cParam.speed;
+		ChangeState("Walk");
+	}
+	else if (Input::Get().IsKey(Key::Num6))
 	{
 		vel.x = cParam.speed;
 		ChangeState("Walk");
@@ -183,7 +209,6 @@ void Player::JumpUpdate()
 	else
 	{
 		jumpFlag = false;
-		ChangeState("Fall");
 	}
 
 	CheckJumpAttack();
@@ -231,8 +256,9 @@ void Player::FallUpdate()
 
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	//if (StageManager::Get().CheckWall(worldPos, tex[type].size))
-	if (GetFootPos().y > StageManager::Get().GetGround())
+	auto tmpPos = Vec2f(worldPos.x + tex[type].size.x / 4, worldPos.y);
+	auto tmpSize = Vec2f(worldPos.x + tex[type].size.x - tex[type].size.x / 4, worldPos.y + tex[type].size.y) - tmpPos;
+	if (StageManager::Get().CheckWall(tmpPos, tmpSize, turnFlag, Dir::Down))
 	{
 		worldPos.y = GetFootPos().y - tex[type].size.y;
 		ChangeState("Neutral");
@@ -242,7 +268,15 @@ void Player::FallUpdate()
 }
 void Player::CheckFall()
 {
-	ChangeState("Fall");
+	auto tmpPos = Vec2f(worldPos.x + tex[type].size.x / 4, worldPos.y);
+	auto tmpSize = Vec2f(worldPos.x + tex[type].size.x - tex[type].size.x / 4, worldPos.y + tex[type].size.y) - tmpPos;
+	if (!jumpFlag &&
+		!StageManager::Get().CheckWall(tmpPos, tmpSize, turnFlag, Dir::Down) &&
+		state != "Damage" &&
+		state != "JumpAttack")
+	{
+		ChangeState("Fall");
+	}
 }
 
 // ƒ_ƒbƒVƒ…

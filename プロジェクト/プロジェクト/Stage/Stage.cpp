@@ -191,13 +191,85 @@ void Stage::DrawMapDataFront(std::weak_ptr<Camera> cam)
 }
 
 // 壁チェック
-bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size)
+bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size, const bool turnFlag, const Dir& dir)
 {
 	Vec2f chipSize(64.0f);
 
-	Vec2f plHalf = size / 2.0f;
-	Vec2f plCentor = pos + plHalf;
+	Vec2f tmpPos = pos;
+	Vec2f tmpSize = { size.x / 2.0f, size.y };
+	if (dir == Dir::Down)
+	{
+		if (!turnFlag)
+		{
+			tmpPos = {
+				pos.x + tmpSize.x,
+				pos.y
+			};
+		}
 
+		for (auto& chips : back.layers[0].chip)
+		{
+			if (chips.data == 0)
+			{
+				continue;
+			}
+
+			if (tmpPos.y + tmpSize.y > chips.worldPos.y &&
+				tmpPos.x < chips.worldPos.x + chipSize.x &&
+				tmpPos.x + tmpSize.x > chips.worldPos.x)
+			{
+				return true;
+			}
+		}
+	}
+
+	if (dir == Dir::Right)
+	{
+		tmpPos = {
+			tmpPos.x + tmpSize.x,
+			tmpPos.y + tmpSize.y / 2.0f
+		};
+
+		Vec2f tmpSize2 = {
+			tmpSize.x - 1.0f,
+			tmpSize.y / 2.0f - 1.0f
+		};
+
+		for (auto& chips : back.layers[0].chip)
+		{
+			if (chips.data == 0)
+			{
+				continue;
+			}
+
+			Vec2f bCenter = chips.worldPos + chipSize / 2.0f;
+			if (fabs(tmpPos.x - bCenter.x) < fabs(tmpSize2.x + chipSize.x) / 2.0f &&
+				fabs(tmpPos.y - bCenter.y) < fabs(tmpSize2.y + chipSize.y) / 2.0f)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+bool Stage::CheckMapChip(const Vec2f& pos)
+{
+	Vec2f chipSize(64.0f);
+	int index = int(pos.x / chipSize.x) + int(pos.y / chipSize.y) * chipMax;
+	if (back.layers[0].chip[index].data != 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void Stage::CheckMapCol(Vec2f& pos, const Vec2f& size, const Vec2f& vel)
+{
+	static bool flag = false;
+	Vec2f chipSize(64.0f);
 	for (auto& chips : back.layers[0].chip)
 	{
 		if (chips.data == 0)
@@ -205,17 +277,35 @@ bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size)
 			continue;
 		}
 
-		Vec2f blHalf = chipSize / 2.0f;
-		Vec2f blCentor = chips.worldPos + blHalf;
+		Vec2f tmpPos = {
+			pos.x,
+			pos.y
+		};
 
-		if (fabs(plCentor.x - blCentor.x) < fabs(plHalf.x + blHalf.x) &&
-			fabs(plCentor.y - blCentor.y) < fabs(plHalf.y + blHalf.y))
+		Vec2f pCenter = tmpPos + size / 2.0f;
+		Vec2f bCenter = chips.worldPos + chipSize / 2.0f;
+
+		if (fabs(pCenter.x - bCenter.x) < fabs(size.x + chipSize.x) / 2.0f &&
+			fabs(pCenter.y - bCenter.y) < fabs(size.y + chipSize.y) / 2.0f)
 		{
-			return true;
+			if (vel.x > 0)
+			{
+				pos.x = chips.worldPos.x - size.x;
+			}
+			else
+			{
+				pos.x = chips.worldPos.x + chipSize.x;
+			}
+			flag = true;
+			break;
 		}
 	}
 
-	return false;
+	if (!flag)
+	{
+		pos.x += vel.x;
+	}
+	flag = false;
 }
 
 // 次のルームを取得

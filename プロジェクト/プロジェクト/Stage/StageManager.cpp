@@ -49,9 +49,19 @@ void StageManager::SetRoom(Stage* room)
 	stage.reset(room);
 }
 
-bool StageManager::CheckWall(const Vec2f& pos, const Vec2f& size)
+bool StageManager::CheckWall(const Vec2f& pos, const Vec2f& size, const bool turnFlag, const Dir& obj)
 {
-	return stage->CheckWall(pos, size);
+	return stage->CheckWall(pos, size, turnFlag, obj);
+}
+
+bool StageManager::CheckMapChip(const Vec2f& pos)
+{
+	return stage->CheckMapChip(pos);
+}
+
+void StageManager::CheckMapCol(Vec2f& pos, const Vec2f& size, const Vec2f& vel)
+{
+	stage->CheckMapCol(pos, size, vel);
 }
 
 // �͈͎擾

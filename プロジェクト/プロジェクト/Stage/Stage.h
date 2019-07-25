@@ -7,6 +7,13 @@
 #include <vector>
 #include <memory>
 
+enum class Dir
+{
+	Up,
+	Down,
+	Left,
+	Right
+};
 
 // チップの種類
 enum class ChipType
@@ -88,7 +95,11 @@ public:
 	// 遷移ボックス描画
 	virtual void DrawBox();
 
-	bool CheckWall(const Vec2f& pos, const Vec2f& size);
+	bool CheckWall(const Vec2f& pos, const Vec2f& size, const bool turnFlag, const Dir& dir);
+
+	bool CheckMapChip(const Vec2f& pos);
+
+	void CheckMapCol(Vec2f& pos, const Vec2f& size, const Vec2f& vel);
 
 	// 次のルームを取得
 	virtual Stage* GetNextRoom();

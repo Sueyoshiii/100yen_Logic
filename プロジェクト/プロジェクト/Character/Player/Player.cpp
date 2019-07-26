@@ -295,7 +295,7 @@ void Player::DashUpdate()
 }
 void Player::CheckDash()
 {
-	if (!dashFlag && Input::Get().IsTrigger(Key::X))
+	if (!dashFlag && Input::Get().IsTrigger(Key::S))
 	{
 		dashFlag = true;
 		stopFlag = true;
@@ -313,7 +313,7 @@ void Player::FirstAttackUpdate()
 }
 void Player::CheckFirstAttack()
 {
-	if (!attackFlag && Input::Get().IsTrigger(Key::Z))
+	if (!attackFlag && Input::Get().IsTrigger(Key::A))
 	{
 		attackFlag = true;
 		attackCnt  = 0;
@@ -350,7 +350,7 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 
 		if (state != lastAttack)
 		{
-			if (Input::Get().IsTrigger(Key::Z))
+			if (Input::Get().IsTrigger(Key::A))
 			{
 				attackCnt = 0;
 				stopFlag = false;
@@ -419,7 +419,7 @@ void Player::JumpAttackUpdate()
 }
 void Player::CheckJumpAttack()
 {
-	if (Input::Get().IsTrigger(Key::Z))
+	if (Input::Get().IsTrigger(Key::A))
 	{
 		jumpFlag = false;
 		ChangeState("JumpAttack");

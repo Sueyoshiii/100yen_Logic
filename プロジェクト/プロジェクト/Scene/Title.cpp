@@ -10,12 +10,14 @@ Title::Title(std::weak_ptr<MyLib>lib) :
 {
 	this->lib = lib;
 
-	tex.Load("img/title.png");
-	tex.pos -= tex.size / 2.0f;
-	tex.pos += {
-		float(lib.lock()->GetWinSize().x) / 2.0f,
-		float(lib.lock()->GetWinSize().y)
-	};
+	tex.Load("img/Title/title.png");
+	//tex.Load("img/Title/title_back.png");
+	//tex.pos -= tex.size / 2.0f;
+	//tex.pos += {
+	//	float(lib.lock()->GetWinSize().x) / 2.0f,
+	//	float(lib.lock()->GetWinSize().y)
+	//};
+	tex.size.y *= 2.0f;
 
 	alpha = 0.0f;
 }

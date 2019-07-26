@@ -61,3 +61,8 @@ void EnemyManager::Delete()
 {
 	list.clear();
 }
+
+size_t EnemyManager::GetEnemyNum()
+{
+	return list.size();
+}

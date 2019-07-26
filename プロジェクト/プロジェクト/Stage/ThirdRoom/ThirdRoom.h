@@ -17,5 +17,4 @@ public:
 
 private:
 	std::weak_ptr<Player> pl;
-	std::weak_ptr<Camera> cam;
 };

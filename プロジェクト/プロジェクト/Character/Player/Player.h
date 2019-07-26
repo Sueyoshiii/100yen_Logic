@@ -111,7 +111,4 @@ private:
 
 	// €–Sƒtƒ‰ƒO
 	bool deadEndFlag;
-
-	// ‰ŠúÀ•W
-	Vec2f firstPos;
 };

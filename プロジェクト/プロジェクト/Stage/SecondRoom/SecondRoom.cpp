@@ -12,7 +12,8 @@ SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::
 
 	nextRoomFlag = false;
 
-	Load(back, "data/stage/map.json", "img/Stage/tileset.png");
+	Load(back, "data/stage/StageDummy_Ground.json", "img/Stage/Mapchip_Ground.png");
+	Load(front, "data/stage/StageDummy_Grass.json", "img/Stage/Mapchip_Grass.png");
 
 	box.pos[0] = Vec3f();
 	box.pos[1] = Vec3f(float(lib.lock()->GetWinSize().x), 0.0f, 0.0f);
@@ -21,8 +22,9 @@ SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::
 
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
+	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(800.0f, 0.0f), lib, pl, cam);
 
-	std::cout << "SecondRoom" << std::endl;
+	length = 3;
 }
 
 SecondRoom::~SecondRoom()

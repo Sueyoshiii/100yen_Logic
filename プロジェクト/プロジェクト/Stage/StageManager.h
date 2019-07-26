@@ -54,11 +54,14 @@ public:
 	bool GetNextRoomFlag()const;
 	float GetBoxAlpha()const;
 
-	void SetRange(const Vec2& size);
+	void ResetRange();
 	void SetNextRoomFlag(const bool flag = true);
 
 	float GetGround()const;
 	float GetGravity()const;
+
+	bool GetClearFlag()const;
+	void SetClearFlag(const bool flag);
 private:
 	StageManager();
 	StageManager(const StageManager&) = delete;
@@ -68,4 +71,5 @@ private:
 	Rect range;
 
 	std::shared_ptr<Stage> stage;
+	bool clearFlag;
 };

@@ -9,7 +9,7 @@ Over::Over(std::weak_ptr<MyLib> lib) :
 {
 	this->lib = lib;
 
-	tex.Load("img/deadend.png");
+	tex.Load("img/deadend/deadend_moji.png");
 	tex.pos -= tex.size / 2.0f;
 	tex.pos += {
 		float(lib.lock()->GetWinSize().x) / 2.0f,

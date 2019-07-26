@@ -20,6 +20,8 @@ public:
 
 	// íœ
 	void Delete();
+
+	size_t GetEnemyNum();
 private:
 	EnemyManager();
 	EnemyManager(const EnemyManager&) = delete;

@@ -5,7 +5,8 @@ namespace {
 	const float GROUND = 1200.0f;
 }
 
-StageManager::StageManager()
+StageManager::StageManager() :
+	clearFlag(false)
 {
 }
 
@@ -81,7 +82,7 @@ float StageManager::GetBoxAlpha() const
 	return stage->GetBoxAlpha();
 }
 
-void StageManager::SetRange(const Vec2& size)
+void StageManager::ResetRange()
 {
 	auto stSize = stage->GetStageSize();
 	range = StageManager::Rect(Vec2f(), float(stSize.x), float(stSize.y));
@@ -100,4 +101,14 @@ float StageManager::GetGround() const
 float StageManager::GetGravity() const
 {
 	return GR;
+}
+
+bool StageManager::GetClearFlag() const
+{
+	return clearFlag;
+}
+
+void StageManager::SetClearFlag(const bool flag)
+{
+	clearFlag = flag;
 }

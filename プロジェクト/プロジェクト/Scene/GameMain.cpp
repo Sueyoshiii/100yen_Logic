@@ -33,7 +33,7 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 
 	// ステージデータの読み込み
 	StageManager::Get().SetRoom(new FirstRoom(lib, pl, cam));
-	StageManager::Get().SetRange(lib.lock()->GetWinSize());
+	StageManager::Get().ResetRange();
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);
@@ -42,6 +42,7 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 // デストラクタ
 GameMain::~GameMain()
 {
+	StageManager::Get().SetClearFlag(false);
 }
 
 // 描画
@@ -96,7 +97,8 @@ void GameMain::Update()
 	CheckChangeRoom();
 
 	// クリア時はクリアシーンへ
-	if (Input::Get().IsTrigger(Key::P))
+	//if (Input::Get().IsTrigger(Key::Q))
+	if (StageManager::Get().GetClearFlag())
 	{
 		ChangeNextScene(new Clear(lib));
 	}
@@ -122,13 +124,14 @@ void GameMain::CheckChangeRoom()
 {
 	if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f > StageManager::Get().GetRange().Right())
 	{
-		StageManager::Get().SetNextRoomFlag();
+		StageManager::Get().SetNextRoomFlag(true);
 		if (StageManager::Get().GetBoxAlpha() >= 1.0f)
 		{
 			DeleteObject();
 			pl->SetPos(pl->GetFirstPos());
 			cam->SetPos(pl->GetWorldPos());
 			StageManager::Get().SetRoom();
+			StageManager::Get().ResetRange();
 		}
 	}
 }

@@ -147,6 +147,8 @@ protected:
 
 	// 次のルームに行けるかの確認フラグ
 	bool nextRoomFlag;
+
+	int length;
 private:
 	// 文字列を数値に変換
 	template<typename T>

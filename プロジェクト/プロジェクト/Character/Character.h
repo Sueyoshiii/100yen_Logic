@@ -206,6 +206,9 @@ protected:
 
 	// 前のキャラタイプ
 	CharacterType oldType;
+
+	// 初期座標
+	Vec2f firstPos;
 private:
 	// 矩形
 	std::unordered_map<std::string, std::vector<std::vector<Primitive>>> box;

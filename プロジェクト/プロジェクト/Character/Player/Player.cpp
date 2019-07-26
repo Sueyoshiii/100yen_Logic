@@ -52,8 +52,8 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	tex[type].pos = Vec2f(0.0f, 0.0f);
 	worldPos = cam.lock()->Correction(tex[type].pos);
 	worldPos.x -= float(lib.lock()->GetWinSize().x);
-	worldPos.y = 0.0f;
-	//worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
+	//worldPos.y = 0.0f;
+	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 
 	firstPos = worldPos;
 

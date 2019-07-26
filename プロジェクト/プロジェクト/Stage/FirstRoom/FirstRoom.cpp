@@ -26,15 +26,12 @@ FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(800.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1000.0f, 0.0f), lib, pl, cam);
-	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
 	
 	//okmonn::CreateObj(IID_PPV_ARGS(&bgm));
 	//bgm->Load("data/sound/bgm_stage.wav");
 	//bgm->Play(true);
 
-	std::cout << "FirstRoom" << std::endl;
+	length = 3;
 }
 
 FirstRoom::~FirstRoom()

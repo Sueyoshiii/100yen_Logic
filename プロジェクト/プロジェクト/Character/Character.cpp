@@ -12,6 +12,8 @@ Character::Character() :
 // デストラクタ
 Character::~Character()
 {
+	tex.clear();
+	info.clear();
 }
 
 // ステージ内に座標を補正
@@ -84,6 +86,10 @@ void Character::DrawImage()
 		info[type].lock()->at(state).rect[index].anim.pos.y
 	};
 
+	//auto range = cam.lock()->GetRange();
+	//if (range.GetLeft() < worldPos.x && worldPos.x < range.GetRight())
+	//{
+	//}
 	lib.lock()->Draw(tex[type], alpha, turnFlag);
 }
 
@@ -186,6 +192,17 @@ void Character::KnockBack(const Vec2f& vec)
 {
 	float v = vec.x != 0.0f ? vec.x / std::fabs(vec.x) : -1.0f;
 	vel = Vec2f(knockBackRange / 2.0f * v, -25.0f);
+}
+
+// 生存情報取得
+bool Character::CheckAlive()
+{
+	if (state != "Death")
+	{
+		return true;
+	}
+
+	return false;
 }
 
 // 衝突矩形を取得

@@ -2,6 +2,7 @@
 #include "GameMain.h"
 #include "../Game/Game.h"
 #include "../Json/JsonLoader.h"
+#include <crtdbg.h>
 
 // コンストラクタ
 Title::Title(std::weak_ptr<MyLib>lib) :
@@ -13,19 +14,16 @@ Title::Title(std::weak_ptr<MyLib>lib) :
 	tex.pos -= tex.size / 2.0f;
 	tex.pos += {
 		float(lib.lock()->GetWinSize().x) / 2.0f,
-			float(lib.lock()->GetWinSize().y)
+		float(lib.lock()->GetWinSize().y)
 	};
 
 	alpha = 0.0f;
-
-#ifdef _DEBUG
-	std::cout << "Title Scene" << std::endl;
-#endif
 }
 
 // デストラクタ
 Title::~Title()
 {
+	//okdio->Release();
 }
 // 描画
 void Title::Draw()
@@ -34,14 +32,17 @@ void Title::Draw()
 }
 
 // 処理
-void Title::UpData()
+void Title::Update()
 {
-	if (Input::Get().IsTrigger(Key::Return))
+	for (unsigned int button = unsigned int(Key::LButton); button <= unsigned int(Key::Ome_102); ++button)
 	{
-		checkNext = true;
+		if (Input::Get().IsTrigger(Key(button)))
+		{
+			checkNext = true;
+		}
 	}
 
-	alpha = std::min(alpha, 1.0f);
+	alpha = std::fmin(alpha, 1.0f);
 	if (checkNext)
 	{
 		alpha -= 0.02f;

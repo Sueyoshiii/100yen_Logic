@@ -14,6 +14,8 @@ public:
 	// 描画
 	void Draw();
 	void Draw(std::weak_ptr<MyLib> lib);
+
+	void SetPos(const Vec2f& pos);
 private:
 	void InitState();
 
@@ -28,8 +30,12 @@ private:
 	void SecondAttackUpdate();
 	// 三撃
 	void ThirdAttackUpdate();
+	// 四撃
+	void FourthAttackUpdate();
 	// 攻撃処理
 	void AttackUpdate(const unsigned int attackInterval);
+	// ジャンプ攻撃
+	void JumpAttackUpdate();
 
 	// 攻撃フレーム
 	unsigned int attackCnt;
@@ -37,5 +43,6 @@ private:
 	// 状態コンテナ
 	std::unordered_map<std::string, std::string> stateMap;
 
+	// 形態関数
 	std::unordered_map<CharacterType, std::function<void()>> typeFunc;
 };

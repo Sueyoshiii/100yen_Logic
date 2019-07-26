@@ -10,7 +10,6 @@
 #include "Over.h"
 #include "../Stage/Stage.h"
 #include "../Stage/FirstRoom/FirstRoom.h"
-#include "../Stage/SecondRoom/SecondRoom.h"
 
 #include "../Json/JsonLoader.h"
 
@@ -33,15 +32,11 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 	pl  = std::make_shared<Player>(lib, cam);
 
 	// ステージデータの読み込み
+	StageManager::Get().SetRoom(new FirstRoom(lib, pl, cam));
 	StageManager::Get().SetRange(lib.lock()->GetWinSize());
-	stage.reset(new FirstRoom(lib, pl, cam));
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);
-
-#ifdef _DEBUG
-	std::cout << "GameMain Scene" << std::endl;
-#endif
 }
 
 // デストラクタ
@@ -52,32 +47,34 @@ GameMain::~GameMain()
 // 描画
 void GameMain::Draw()
 {
-	if (pl->GetState() != "Death")
+	if (pl->CheckAlive())
 	{
 		// 背景
 		bg->Draw();
 
-		// ステージ
-		stage->Draw();
+		// ステージ（奥）
+		StageManager::Get().Draw();
 	}
 
 	// プレイヤー
 	pl->Draw();
 
-	if (pl->GetState() != "Death")
+	if (pl->CheckAlive())
 	{
 		// エフェクト
 		EffectManager::Get().Draw(lib);
+		// ステージ（手前）
+		StageManager::Get().DrawFront();
 	}
 
 	// 遷移用ボックス描画
-	stage->DrawBox();
+	StageManager::Get().DrawBox();
 }
 
 // 処理
-void GameMain::UpData()
+void GameMain::Update()
 {
-	if (!stage->GetNextRoomFlag())
+	if (!StageManager::Get().GetNextRoomFlag())
 	{
 		// カメラ
 		cam->Update();
@@ -86,7 +83,7 @@ void GameMain::UpData()
 		bg->Update();
 
 		// ルーム
-		stage->Update();
+		StageManager::Get().Update();
 
 		// プレイヤー
 		pl->Update();
@@ -99,7 +96,7 @@ void GameMain::UpData()
 	CheckChangeRoom();
 
 	// クリア時はクリアシーンへ
-	if (INPUT.IsTrigger(Key::P))
+	if (Input::Get().IsTrigger(Key::P))
 	{
 		ChangeNextScene(new Clear(lib));
 	}
@@ -125,13 +122,13 @@ void GameMain::CheckChangeRoom()
 {
 	if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f > StageManager::Get().GetRange().Right())
 	{
-		stage->SetNextRoomFlag(true);
-		if (stage->GetBoxAlpha() >= 1.0f)
+		StageManager::Get().SetNextRoomFlag();
+		if (StageManager::Get().GetBoxAlpha() >= 1.0f)
 		{
 			DeleteObject();
 			pl->SetPos(pl->GetFirstPos());
 			cam->SetPos(pl->GetWorldPos());
-			stage.reset(stage->GetNextRoom());
+			StageManager::Get().SetRoom();
 		}
 	}
 }

@@ -13,14 +13,10 @@ Clear::Clear(std::weak_ptr<MyLib> lib)
 	tex.pos -= tex.size / 2.0f;
 	tex.pos += {
 		float(lib.lock()->GetWinSize().x) / 2.0f,
-			float(lib.lock()->GetWinSize().y)
+		float(lib.lock()->GetWinSize().y)
 	};
 
 	alpha = 0.0f;
-
-#ifdef _DEBUG
-	std::cout << "GameClear Scene" << std::endl;
-#endif
 }
 
 // デストラクタ
@@ -35,14 +31,14 @@ void Clear::Draw()
 }
 
 // 処理
-void Clear::UpData()
+void Clear::Update()
 {
 	if (Input::Get().IsTrigger(Key::Return))
 	{
 		checkNext = true;
 	}
 
-	alpha = std::min(alpha, 1.0f);
+	alpha = std::fmin(alpha, 1.0f);
 	if (checkNext)
 	{
 		alpha -= 0.02f;

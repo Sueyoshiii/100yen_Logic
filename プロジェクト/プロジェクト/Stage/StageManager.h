@@ -34,10 +34,28 @@ public:
 	~StageManager();
 	static StageManager& Get();
 
+	void Update();
+	void Draw();
+	void DrawFront();
+	void DrawBox();
+
+	void SetRoom();
+	void SetRoom(Stage* room);
+
+	bool CheckWall(const Vec2f& pos, const Vec2f& size, const bool turnFlag, const Dir& obj);
+
+	bool CheckMapChip(const Vec2f& pos);
+
+	void CheckMapCol(Vec2f& pos, const Vec2f& size, const Vec2f& vel);
+
 	// ステージ範囲取得
 	StageRange GetRange();
 
+	bool GetNextRoomFlag()const;
+	float GetBoxAlpha()const;
+
 	void SetRange(const Vec2& size);
+	void SetNextRoomFlag(const bool flag = true);
 
 	float GetGround()const;
 	float GetGravity()const;
@@ -48,4 +66,6 @@ private:
 
 	//範囲
 	Rect range;
+
+	std::shared_ptr<Stage> stage;
 };

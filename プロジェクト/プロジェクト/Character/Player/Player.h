@@ -57,22 +57,27 @@ private:
 	void SecondAttackUpdate();
 	// 3段目の攻撃
 	void ThirdAttackUpdate();
+	// 4段目の攻撃
+	void FourthAttackUpdate();
 	// 次の攻撃へ移る
 	void CheckNextAttack(const unsigned int attackInterval);
+	// ジャンプ攻撃
+	void JumpAttackUpdate();
+	void CheckJumpAttack();
 	// ダメージ
 	void DamageUpdate();
 	// 死亡
 	void DeathUpdate();
+	// 変身
+	void TransformUpdate();
+	void CheckTransform();
+	void Transform(const CharacterType& next, const CharacterType& now, const CharacterParameter& param);
 
 	// ヒットストップ処理
 	bool CheckHitStop();
 
 	// ダメージ時の描画
 	void DamageDraw();
-
-	// 形態変更
-	void ChangeNormal();
-	void ChangeWolf();
 
 	// ジャンプフラグ
 	bool jumpFlag;

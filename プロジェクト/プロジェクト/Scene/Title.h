@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include <MyLib.h>
+#include <wrl.h>
 
 class Title :
 	public Scene
@@ -15,7 +16,7 @@ public:
 	void Draw();
 
 	// ˆ—
-	void UpData();
+	void Update();
 private:
 	bool checkNext;
 };

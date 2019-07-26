@@ -1,8 +1,14 @@
 #include "Wolf.h"
 
 namespace {
-	const float WALK_SPEED = 2.0f;
-	const float DASH_SPEED = 6.0f;
+	const unsigned int	HP_MAX      = 2;
+	const float			WALK_SPEED  = 2.0f;
+	const float			DASH_SPEED  = 8.0f;
+	const int			ATTACK_POW  = 2;
+	const int			DEFENCE_POW = 2;
+	const float			DASH_POW    = 10.0f;
+	const float			JUMP_POW    = -30.0f;
+
 	const float ATTACK_RANGE_MAX = 180.0f;
 	const float ATTACK_RANGE_MIN = 0.0f;
 
@@ -11,6 +17,8 @@ namespace {
 	const unsigned int THREAT_TIME_MAX  = 10;
 	const unsigned int COOL_TIME_MAX    = 120;
 	const unsigned int STUN_TIME_MAX    = 40;
+
+	const float KNOCK_BACK_RANGE = 8.0f;
 }
 
 // コンストラクタ
@@ -30,20 +38,21 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	ChangeState("Neutral");
 
 	tex[type].size *= 3.0f;
+	tex[type].size.y *= 2.0f;
 
-	// hp, speed, attack, defense, dush, jump
-	cParam = CharacterParameter(2, WALK_SPEED, 2, 2, 10.0f, -30.0f);
+	// hp, speed, attack, defense, dash, jump
+	cParam = CharacterParameter(HP_MAX, WALK_SPEED, ATTACK_POW, DEFENCE_POW, DASH_POW, JUMP_POW);
 
 	vel = Vec2f(cParam.speed, 0.0f);
 
 	turnFlag = true;
 
-	tex[type].pos    = pos;
+	tex[type].pos = pos;
 	worldPos   = cam.lock()->Correction(tex[type].pos);
 	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 	fulcrum    = worldPos;
 
-	knockBackRange = 4.0f;
+	knockBackRange = KNOCK_BACK_RANGE;
 }
 
 // デストラクタ
@@ -66,7 +75,7 @@ void Wolf::Update()
 		FallUpdate();
 	}
 
-	CheckHit();
+	//CheckHit();
 	CheckHitEffect();
 }
 
@@ -80,11 +89,11 @@ void Wolf::Draw()
 		AnimationUpdate();
 	}
 
-	DrawImage();
+	//DrawImage();
 
 #ifdef _DEBUG
 	DrawRect();
-	if (state != "Death")
+	if (CheckAlive())
 	{
 		DrawViewRange();
 	}
@@ -311,7 +320,7 @@ void Wolf::DeathUpdate()
 	if (CheckAnimEnd())
 	{
 		stopFlag = true;
-		if ((alpha < 0.0f))
+		if (alpha < 0.0f)
 		{
 			deleteFlag = true;
 		}

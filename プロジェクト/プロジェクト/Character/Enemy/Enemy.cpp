@@ -34,17 +34,18 @@ void Enemy::CheckHit()
 				Vec2f dir = pl.lock()->GetPos() - GetPos();
 				if (p.type == HitType::Attack)
 				{
-					pl.lock()->SetHitFlag(true);
+					//pl.lock()->SetHitFlag(true);
 					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
 					KnockBack(-dir);
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 					ChangeState("Damage");
+					EffectManager::Get().CreateBloodSplash(tex[type].pos, tex[type].size, pl.lock()->GetTurnFlag());
 					EffectManager::Get().CreateFlower(tex[type].pos, pl);
 					cam.lock()->SetVibrationFlag(true);
 				}
 				else
 				{
-					if (!pl.lock()->GetInvincibleFlag())
+					if (!pl.lock()->GetInvincibleFlag() && state != "Damage")
 					{
 						bool nextTurn = turnFlag;
 						if (dir.x < 0)
@@ -75,7 +76,9 @@ void Enemy::CheckHitEffect()
 	for (auto itr = list.begin(); itr != list.end(); ++itr)
 	{
 		// �ԁA�폜�ς݂͑ΏۊO
-		if ((*itr).type == EffectType::Flower || (*itr).ptr->GetDeleteFlag())
+		if ((*itr).type == EffectType::Flower || 
+			(*itr).type == EffectType::BloodSplash ||
+			(*itr).ptr->GetDeleteFlag())
 		{
 			continue;
 		}
@@ -94,14 +97,16 @@ void Enemy::CheckHitEffect()
 				Box efBox = Box(ef.rect.pos, ef.rect.size);
 				Box emBox = Box(em.rect.pos, em.rect.size);
 
+				//if (CheckColBox(ef.rect.pos, ef.rect.size, em.rect.pos, em.rect.size))
 				if (CheckColBox(efBox, emBox))
 				{
-					pl.lock()->SetHitFlag(true);
+					//pl.lock()->SetHitFlag(true);
 					Vec2f dir = pl.lock()->GetPos() - GetPos();
 					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
 					KnockBack(-dir);
 					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 					ChangeState("Damage");
+					EffectManager::Get().CreateBloodSplash(tex[type].pos, tex[type].size, pl.lock()->GetTurnFlag());
 					EffectManager::Get().CreateFlower(tex[type].pos, pl);
 					cam.lock()->SetVibrationFlag(true);
 
@@ -152,6 +157,17 @@ bool Enemy::CheckColBox(const Box& box1, const Box& box2)
 {
 	if (fabs(box1.centor.x - box2.centor.x) < fabs(box1.half.x + box2.half.x) &&
 		fabs(box1.centor.y - box2.centor.y) < fabs(box1.half.y + box2.half.y))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool Enemy::CheckColBox(const Vec2f& pos1, const Vec2f& size1, const Vec2f& pos2, const Vec2f& size2)
+{
+	if (pos1.x <= pos2.x + size2.x && pos1.x + size1.x >= pos2.x &&
+		pos1.y <= pos2.y + size2.y && pos1.y + size1.y >= pos2.y)
 	{
 		return true;
 	}

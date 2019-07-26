@@ -21,6 +21,8 @@ public:
 	// •`‰æ
 	void Draw();
 
+	void Finish(void);
+
 	// ƒV[ƒ“Ø‚è‘Ö‚¦
 	void ChangeScene(Scene* scene);
 private:

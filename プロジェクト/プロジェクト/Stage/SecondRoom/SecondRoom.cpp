@@ -12,7 +12,7 @@ SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::
 
 	nextRoomFlag = false;
 
-	Load("data/stage/map.json", "img/Stage/tileset.png");
+	Load(back, "data/stage/map.json", "img/Stage/tileset.png");
 
 	box.pos[0] = Vec3f();
 	box.pos[1] = Vec3f(float(lib.lock()->GetWinSize().x), 0.0f, 0.0f);
@@ -36,8 +36,13 @@ void SecondRoom::Update()
 
 void SecondRoom::Draw()
 {
-	DrawMapData();
+	DrawMapData(cam);
 	EnemyManager::Get().Draw();
+}
+
+void SecondRoom::DrawFront()
+{
+	DrawMapDataFront(cam);
 }
 
 Stage* SecondRoom::GetNextRoom()

@@ -12,8 +12,8 @@ struct ViewRange
 	ViewRange() : left(0.0f), right(0.0f) {}
 	ViewRange(const Vec2f& pos, const Vec2f& size)
 	{
-		left  = pos.x - size.x;
-		right = pos.x + size.x;
+		left  = pos.x - size.x/* / 2.0f*/;
+		right = pos.x + size.x/* / 2.0f*/;
 	}
 	
 	float GetLeft()const { return left; }

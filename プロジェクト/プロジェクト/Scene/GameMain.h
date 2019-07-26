@@ -20,7 +20,7 @@ public:
 	void Draw();
 	
 	// 処理
-	void UpData();
+	void Update();
 private:
 	// シーン切り替え
 	void ChangeNextScene(Scene* scene);
@@ -39,7 +39,4 @@ private:
 
 	// プレイヤー
 	std::shared_ptr<Player> pl;
-
-	// ステージ
-	std::shared_ptr<Stage> stage;
 };

@@ -9,13 +9,13 @@ public:
 	// コンストラクタ
 	Scene() {}
 	// デストラクタ
-	~Scene() {}
+	virtual ~Scene() {}
 
 	// 描画
 	virtual void Draw() = 0;
 
 	// 処理
-	virtual void UpData() = 0;
+	virtual void Update() = 0;
 
 protected:
 	// ライブラリ

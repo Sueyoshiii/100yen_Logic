@@ -11,8 +11,6 @@
 #include <functional>
 #include <algorithm>
 
-#define INPUT Input::Get()
-
 enum class CharacterType
 {
 	// プレイヤー
@@ -22,7 +20,8 @@ enum class CharacterType
 	EM_WEAK_WOLF,
 	// エフェクト
 	EF_PL_NORMAL_SLASH,
-	EF_PL_WOLF_SLASH
+	EF_PL_WOLF_SLASH,
+	EF_BLOOD_SPLASH
 };
 
 // キャラクターのパラメータ
@@ -41,31 +40,31 @@ struct CharacterParameter
 	int defensePow;
 
 	// ダッシュ力
-	float dushPow;
+	float dashPow;
 
 	// ジャンプ力
 	float jumpPow;
 
 	CharacterParameter() :
 		hp(0), speed(0.0f), attackPow(0), defensePow(0), 
-		dushPow(0.0f), jumpPow(0.0f) {}
+		dashPow(0.0f), jumpPow(0.0f) {}
 
 	CharacterParameter(const int hp, const float speed, const int attackPow,
-		const int defencePow, const float dushPow, const float jumpPow) :
+		const int defencePow, const float dashPow, const float jumpPow) :
 		hp(hp), speed(speed), attackPow(attackPow), defensePow(defencePow), 
-		dushPow(dushPow), jumpPow(jumpPow) {}
+		dashPow(dashPow), jumpPow(jumpPow) {}
 
 	CharacterParameter(const float speed, const int attackPow,
-		const int defencePow, const float dushPow, const float jumpPow) :
+		const int defencePow, const float dashPow, const float jumpPow) :
 		speed(speed), attackPow(attackPow), defensePow(defencePow), 
-		dushPow(dushPow), jumpPow(jumpPow) {}
+		dashPow(dashPow), jumpPow(jumpPow) {}
 };
 
 class Character
 {
 public:
 	Character();
-	~Character();
+	virtual ~Character();
 
 	// 更新
 	virtual void Update() = 0;
@@ -78,6 +77,9 @@ public:
 
 	// ノックバック
 	void KnockBack(const Vec2f& vec);
+
+	// 生存情報取得
+	bool CheckAlive();
 
 	// 衝突矩形を取得
 	std::vector<HitRect<Vec2f>> GetRect();

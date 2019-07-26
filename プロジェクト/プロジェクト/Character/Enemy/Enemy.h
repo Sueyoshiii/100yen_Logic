@@ -7,7 +7,8 @@
 // 敵さん達のお名前
 enum class Enemies
 {
-	Wolf
+	Wolf,
+	BOSS_WOLF
 };
 
 // 矩形構造体
@@ -54,7 +55,7 @@ class Enemy :
 {
 public:
 	Enemy();
-	~Enemy();
+	virtual ~Enemy();
 
 	// 削除フラグ取得
 	bool GetDeleteFlag()const;
@@ -69,6 +70,7 @@ protected:
 
 	// 矩形同士の衝突判定
 	bool CheckColBox(const Box& box1, const Box& box2);
+	bool CheckColBox(const Vec2f& pos1, const Vec2f& size1, const Vec2f& pos2, const Vec2f& size2);
 
 	// 線分同士の衝突判定
 	bool CheckColSegments(const Segment& seg1, const Segment& seg2);

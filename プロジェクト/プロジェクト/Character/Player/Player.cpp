@@ -3,23 +3,23 @@
 #include <iostream>
 
 namespace {
-	const unsigned int HP_MAX = 1;
+	const unsigned int HP_MAX = 10;
 
 	const float NORMAL_WALK_SPEED = 8.0f;
-	const int NORMAL_ATTACK_POW = 2;
-	const int NORMAL_DEFENCE_POW = 2;
-	const float NORMAL_DASH_POW = 15.0f;
-	const float NORMAL_JUMP_POW = -40.0f;
+	const int NORMAL_ATTACK_POW   = 2;
+	const int NORMAL_DEFENCE_POW  = 2;
+	const float NORMAL_DASH_POW   = 15.0f;
+	const float NORMAL_JUMP_POW   = -35.0f;
 
 	const float WOLF_WALK_SPEED = 12.0f;
-	const int WOLF_ATTACK_POW = 4;
-	const int WOLF_DEFENCE_POW = 0;
-	const float WOLF_DASH_POW = 15.0f;
-	const float WOLF_JUMP_POW = -40.0f;
+	const int WOLF_ATTACK_POW   = 4;
+	const int WOLF_DEFENCE_POW  = 0;
+	const float WOLF_DASH_POW   = 20.0f;
+	const float WOLF_JUMP_POW   = -50.0f;
 
-	const unsigned int HIT_STOP_CNT_MAX = 15;
+	const unsigned int HIT_STOP_CNT_MAX  = 15;
 	const unsigned int DISAPPEAR_CNT_MAX = 60;
-	const unsigned int CRITICAL_CNT_MAX = 5;
+	const unsigned int CRITICAL_CNT_MAX  = 5;
 }
 
 // コンストラクタ
@@ -35,7 +35,6 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	LoadData("data/chara/player_wolf.info");
 	LoadImage("img/Player/player_wolf.png");
 
-
 	type = CharacterType::PL_NORMAL;
 	LoadData("data/chara/player.info");
 	LoadImage("img/Player/player.png");
@@ -47,18 +46,20 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	ChangeState("Neutral");
 
 	tex[type].size *= 3.0f;
+	tex[type].size.y *= 2.0f;
 	tex[CharacterType::PL_WOLF].size = tex[type].size;
 
 	tex[type].pos = Vec2f(0.0f, 0.0f);
 	worldPos = cam.lock()->Correction(tex[type].pos);
 	worldPos.x -= float(lib.lock()->GetWinSize().x);
-	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
+	worldPos.y = 0.0f;
+	//worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 
 	firstPos = worldPos;
 
 	// hp, speed, attack, defense, dush, jump
 	cParam = CharacterParameter(HP_MAX, NORMAL_WALK_SPEED, NORMAL_ATTACK_POW, NORMAL_DEFENCE_POW, NORMAL_DASH_POW, NORMAL_JUMP_POW);
-	vel = Vec2f(cParam.speed, 0.0f);
+	vel = Vec2f();
 
 	knockBackRange = 4.0f;
 }
@@ -76,19 +77,14 @@ void Player::Update()
 		return;
 	}
 
-	// 状態関数
-	func[state]();
-
 	CorrectPosInStage();
 
-	if (!jumpFlag && 
-		GetFootPos().y < StageManager::Get().GetGround() &&
-		state != "Damage")
-	{
-		CheckFall();
-	}
+	CheckFall();
 
 	InvicibleUpdate();
+
+	// 状態関数
+	func[state]();
 }
 
 // 描画
@@ -104,6 +100,12 @@ void Player::Draw()
 	DamageDraw();
 
 	DrawImage();
+	//static Primitive b(PrimitiveType::box);
+	//b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y, 0);
+	//b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x/4, tex[type].pos.y, 0);
+	//b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
+	//b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
+	//lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
 
 #ifdef _DEBUG
 	DrawRect();
@@ -121,31 +123,41 @@ void Player::NeutralUpdate()
 
 	CheckFirstAttack();
 
-	if (INPUT.IsTrigger(Key::F))
-	{
-		if (type == CharacterType::PL_NORMAL)
-		{
-			ChangeWolf();
-		}
-		else
-		{
-			ChangeNormal();
-		}
-	}
+	CheckTransform();
 }
 
 // 歩行
 void Player::WalkUpdate()
 {
-	if (INPUT.IsKey(Key::Num4))
+	if (Input::Get().IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		worldPos.x -= vel.x;
+		vel.x = -cParam.speed;
+		//worldPos.x += vel.x;
+		//StageManager::Get().CheckMapCol(worldPos, tex[type].size, vel);
+		if (StageManager::Get().CheckWall(worldPos, tex[type].size, turnFlag, Dir::Right))
+		{
+			worldPos.x = worldPos.x / 64 * 64 - 64;
+		}
+		else
+		{
+			worldPos.x += vel.x;
+		}
 	}
-	else if (INPUT.IsKey(Key::Num6))
+	else if (Input::Get().IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		worldPos.x += vel.x;
+		vel.x = cParam.speed;
+		//worldPos.x += vel.x;
+		//StageManager::Get().CheckMapCol(worldPos, tex[type].size, vel);
+		if (StageManager::Get().CheckWall(worldPos, tex[type].size, turnFlag, Dir::Right))
+		{
+			worldPos.x = worldPos.x / 64 * 64;
+		}
+		else
+		{
+			worldPos.x += vel.x;
+		}
 	}
 	else
 	{
@@ -157,10 +169,17 @@ void Player::WalkUpdate()
 	CheckDash();
 
 	CheckFirstAttack();
+
+	CheckTransform();
 }
 void Player::CheckWalk()
 {
-	if (INPUT.IsKey(Key::Num4) || INPUT.IsKey(Key::Num6))
+	if (Input::Get().IsKey(Key::Num4))
+	{
+		vel.x = -cParam.speed;
+		ChangeState("Walk");
+	}
+	else if (Input::Get().IsKey(Key::Num6))
 	{
 		vel.x = cParam.speed;
 		ChangeState("Walk");
@@ -170,17 +189,18 @@ void Player::CheckWalk()
 // ジャンプ
 void Player::JumpUpdate()
 {
-	if (INPUT.IsKey(Key::Num4))
+	if (Input::Get().IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		worldPos.x -= vel.x;
+		vel.x = -cParam.speed;
 	}
-	else if (INPUT.IsKey(Key::Num6))
+	else if (Input::Get().IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		worldPos.x += vel.x;
+		vel.x = cParam.speed;
 	}
 
+	worldPos.x += vel.x;
 	if (vel.y <= 0)
 	{
 		vel.y += StageManager::Get().GetGravity();
@@ -189,13 +209,29 @@ void Player::JumpUpdate()
 	else
 	{
 		jumpFlag = false;
-		ChangeState("Fall");
 	}
+
+	CheckJumpAttack();
 }
 void Player::CheckJump()
 {
-	if (!jumpFlag && INPUT.IsTrigger(Key::Space))
+	if (!jumpFlag && Input::Get().IsTrigger(Key::Space))
 	{
+		if (Input::Get().IsKey(Key::Num4))
+		{
+			turnFlag = true;
+			vel.x = -cParam.speed;
+		}
+		else if (Input::Get().IsKey(Key::Num6))
+		{
+			turnFlag = false;
+			vel.x = cParam.speed;
+		}
+		else
+		{
+			vel.x = 0.0f;
+		}
+
 		jumpFlag = true;
 		vel.y = cParam.jumpPow;
 		ChangeState("Jump");
@@ -205,28 +241,43 @@ void Player::CheckJump()
 // 落下
 void Player::FallUpdate()
 {
-	if (INPUT.IsKey(Key::Num4))
+	if (Input::Get().IsKey(Key::Num4))
 	{
 		turnFlag = true;
-		worldPos.x -= vel.x;
+		vel.x = -cParam.speed;
 	}
-	else if (INPUT.IsKey(Key::Num6))
+	else if (Input::Get().IsKey(Key::Num6))
 	{
 		turnFlag = false;
-		worldPos.x += vel.x;
+		vel.x = cParam.speed;
 	}
+
+	worldPos.x += vel.x;
 
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	if (GetFootPos().y > StageManager::Get().GetGround())
+	auto tmpPos = Vec2f(worldPos.x + tex[type].size.x / 4, worldPos.y);
+	auto tmpSize = Vec2f(worldPos.x + tex[type].size.x - tex[type].size.x / 4, worldPos.y + tex[type].size.y) - tmpPos;
+	if (StageManager::Get().CheckWall(tmpPos, tmpSize, turnFlag, Dir::Down))
 	{
-		worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
+		worldPos.y = worldPos.y / 64.0f * 64.0f + 40.0f/* + tex[type].size.y*/;
+		//worldPos.y = GetFootPos().y - tex[type].size.y;
 		ChangeState("Neutral");
 	}
+
+	CheckJumpAttack();
 }
 void Player::CheckFall()
 {
-	ChangeState("Fall");
+	auto tmpPos = Vec2f(worldPos.x + tex[type].size.x / 4, worldPos.y);
+	auto tmpSize = Vec2f(worldPos.x + tex[type].size.x - tex[type].size.x / 4, worldPos.y + tex[type].size.y) - tmpPos;
+	if (!jumpFlag &&
+		!StageManager::Get().CheckWall(tmpPos, tmpSize, turnFlag, Dir::Down) &&
+		state != "Damage" &&
+		state != "JumpAttack")
+	{
+		ChangeState("Fall");
+	}
 }
 
 // ダッシュ
@@ -244,13 +295,13 @@ void Player::DashUpdate()
 }
 void Player::CheckDash()
 {
-	if (!dashFlag && INPUT.IsTrigger(Key::X))
+	if (!dashFlag && Input::Get().IsTrigger(Key::X))
 	{
 		dashFlag = true;
 		stopFlag = true;
 		attackCnt = 0;
 		attackFlag = false;
-		vel.x = turnFlag ? -cParam.dushPow : cParam.dushPow;
+		vel.x = turnFlag ? -cParam.dashPow : cParam.dashPow;
 		ChangeState("Dash");
 	}
 }
@@ -262,7 +313,7 @@ void Player::FirstAttackUpdate()
 }
 void Player::CheckFirstAttack()
 {
-	if (!attackFlag && INPUT.IsTrigger(Key::Z))
+	if (!attackFlag && Input::Get().IsTrigger(Key::Z))
 	{
 		attackFlag = true;
 		attackCnt  = 0;
@@ -283,15 +334,23 @@ void Player::ThirdAttackUpdate()
 	CheckNextAttack(25);
 }
 
+// 4段目の攻撃
+void Player::FourthAttackUpdate()
+{
+	CheckNextAttack(25);
+}
+
 // 次の攻撃へ移る
 void Player::CheckNextAttack(const unsigned int attackInterval)
 {
 	if (CheckAnimEnd())
 	{
 		stopFlag = true;
-		if (state != "Attack3")
+		std::string lastAttack = type == CharacterType::PL_NORMAL ? "Attack3" : "Attack4";
+
+		if (state != lastAttack)
 		{
-			if (INPUT.IsTrigger(Key::Z))
+			if (Input::Get().IsTrigger(Key::Z))
 			{
 				attackCnt = 0;
 				stopFlag = false;
@@ -306,6 +365,7 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 			}
 			CheckDash();
 		}
+
 		if ((++attackCnt) > attackInterval)
 		{
 			attackCnt = 0;
@@ -317,6 +377,53 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 	else
 	{
 		CheckDash();
+	}
+}
+
+// ジャンプ攻撃
+void Player::JumpAttackUpdate()
+{
+	if (!CheckAnimEnd())
+	{
+		if (Input::Get().IsKey(Key::Num4))
+		{
+			turnFlag = true;
+			vel.x = -cParam.speed;
+		}
+		else if (Input::Get().IsKey(Key::Num6))
+		{
+			turnFlag = false;
+			vel.x = cParam.speed;
+		}
+
+		worldPos.x += vel.x;
+
+		vel.y += StageManager::Get().GetGravity();
+		worldPos.y += vel.y;
+
+		EffectManager::Get().SetPos(tex[type].pos);
+	}
+	else
+	{
+		if (GetFootPos().y < StageManager::Get().GetGround())
+		{
+			ChangeState("Fall");
+		}
+	}
+
+	if (GetFootPos().y > StageManager::Get().GetGround())
+	{
+		worldPos.y = GetFootPos().y - tex[type].size.y;
+		ChangeState("Neutral");
+	}
+}
+void Player::CheckJumpAttack()
+{
+	if (Input::Get().IsTrigger(Key::Z))
+	{
+		jumpFlag = false;
+		ChangeState("JumpAttack");
+		EffectManager::Get().CreateSlash(state, type, tex[type].pos, tex[type].size, turnFlag);
 	}
 }
 
@@ -353,7 +460,6 @@ void Player::DamageUpdate()
 			}
 		}
 	}
-
 }
 
 // 死亡
@@ -371,6 +477,40 @@ void Player::DeathUpdate()
 			deadEndFlag = true;
 		}
 	}
+}
+
+// 変身
+void Player::TransformUpdate()
+{
+	if (CheckAnimEnd())
+	{
+		if (type == CharacterType::PL_NORMAL)
+		{
+			Transform(CharacterType::PL_WOLF, type, CharacterParameter(cParam.hp, WOLF_WALK_SPEED, WOLF_ATTACK_POW, WOLF_DEFENCE_POW, WOLF_DASH_POW, WOLF_JUMP_POW));
+		}
+		else
+		{
+			Transform(CharacterType::PL_NORMAL, type, CharacterParameter(cParam.hp, NORMAL_WALK_SPEED, NORMAL_ATTACK_POW, NORMAL_DEFENCE_POW, NORMAL_DASH_POW, NORMAL_JUMP_POW));
+		}
+	}
+}
+void Player::CheckTransform()
+{
+	if (Input::Get().IsTrigger(Key::F))
+	{
+		ChangeState("Change");
+	}
+}
+void Player::Transform(const CharacterType& next, const CharacterType& now, const CharacterParameter& param)
+{
+	oldType = type;
+	type = next;
+
+	tex[type].pos = tex[now].pos;
+
+	cParam = param;
+
+	ChangeState("Neutral");
 }
 
 // ヒットストップ処理
@@ -402,30 +542,6 @@ void Player::DamageDraw()
 	}
 }
 
-void Player::ChangeNormal()
-{
-	oldType = type;
-	type = CharacterType::PL_NORMAL;
-	
-	tex[type].pos = tex[CharacterType::PL_WOLF].pos;
-
-	cParam = CharacterParameter(cParam.hp, NORMAL_WALK_SPEED, NORMAL_ATTACK_POW, NORMAL_DEFENCE_POW, NORMAL_DASH_POW, NORMAL_JUMP_POW);
-
-	ChangeState(state);
-}
-
-void Player::ChangeWolf()
-{
-	oldType = type;
-	type = CharacterType::PL_WOLF;
-
-	tex[type].pos = tex[CharacterType::PL_NORMAL].pos;
-
-	cParam = CharacterParameter(cParam.hp, WOLF_WALK_SPEED, WOLF_ATTACK_POW, WOLF_DEFENCE_POW, WOLF_DASH_POW, WOLF_JUMP_POW);
-
-	ChangeState(state);
-}
-
 // 状態と関数をバインド
 void Player::InitFunc()
 {
@@ -439,8 +555,11 @@ void Player::InitFunc()
 	func["Attack1"] = std::bind(&Player::FirstAttackUpdate, this);
 	func["Attack2"] = std::bind(&Player::SecondAttackUpdate, this);
 	func["Attack3"] = std::bind(&Player::ThirdAttackUpdate, this);
+	func["Attack4"] = std::bind(&Player::FourthAttackUpdate, this);
+	func["JumpAttack"] = std::bind(&Player::JumpAttackUpdate, this);
 	func["Damage"]  = std::bind(&Player::DamageUpdate, this);
 	func["Death"]   = std::bind(&Player::DeathUpdate, this);
+	func["Change"]  = std::bind(&Player::TransformUpdate, this);
 }
 
 // ローカル座標取得

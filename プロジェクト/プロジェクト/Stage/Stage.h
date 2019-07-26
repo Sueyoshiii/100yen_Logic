@@ -108,6 +108,9 @@ public:
 	// ボックスのアルファ値を取得
 	float GetBoxAlpha()const;
 
+	// ステージサイズ取得
+	Vec2f GetStageSize()const;
+
 	// 部屋移動フラグを取得
 	bool GetNextRoomFlag()const;
 

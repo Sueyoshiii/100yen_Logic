@@ -14,8 +14,10 @@ FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 
 	nextRoomFlag = false;
 
-	Load(back, "data/stage/Stage1/Stage1_Ground.json", "img/Stage/Mapchip_Ground.png");
-	Load(front, "data/stage/Stage1/Stage1_Grass.json", "img/Stage/Mapchip_Grass.png");
+	Load(back, "data/stage/StageDummy_Ground.json", "img/Stage/Mapchip_Ground.png");
+	Load(front, "data/stage/StageDummy_Grass.json", "img/Stage/Mapchip_Grass.png");
+	//Load(back, "data/stage/Stage1/Stage1_Ground.json", "img/Stage/Mapchip_Ground.png");
+	//Load(front, "data/stage/Stage1/Stage1_Grass.json", "img/Stage/Mapchip_Grass.png");
 
 	box.pos[0] = Vec3f();
 	box.pos[1] = Vec3f(float(lib.lock()->GetWinSize().x), 0.0f, 0.0f);

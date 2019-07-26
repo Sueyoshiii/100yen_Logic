@@ -100,12 +100,12 @@ void Player::Draw()
 	DamageDraw();
 
 	DrawImage();
-	static Primitive b(PrimitiveType::box);
-	b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y, 0);
-	b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x/4, tex[type].pos.y, 0);
-	b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
-	b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
-	lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
+	//static Primitive b(PrimitiveType::box);
+	//b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y, 0);
+	//b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x/4, tex[type].pos.y, 0);
+	//b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
+	//b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
+	//lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
 
 #ifdef _DEBUG
 	DrawRect();

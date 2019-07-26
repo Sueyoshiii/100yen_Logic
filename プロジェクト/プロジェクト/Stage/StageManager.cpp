@@ -67,7 +67,7 @@ void StageManager::CheckMapCol(Vec2f& pos, const Vec2f& size, const Vec2f& vel)
 // �͈͎擾
 StageRange StageManager::GetRange()
 {
-	StageRange stRange = StageRange(range.Top(), range.Bottom(), range.Left() / 10, range.Right());
+	StageRange stRange = StageRange(range.Top(), range.Bottom(), range.Left(), range.Right());
 	return stRange;
 }
 
@@ -83,7 +83,8 @@ float StageManager::GetBoxAlpha() const
 
 void StageManager::SetRange(const Vec2& size)
 {
-	range = StageManager::Rect(Vec2f(), float(size.x * 10), float(size.y));
+	auto stSize = stage->GetStageSize();
+	range = StageManager::Rect(Vec2f(), float(stSize.x), float(stSize.y));
 }
 
 void StageManager::SetNextRoomFlag(const bool flag)

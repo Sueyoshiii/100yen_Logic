@@ -337,6 +337,11 @@ float Stage::GetBoxAlpha() const
 	return boxAlpha;
 }
 
+Vec2f Stage::GetStageSize() const
+{
+	return Vec2f(back.size.x, back.size.y);
+}
+
 bool Stage::GetNextRoomFlag() const
 {
 	return nextRoomFlag;

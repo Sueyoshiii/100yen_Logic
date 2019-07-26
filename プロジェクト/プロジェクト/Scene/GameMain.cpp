@@ -10,7 +10,6 @@
 #include "Over.h"
 #include "../Stage/Stage.h"
 #include "../Stage/FirstRoom/FirstRoom.h"
-//#include "../Stage/SecondRoom/SecondRoom.h"
 
 #include "../Json/JsonLoader.h"
 
@@ -33,8 +32,8 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 	pl  = std::make_shared<Player>(lib, cam);
 
 	// ステージデータの読み込み
-	StageManager::Get().SetRange(lib.lock()->GetWinSize());
 	StageManager::Get().SetRoom(new FirstRoom(lib, pl, cam));
+	StageManager::Get().SetRange(lib.lock()->GetWinSize());
 
 	// 対象をプレイヤーにする
 	cam->SetFocus(pl);

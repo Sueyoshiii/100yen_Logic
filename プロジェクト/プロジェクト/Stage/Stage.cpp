@@ -2,6 +2,8 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <iostream>
 #include <iterator>
+#include <algorithm>
+#include <chrono>
 
 using namespace boost::property_tree;
 
@@ -63,7 +65,13 @@ int Stage::Load(StageData& stage, const std::string& jsonFilePath, const std::st
 
 		// マップデータ取得
 		auto data = layers.get_child(".data");
-		layer.chip.resize(data.size());
+		//layer.chip.resize(data.size());
+		// 縦・横
+		layer.chips.resize(layer.massNum.y);
+		for (auto& x : layer.chips)
+		{
+			x.resize(layer.massNum.x);
+		}
 		unsigned int index = 0;
 		while (!data.empty())
 		{
@@ -76,8 +84,11 @@ int Stage::Load(StageData& stage, const std::string& jsonFilePath, const std::st
 			// 削除
 			data.pop_front();
 
-			// テクスチャ
-			auto& chip = layer.chip[index];
+			//auto& chip = layer.chip[index];
+			// 現在のマスを取得
+			int massPosX = index % layer.massNum.x;
+			int massPosY = int(floorf(float(index / layer.massNum.x)));
+			auto& chip = layer.chips.at(massPosY).at(massPosX);
 
 			// チップ番号
 			chip.data = chipNum;
@@ -98,11 +109,11 @@ int Stage::Load(StageData& stage, const std::string& jsonFilePath, const std::st
 				float(stage.divSize.y)
 			};
 
+			// 画像の横の分割数
+			chipMax = int(chip.tex.size.x / chip.tex.divSize.x);
+
 			// エディター側が1から始まるので引く
 			--chipNum;
-
-			// 横の分割数
-			chipMax = int(chip.tex.size.x / chip.tex.divSize.x);
 
 			// 分割位置
 			chip.tex.offsetPos = {
@@ -115,8 +126,8 @@ int Stage::Load(StageData& stage, const std::string& jsonFilePath, const std::st
 
 			// 描画位置
 			chip.tex.pos = {
-				float(index % layer.massNum.x) * chip.tex.size.x,
-				floorf(float(index / layer.massNum.x)) * chip.tex.size.y
+				float(massPosX) * chip.tex.size.x,
+				float(massPosY) * chip.tex.size.y
 			};
 			chip.worldPos = cam.lock()->Correction(chip.tex.pos);
 			chip.worldPos.x -= float(lib.lock()->GetWinSize().x);
@@ -147,18 +158,32 @@ void Stage::DrawMapData(std::weak_ptr<Camera> cam)
 		return;
 	}
 
-	auto camRange = cam.lock()->GetRange();
-	for (auto& chip : back.layers[0].chip)
-	{
-		if (chip.data > 0)
-		{
-			if (chip.worldPos.x > camRange.GetLeft() && chip.worldPos.x < camRange.GetRight())
+	//auto camRange = cam.lock()->GetRange();
+	//for (auto& chip : back.layers[0].chip)
+	//{
+	//	if (chip.data > 0)
+	//	{
+	//		if (chip.worldPos.x > camRange.GetLeft() && chip.worldPos.x < camRange.GetRight())
+	//		{
+	//			chip.tex.pos = cam.lock()->Correction(chip.worldPos);
+	//			lib.lock()->Draw(chip.tex);
+	//		}
+	//	}
+	//}
+
+	auto camera = cam.lock();
+	std::for_each(back.layers[0].chips.begin(), back.layers[0].chips.end(), [this, camera](std::vector<MapchipData>& x) {
+		std::for_each(x.begin(), x.end(), [this, camera](MapchipData& chip) {
+			if (chip.data > 0)
 			{
-				chip.tex.pos = cam.lock()->Correction(chip.worldPos);
-				lib.lock()->Draw(chip.tex);
+				if (chip.worldPos.x > camera->GetRange().GetLeft() && chip.worldPos.x < camera->GetRange().GetRight())
+				{
+					chip.tex.pos = camera->Correction(chip.worldPos);
+					lib.lock()->Draw(chip.tex);
+				}
 			}
-		}
-	}
+		});
+	});
 }
 
 // 遷移ボックス描画
@@ -176,18 +201,32 @@ void Stage::DrawMapDataFront(std::weak_ptr<Camera> cam)
 		return;
 	}
 
-	auto camRange = cam.lock()->GetRange();
-	for (auto& chip : front.layers[0].chip)
-	{
-		if (chip.data > 0)
-		{
-			if (chip.worldPos.x > camRange.GetLeft() && chip.worldPos.x < camRange.GetRight())
+	//auto camRange = cam.lock()->GetRange();
+	//for (auto& chip : front.layers[0].chip)
+	//{
+	//	if (chip.data > 0)
+	//	{
+	//		if (chip.worldPos.x > camRange.GetLeft() && chip.worldPos.x < camRange.GetRight())
+	//		{
+	//			chip.tex.pos = cam.lock()->Correction(chip.worldPos);
+	//			lib.lock()->Draw(chip.tex);
+	//		}
+	//	}
+	//}
+
+	auto camera = cam.lock();
+	std::for_each(front.layers[0].chips.begin(), front.layers[0].chips.end(), [this, camera](std::vector<MapchipData> & x) {
+		std::for_each(x.begin(), x.end(), [this, camera](MapchipData & chip) {
+			if (chip.data > 0)
 			{
-				chip.tex.pos = cam.lock()->Correction(chip.worldPos);
-				lib.lock()->Draw(chip.tex);
+				if (chip.worldPos.x > camera->GetRange().GetLeft() && chip.worldPos.x < camera->GetRange().GetRight())
+				{
+					chip.tex.pos = camera->Correction(chip.worldPos);
+					lib.lock()->Draw(chip.tex);
+				}
 			}
-		}
-	}
+		});
+	});
 }
 
 // 壁チェック
@@ -207,46 +246,25 @@ bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size, const bool turnFlag, 
 			};
 		}
 
-		for (auto& chips : back.layers[0].chip)
+		for (std::vector<MapchipData>& massDirY : back.layers[0].chips)
 		{
-			if (chips.data == 0)
+			for (MapchipData& massDirX : massDirY)
 			{
-				continue;
-			}
+				if (massDirX.data == 0)
+				{
+					continue;
+				}
 
-			if (tmpPos.y + tmpSize.y > chips.worldPos.y &&
-				tmpPos.x < chips.worldPos.x + chipSize.x &&
-				tmpPos.x + tmpSize.x > chips.worldPos.x)
-			{
-				return true;
-			}
-		}
-	}
-
-	if (dir == Dir::Right)
-	{
-		tmpPos = {
-			tmpPos.x + tmpSize.x,
-			tmpPos.y + tmpSize.y / 2.0f
-		};
-
-		Vec2f tmpSize2 = {
-			tmpSize.x - 1.0f,
-			tmpSize.y / 2.0f - 1.0f
-		};
-
-		for (auto& chips : back.layers[0].chip)
-		{
-			if (chips.data == 0)
-			{
-				continue;
-			}
-
-			Vec2f bCenter = chips.worldPos + chipSize / 2.0f;
-			if (fabs(tmpPos.x - bCenter.x) < fabs(tmpSize2.x + chipSize.x) / 2.0f &&
-				fabs(tmpPos.y - bCenter.y) < fabs(tmpSize2.y + chipSize.y) / 2.0f)
-			{
-				return true;
+				if (cam.lock()->GetRange().GetLeft() < massDirX.worldPos.x &&
+					cam.lock()->GetRange().GetRight() > massDirX.worldPos.x)
+				{
+					if (tmpPos.y + tmpSize.y > massDirX.worldPos.y &&
+						tmpPos.x < massDirX.worldPos.x + chipSize.x &&
+						tmpPos.x + tmpSize.x > massDirX.worldPos.x)
+					{
+						return true;
+					}
+				}
 			}
 		}
 	}
@@ -257,8 +275,7 @@ bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size, const bool turnFlag, 
 bool Stage::CheckMapChip(const Vec2f& pos)
 {
 	Vec2f chipSize(64.0f);
-	int index = int(pos.x / chipSize.x) + int(pos.y / chipSize.y) * chipMax;
-	if (back.layers[0].chip[index].data != 0)
+	if (back.layers[0].chips.at(int(pos.y / chipSize.y)).at(int(pos.x / chipSize.x)).data != 0)
 	{
 		return true;
 	}
@@ -268,44 +285,44 @@ bool Stage::CheckMapChip(const Vec2f& pos)
 
 void Stage::CheckMapCol(Vec2f& pos, const Vec2f& size, const Vec2f& vel)
 {
-	static bool flag = false;
-	Vec2f chipSize(64.0f);
-	for (auto& chips : back.layers[0].chip)
-	{
-		if (chips.data == 0)
-		{
-			continue;
-		}
+	//static bool flag = false;
+	//Vec2f chipSize(64.0f);
+	//for (auto& chips : back.layers[0].chip)
+	//{
+	//	if (chips.data == 0)
+	//	{
+	//		continue;
+	//	}
 
-		Vec2f tmpPos = {
-			pos.x,
-			pos.y
-		};
+	//	Vec2f tmpPos = {
+	//		pos.x,
+	//		pos.y
+	//	};
 
-		Vec2f pCenter = tmpPos + size / 2.0f;
-		Vec2f bCenter = chips.worldPos + chipSize / 2.0f;
+	//	Vec2f pCenter = tmpPos + size / 2.0f;
+	//	Vec2f bCenter = chips.worldPos + chipSize / 2.0f;
 
-		if (fabs(pCenter.x - bCenter.x) < fabs(size.x + chipSize.x) / 2.0f &&
-			fabs(pCenter.y - bCenter.y) < fabs(size.y + chipSize.y) / 2.0f)
-		{
-			if (vel.x > 0)
-			{
-				pos.x = chips.worldPos.x - size.x;
-			}
-			else
-			{
-				pos.x = chips.worldPos.x + chipSize.x;
-			}
-			flag = true;
-			break;
-		}
-	}
+	//	if (fabs(pCenter.x - bCenter.x) < fabs(size.x + chipSize.x) / 2.0f &&
+	//		fabs(pCenter.y - bCenter.y) < fabs(size.y + chipSize.y) / 2.0f)
+	//	{
+	//		if (vel.x > 0)
+	//		{
+	//			pos.x = chips.worldPos.x - size.x;
+	//		}
+	//		else
+	//		{
+	//			pos.x = chips.worldPos.x + chipSize.x;
+	//		}
+	//		flag = true;
+	//		break;
+	//	}
+	//}
 
-	if (!flag)
-	{
-		pos.x += vel.x;
-	}
-	flag = false;
+	//if (!flag)
+	//{
+	//	pos.x += vel.x;
+	//}
+	//flag = false;
 }
 
 // 次のルームを取得

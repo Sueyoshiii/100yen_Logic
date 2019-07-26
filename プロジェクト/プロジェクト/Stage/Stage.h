@@ -53,7 +53,8 @@ struct MapchipData
 struct LayerData
 {
 	// マップデータ
-	std::vector<MapchipData> chip;
+	//std::vector<MapchipData> chip;
+	std::vector<std::vector<MapchipData>> chips;
 	// レイヤー名
 	std::string name;
 	// レイヤータイプ

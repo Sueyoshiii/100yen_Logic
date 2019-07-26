@@ -260,7 +260,8 @@ void Player::FallUpdate()
 	auto tmpSize = Vec2f(worldPos.x + tex[type].size.x - tex[type].size.x / 4, worldPos.y + tex[type].size.y) - tmpPos;
 	if (StageManager::Get().CheckWall(tmpPos, tmpSize, turnFlag, Dir::Down))
 	{
-		worldPos.y = GetFootPos().y - tex[type].size.y;
+		worldPos.y = worldPos.y / 64.0f * 64.0f + 40.0f/* + tex[type].size.y*/;
+		//worldPos.y = GetFootPos().y - tex[type].size.y;
 		ChangeState("Neutral");
 	}
 

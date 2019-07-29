@@ -75,8 +75,8 @@ void Wolf::Update()
 		FallUpdate();
 	}
 
-	CheckHit();
-	CheckHitEffect();
+	//CheckHit();
+	//CheckHitEffect();
 }
 
 // •`‰æ
@@ -89,7 +89,7 @@ void Wolf::Draw()
 		AnimationUpdate();
 	}
 
-	DrawImage();
+	//DrawImage();
 
 #ifdef _DEBUG
 	DrawRect();

@@ -4,6 +4,7 @@
 #include <iterator>
 #include <algorithm>
 #include <chrono>
+#include <fstream>
 
 using namespace boost::property_tree;
 
@@ -147,6 +148,29 @@ int Stage::Load(StageData& stage, const std::string& jsonFilePath, const std::st
 	std::string str = GetValue<std::string>(data, "type");
 	stage.type = mapType[str];
 
+	std::string map;
+	for (auto& y : back.layers[0].chips)
+	{
+		for (auto& x : y)
+		{
+			std::string str;
+			if (x.data < 10)
+			{
+				str = " " + std::to_string(x.data);
+			}
+			else
+			{
+				str = std::to_string(x.data);
+			}
+			map += str;
+		}
+		map += "\n";
+	}
+
+	std::ofstream outText("mapchip.txt");
+	outText << map;
+	outText.close();
+
 	return 0;
 }
 
@@ -157,19 +181,6 @@ void Stage::DrawMapData(std::weak_ptr<Camera> cam)
 	{
 		return;
 	}
-
-	//auto camRange = cam.lock()->GetRange();
-	//for (auto& chip : back.layers[0].chip)
-	//{
-	//	if (chip.data > 0)
-	//	{
-	//		if (chip.worldPos.x > camRange.GetLeft() && chip.worldPos.x < camRange.GetRight())
-	//		{
-	//			chip.tex.pos = cam.lock()->Correction(chip.worldPos);
-	//			lib.lock()->Draw(chip.tex);
-	//		}
-	//	}
-	//}
 
 	auto camera = cam.lock();
 	std::for_each(back.layers[0].chips.begin(), back.layers[0].chips.end(), [this, camera](std::vector<MapchipData>& x) {
@@ -200,19 +211,6 @@ void Stage::DrawMapDataFront(std::weak_ptr<Camera> cam)
 	{
 		return;
 	}
-
-	//auto camRange = cam.lock()->GetRange();
-	//for (auto& chip : front.layers[0].chip)
-	//{
-	//	if (chip.data > 0)
-	//	{
-	//		if (chip.worldPos.x > camRange.GetLeft() && chip.worldPos.x < camRange.GetRight())
-	//		{
-	//			chip.tex.pos = cam.lock()->Correction(chip.worldPos);
-	//			lib.lock()->Draw(chip.tex);
-	//		}
-	//	}
-	//}
 
 	auto camera = cam.lock();
 	std::for_each(front.layers[0].chips.begin(), front.layers[0].chips.end(), [this, camera](std::vector<MapchipData> & x) {
@@ -274,10 +272,13 @@ bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size, const bool turnFlag, 
 
 bool Stage::CheckMapChip(const Vec2f& pos)
 {
-	Vec2f chipSize(64.0f);
-	if (back.layers[0].chips.at(int(pos.y / chipSize.y)).at(int(pos.x / chipSize.x)).data != 0)
+	Vec2 chipSize(64);
+	Vec2 localPos = Vec2(cam.lock()->Correction(pos).x, cam.lock()->Correction(pos).y);
+
+	auto data = back.layers[0].chips.at(localPos.y / chipSize.y).at(localPos.x / chipSize.x).data;
+	if (data != 0)
 	{
-		return true;
+  		return true;
 	}
 
 	return false;

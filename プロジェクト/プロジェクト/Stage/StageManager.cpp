@@ -68,7 +68,7 @@ void StageManager::CheckMapCol(Vec2f& pos, const Vec2f& size, const Vec2f& vel)
 // �͈͎擾
 StageRange StageManager::GetRange()
 {
-	StageRange stRange = StageRange(range.Top(), range.Bottom(), range.Left(), range.Right());
+	StageRange stRange = StageRange(range.Top(), range.Bottom(), range.Left(), range.Right()*2);
 	return stRange;
 }
 

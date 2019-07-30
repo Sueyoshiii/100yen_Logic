@@ -49,7 +49,10 @@ void Camera::Update()
 // Žó‚¯Žæ‚Á‚½À•W‚ð•â³
 Vec2f Camera::Correction(const Vec2f& pos)
 {
-	return Vec2f(pos.x - (this->pos.x - size.x / 2), pos.y);
+	Vec2f tmp = pos;
+	tmp.x = pos.x - (this->pos.x - size.x / 2);
+
+	return tmp;
 }
 
 // À•WŽæ“¾
@@ -82,8 +85,10 @@ void Camera::SetPos(const Vec2f& pos)
 {
 	this->pos = pos;
 
-	float left  = StageManager::Get().GetRange().Left();
-	float right = StageManager::Get().GetRange().Right();
+	float left  = 0.0f;
+	//float left  = StageManager::Get().GetRange().Left();
+	float right = 64 * 40;
+	//float right = StageManager::Get().GetRange().Right();
 
 	if (this->pos.x - size.x / 2 < left) {
 		this->pos.x = left + size.x / 2;

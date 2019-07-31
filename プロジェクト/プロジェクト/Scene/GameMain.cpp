@@ -122,7 +122,7 @@ void GameMain::ChangeNextScene(Scene* scene)
 // ƒ‹[ƒ€Ø‚è‘Ö‚¦
 void GameMain::CheckChangeRoom()
 {
-	if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f > StageManager::Get().GetRange().Right())
+	if (pl->GetWorldPos().x + pl->GetSize().x / 2.0f > StageManager::Get().GetStageSize().x)
 	{
 		StageManager::Get().SetNextRoomFlag(true);
 		if (StageManager::Get().GetBoxAlpha() >= 1.0f)

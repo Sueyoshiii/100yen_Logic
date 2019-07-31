@@ -46,7 +46,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	ChangeState("Neutral");
 
 	tex[type].size *= 3.0f;
-	//tex[type].size = Vec2f(64.0f) * 2;
+	tex[type].size = Vec2f(64.0f) * 2;
 	tex[type].size.y *= 2.0f;
 	tex[CharacterType::PL_WOLF].size = tex[type].size;
 
@@ -89,19 +89,25 @@ void Player::Update()
 		tex[type].size.y
 	};
 
+	int chipSizeX = StageManager::Get().GetChipSize().x;
+
 	// 左
 	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y)) ||
 		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y - 1.0f)))
 	{
-		worldPos.x = int(worldPos.x) / 64 * 64 + tex[type].size.x + tmpSize.x;
+		vel.x = 0;
+		worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX + tmpSize.x;
 	}
 
 	// 右
 	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y)) ||
 		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
 	{
-		worldPos.x = int(worldPos.x) / 64 * 64 + tmpSize.x;
+		vel.x = 0;
+		worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX/* + tmpSize.x*/;
 	}
+
+	firstPos.y = worldPos.y;
 }
 
 // 描画
@@ -117,6 +123,7 @@ void Player::Draw()
 	DamageDraw();
 
 	DrawImage();
+#ifdef _DEBUG
 	static Primitive b(PrimitiveType::box);
 	b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y, 0);
 	b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x/4, tex[type].pos.y, 0);
@@ -124,7 +131,6 @@ void Player::Draw()
 	b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
 	lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
 
-#ifdef _DEBUG
 	DrawRect();
 #endif
 }
@@ -260,60 +266,46 @@ void Player::FallUpdate()
 		tex[type].size.y
 	};
 
-	if (turnFlag)
+	int chipSizeY = StageManager::Get().GetChipSize().y;
+	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y - 1.0f)) ||
+		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
 	{
-		if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y - 1.0f)) ||
-			StageManager::Get().CheckMapChip(Vec2f((worldPos.x + tex[type].size.x - tmpSize.x) / 2.0f - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
-		{
-			vel.y = 0.0f;
-			worldPos.y = int(worldPos.y) / 64 * 64;
-			ChangeState("Neutral");
-		}
-	}
-	else
-	{
-		if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x + tmpSize.x / 2.0f, worldPos.y + tex[type].size.y - 1.0f)) ||
-			StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
-		{
-			vel.y = 0.0f;
-			worldPos.y = int(worldPos.y) / 64 * 64;
-			ChangeState("Neutral");
-		}
+		vel.y = 0.0f;
+		worldPos.y = int(worldPos.y) / chipSizeY * chipSizeY;
+		ChangeState("Neutral");
 	}
 
 	CheckJumpAttack();
+
+	// 穴に落ちた
+	if (worldPos.x < lib.lock()->GetWinSize().x)
+	{
+		if (worldPos.y - tex[type].size.y * 3 > lib.lock()->GetWinSize().y * 2)
+		{
+			deadEndFlag = true;
+		}
+	}
 }
 void Player::CheckFall()
 {
+	//if (worldPos.x >= StageManager::Get().GetStageSize().x ||
+	//	worldPos.x < 0.0f)
+	//{
+	//	return;
+	//}
+
 	Vec2f tmpSize = {
 		tex[type].size.x / 4,
 		tex[type].size.y
 	};
 
-	if (turnFlag)
+	if (!StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y)) &&
+		!StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x, worldPos.y + tex[type].size.y)) &&
+		!jumpFlag &&
+		state != "Damage" &&
+		state != "JumpAttack")
 	{
-		// 左向き、左半分
-		if (!StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y)) &&
-			!StageManager::Get().CheckMapChip(Vec2f((worldPos.x + tex[type].size.x - tmpSize.x) / 2.0f, worldPos.y + tex[type].size.y)) &&
-			!jumpFlag &&
-			state != "Damage" &&
-			state != "JumpAttack")
-		{
-			worldPos.x = (worldPos.x + tex[type].size.x / 2.0f) / 64 * 64;
-			ChangeState("Fall");
-		}
-	}
-	else
-	{
-		// 右向き、右半分
-		if (!StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x + tmpSize.x / 2.0f, worldPos.y + tex[type].size.y)) &&
-			!StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x, worldPos.y + tex[type].size.y)) &&
-			!jumpFlag &&
-			state != "Damage" &&
-			state != "JumpAttack")
-		{
-			ChangeState("Fall");
-		}
+		ChangeState("Fall");
 	}
 }
 
@@ -473,19 +465,30 @@ void Player::DamageUpdate()
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
 
-	if (GetFootPos().y < StageManager::Get().GetGround())
+
+	Vec2f tmpSize = {
+		tex[type].size.x / 4,
+		tex[type].size.y
+	};
+	static bool hitFlag = false;
+	int chipSizeY = StageManager::Get().GetChipSize().y;
+	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y - 1.0f)) ||
+		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
 	{
-		worldPos.x += vel.x;
+		vel.y = 0.0f;
+		worldPos.y = int(worldPos.y) / chipSizeY * chipSizeY;
+		hitFlag = true;
 	}
-	else
+
+	if (hitFlag)
 	{
-		worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 		if ((++cnt) > 40)
 		{
 			cnt = 0;
 			jumpFlag = false;
 			dashFlag = false;
 			attackFlag = false;
+			hitFlag = false;
 			if (cParam.hp > 0)
 			{
 				invincibleFlag = true;
@@ -497,6 +500,35 @@ void Player::DamageUpdate()
 			}
 		}
 	}
+	else
+	{
+		worldPos.x += vel.x;
+	}
+
+	//if (GetFootPos().y < StageManager::Get().GetGround())
+	//{
+	//	worldPos.x += vel.x;
+	//}
+	//else
+	//{
+	//	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
+	//	if ((++cnt) > 40)
+	//	{
+	//		cnt = 0;
+	//		jumpFlag = false;
+	//		dashFlag = false;
+	//		attackFlag = false;
+	//		if (cParam.hp > 0)
+	//		{
+	//			invincibleFlag = true;
+	//			ChangeState("Neutral");
+	//		}
+	//		else
+	//		{
+	//			ChangeState("Death");
+	//		}
+	//	}
+	//}
 }
 
 // 死亡

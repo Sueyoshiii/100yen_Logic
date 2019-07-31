@@ -123,8 +123,9 @@ int Stage::Load(StageData& stage, const std::string& jsonFilePath, const std::st
 			};
 
 			// サイズ
-			chip.tex.size = Vec2f(64.0f);
-			//chip.tex.size.y *= 2.0f;
+			chip.tex.size = Vec2f(32.0f);
+			chip.tex.size.y *= 2.0f;
+			chipSize = Vec2(chip.tex.size.x, chip.tex.size.y);
 
 			// 描画位置
 			chip.worldPos = {
@@ -141,7 +142,7 @@ int Stage::Load(StageData& stage, const std::string& jsonFilePath, const std::st
 	}
 
 	// ステージのサイズ
-	stage.size = 64 * stage.layers[0].massNum;
+	stage.size = chipSize * stage.layers[0].massNum;
 
 	// マップタイプ
 	std::string str = GetValue<std::string>(data, "type");
@@ -236,10 +237,16 @@ bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size, const bool turnFlag, 
 
 bool Stage::CheckMapChip(const Vec2f& pos)
 {
-	Vec2 chipSize(64);
-	Vec2 localPos = Vec2(pos.x, pos.y);
+	int y = pos.y / chipSize.y;
+	int x = pos.x / chipSize.x;
 
-	int data = back.layers[0].chips.at(localPos.y / chipSize.y).at(localPos.x / chipSize.x).data;
+	if (y >= back.layers[0].massNum.y ||
+		x >= back.layers[0].massNum.x)
+	{
+		return false;
+	}
+
+	int data = back.layers[0].chips.at(y).at(x).data;
 	if (data != 0)
 	{
   		return true;
@@ -267,6 +274,11 @@ float Stage::GetBoxAlpha() const
 Vec2f Stage::GetStageSize() const
 {
 	return Vec2f(back.size.x/* * length*/, back.size.y);
+}
+
+Vec2 Stage::GetChipSize() const
+{
+	return chipSize;
 }
 
 bool Stage::GetNextRoomFlag() const

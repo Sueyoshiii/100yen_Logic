@@ -103,6 +103,17 @@ float StageManager::GetGravity() const
 	return GR;
 }
 
+Vec2 StageManager::GetChipSize() const
+{
+	return stage->GetChipSize();
+}
+
+Vec2 StageManager::GetStageSize() const
+{
+	auto tmp = stage->GetStageSize();
+	return Vec2(tmp.x, tmp.y);
+}
+
 bool StageManager::GetClearFlag() const
 {
 	return clearFlag;

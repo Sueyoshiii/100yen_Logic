@@ -8,16 +8,22 @@ struct ViewRange
 {
 	float left;
 	float right;
+	float top;
+	float bottom;
 
-	ViewRange() : left(0.0f), right(0.0f) {}
+	ViewRange() : left(0.0f), right(0.0f), top(0.0f), bottom(0.0f) {}
 	ViewRange(const Vec2f& pos, const Vec2f& size)
 	{
 		left  = pos.x - size.x/* / 2.0f*/;
 		right = pos.x + size.x/* / 2.0f*/;
+		top = pos.y - size.y;
+		bottom = pos.y + size.y;
 	}
 	
 	float GetLeft()const { return left; }
 	float GetRight()const { return right; }
+	float GetTop()const { return top; }
+	float GetBottom()const { return bottom; }
 };
 
 class Camera

@@ -60,6 +60,9 @@ public:
 	float GetGround()const;
 	float GetGravity()const;
 
+	Vec2 GetChipSize()const;
+	Vec2 GetStageSize()const;
+
 	bool GetClearFlag()const;
 	void SetClearFlag(const bool flag);
 private:

@@ -38,6 +38,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	ChangeState("Neutral");
 
 	tex[type].size *= 3.0f;
+	tex[type].size = Vec2f(64.0f) * 2;
 	tex[type].size.y *= 2.0f;
 
 	// hp, speed, attack, defense, dash, jump
@@ -47,9 +48,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 
 	turnFlag = true;
 
-	tex[type].pos = pos;
-	worldPos   = cam.lock()->Correction(tex[type].pos);
-	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
+	worldPos   = pos;
 	fulcrum    = worldPos;
 
 	knockBackRange = KNOCK_BACK_RANGE;
@@ -75,8 +74,35 @@ void Wolf::Update()
 		FallUpdate();
 	}
 
-	//CheckHit();
-	//CheckHitEffect();
+	//int chipSizeX = StageManager::Get().GetChipSize().x;
+
+	//// ¶
+	//if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y)) ||
+	//	StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y - 1.0f)))
+	//{
+	//	vel.x = 0;
+	//	worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX + tmpSize.x;
+	//}
+
+	//// ‰E
+	//if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y)) ||
+	//	StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
+	//{
+	//	vel.x = 0;
+	//	worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX/* + tmpSize.x*/;
+	//}
+
+	// °
+	int chipSizeY = StageManager::Get().GetChipSize().y;
+	if (StageManager::Get().CheckMapChip(Vec2f()) ||
+		StageManager::Get().CheckMapChip(Vec2f()))
+	{
+		vel.y = 0;
+		worldPos.y = worldPos.y / chipSizeY * chipSizeY;
+	}
+
+	CheckHit();
+	CheckHitEffect();
 }
 
 // •`‰æ
@@ -89,7 +115,13 @@ void Wolf::Draw()
 		AnimationUpdate();
 	}
 
-	//DrawImage();
+	DrawImage();
+	//static Primitive b(PrimitiveType::box);
+	//b.pos[0] = Vec3f(tex[type].pos.x, tex[type].pos.y + tex[type].size.y / 2.0f, 0);
+	//b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y + tex[type].size.y / 2.0f, 0);
+	//b.pos[2] = Vec3f(tex[type].pos.x, tex[type].pos.y + tex[type].size.y, 0);
+	//b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y + tex[type].size.y, 0);
+	//lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
 
 #ifdef _DEBUG
 	DrawRect();

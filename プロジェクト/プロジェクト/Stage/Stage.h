@@ -111,6 +111,8 @@ public:
 	// ステージサイズ取得
 	Vec2f GetStageSize()const;
 
+	Vec2 GetChipSize()const;
+
 	// 部屋移動フラグを取得
 	bool GetNextRoomFlag()const;
 
@@ -149,6 +151,8 @@ protected:
 	bool nextRoomFlag;
 
 	int length;
+
+	Vec2 chipSize;
 private:
 	// 文字列を数値に変換
 	template<typename T>

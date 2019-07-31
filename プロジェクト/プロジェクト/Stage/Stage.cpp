@@ -131,12 +131,6 @@ int Stage::Load(StageData& stage, const std::string& jsonFilePath, const std::st
 				float(massPosX) * chip.tex.size.x,
 				float(massPosY) * chip.tex.size.y
 			};
-			//chip.tex.pos = {
-			//	float(massPosX) * chip.tex.size.x,
-			//	float(massPosY) * chip.tex.size.y
-			//};
-			//chip.worldPos = cam.lock()->Correction(chip.tex.pos);
-			//chip.worldPos.x -= float(lib.lock()->GetWinSize().x);
 
 			++index;
 		}
@@ -237,43 +231,6 @@ void Stage::DrawMapDataFront(std::weak_ptr<Camera> cam)
 // 壁チェック
 bool Stage::CheckWall(const Vec2f& pos, const Vec2f& size, const bool turnFlag, const Dir& dir)
 {
-	Vec2f chipSize(64.0f);
-
-	Vec2f tmpPos = pos;
-	Vec2f tmpSize = { size.x / 2.0f, size.y };
-	//if (dir == Dir::Down)
-	//{
-	//	if (!turnFlag)
-	//	{
-	//		tmpPos = {
-	//			pos.x + tmpSize.x,
-	//			pos.y
-	//		};
-	//	}
-
-	//	for (std::vector<MapchipData>& massDirY : back.layers[0].chips)
-	//	{
-	//		for (MapchipData& massDirX : massDirY)
-	//		{
-	//			if (massDirX.data == 0)
-	//			{
-	//				continue;
-	//			}
-
-	//			if (cam.lock()->GetRange().GetLeft() < massDirX.worldPos.x &&
-	//				cam.lock()->GetRange().GetRight() > massDirX.worldPos.x)
-	//			{
-	//				if (tmpPos.y + tmpSize.y > massDirX.worldPos.y &&
-	//					tmpPos.x < massDirX.worldPos.x + chipSize.x &&
-	//					tmpPos.x + tmpSize.x > massDirX.worldPos.x)
-	//				{
-	//					return true;
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-
 	return false;
 }
 
@@ -281,7 +238,6 @@ bool Stage::CheckMapChip(const Vec2f& pos)
 {
 	Vec2 chipSize(64);
 	Vec2 localPos = Vec2(pos.x, pos.y);
-	//Vec2 localPos = Vec2(cam.lock()->Correction(pos+lib.lock()->GetWinSize().x).x, cam.lock()->Correction(pos).y);
 
 	int data = back.layers[0].chips.at(localPos.y / chipSize.y).at(localPos.x / chipSize.x).data;
 	if (data != 0)

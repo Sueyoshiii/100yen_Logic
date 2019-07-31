@@ -46,16 +46,12 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	ChangeState("Neutral");
 
 	tex[type].size *= 3.0f;
-	//tex[type].size = Vec2f(64.0f);
+	//tex[type].size = Vec2f(64.0f) * 2;
 	tex[type].size.y *= 2.0f;
 	tex[CharacterType::PL_WOLF].size = tex[type].size;
 
 	tex[type].pos = Vec2f(0.0f, 0.0f);
 	worldPos = Vec2f();
-	//worldPos = cam.lock()->Correction(tex[type].pos);
-	//worldPos.x -= float(lib.lock()->GetWinSize().x);
-	//worldPos.y = 0.0f;
-	//worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 
 	firstPos = worldPos;
 
@@ -87,6 +83,25 @@ void Player::Update()
 
 	// 状態関数
 	func[state]();
+
+	Vec2f tmpSize = {
+		tex[type].size.x / 4,
+		tex[type].size.y
+	};
+
+	// 左
+	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y)) ||
+		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y - 1.0f)))
+	{
+		worldPos.x = int(worldPos.x) / 64 * 64 + tex[type].size.x + tmpSize.x;
+	}
+
+	// 右
+	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y)) ||
+		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
+	{
+		worldPos.x = int(worldPos.x) / 64 * 64 + tmpSize.x;
+	}
 }
 
 // 描画
@@ -103,10 +118,10 @@ void Player::Draw()
 
 	DrawImage();
 	static Primitive b(PrimitiveType::box);
-	b.pos[0] = Vec3f(tex[type].pos.x/* + tex[type].size.x / 4*/, tex[type].pos.y, 0);
-	b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x/* - tex[type].size.x/4*/, tex[type].pos.y, 0);
-	b.pos[2] = Vec3f(tex[type].pos.x/* + tex[type].size.x / 4*/, tex[type].pos.y + tex[type].size.y, 0);
-	b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x/* - tex[type].size.x / 4*/, tex[type].pos.y + tex[type].size.y, 0);
+	b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y, 0);
+	b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x/4, tex[type].pos.y, 0);
+	b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
+	b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
 	lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
 
 #ifdef _DEBUG
@@ -135,31 +150,11 @@ void Player::WalkUpdate()
 	{
 		turnFlag = true;
 		vel.x = -cParam.speed;
-		//worldPos.x += vel.x;
-		//StageManager::Get().CheckMapCol(worldPos, tex[type].size, vel);
-		//if (StageManager::Get().CheckWall(worldPos, tex[type].size, turnFlag, Dir::Right))
-		//{
-		//	worldPos.x = worldPos.x / 64 * 64 - 64;
-		//}
-		//else
-		//{
-		//	worldPos.x += vel.x;
-		//}
 	}
 	else if (Input::Get().IsKey(Key::Num6))
 	{
 		turnFlag = false;
 		vel.x = cParam.speed;
-		//worldPos.x += vel.x;
-		//StageManager::Get().CheckMapCol(worldPos, tex[type].size, vel);
-		//if (StageManager::Get().CheckWall(worldPos, tex[type].size, turnFlag, Dir::Right))
-		//{
-		//	worldPos.x = worldPos.x / 64 * 64;
-		//}
-		//else
-		//{
-		//	worldPos.x += vel.x;
-		//}
 	}
 	else
 	{
@@ -260,26 +255,65 @@ void Player::FallUpdate()
 
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x, worldPos.y + tex[type].size.y - 1.0f)) ||
-		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
+	Vec2f tmpSize = {
+		tex[type].size.x / 4,
+		tex[type].size.y
+	};
+
+	if (turnFlag)
 	{
-		vel.y = 0.0f;
-		//worldPos.y = GetFootPos().y - tex[type].size.y;
-		worldPos.y = int(worldPos.y) / 64 * 64;
-		ChangeState("Neutral");
+		if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y - 1.0f)) ||
+			StageManager::Get().CheckMapChip(Vec2f((worldPos.x + tex[type].size.x - tmpSize.x) / 2.0f - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
+		{
+			vel.y = 0.0f;
+			worldPos.y = int(worldPos.y) / 64 * 64;
+			ChangeState("Neutral");
+		}
+	}
+	else
+	{
+		if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x + tmpSize.x / 2.0f, worldPos.y + tex[type].size.y - 1.0f)) ||
+			StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
+		{
+			vel.y = 0.0f;
+			worldPos.y = int(worldPos.y) / 64 * 64;
+			ChangeState("Neutral");
+		}
 	}
 
 	CheckJumpAttack();
 }
 void Player::CheckFall()
 {
-	if (!jumpFlag &&
-		state != "Damage" &&
-		!StageManager::Get().CheckMapChip(Vec2f(worldPos.x, worldPos.y + tex[type].size.y)) &&
-		!StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x + 1.0f, worldPos.y + tex[type].size.y)) &&
-		state != "JumpAttack")
+	Vec2f tmpSize = {
+		tex[type].size.x / 4,
+		tex[type].size.y
+	};
+
+	if (turnFlag)
 	{
-		ChangeState("Fall");
+		// 左向き、左半分
+		if (!StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y)) &&
+			!StageManager::Get().CheckMapChip(Vec2f((worldPos.x + tex[type].size.x - tmpSize.x) / 2.0f, worldPos.y + tex[type].size.y)) &&
+			!jumpFlag &&
+			state != "Damage" &&
+			state != "JumpAttack")
+		{
+			worldPos.x = (worldPos.x + tex[type].size.x / 2.0f) / 64 * 64;
+			ChangeState("Fall");
+		}
+	}
+	else
+	{
+		// 右向き、右半分
+		if (!StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x + tmpSize.x / 2.0f, worldPos.y + tex[type].size.y)) &&
+			!StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x, worldPos.y + tex[type].size.y)) &&
+			!jumpFlag &&
+			state != "Damage" &&
+			state != "JumpAttack")
+		{
+			ChangeState("Fall");
+		}
 	}
 }
 

@@ -123,13 +123,13 @@ void Player::Draw()
 	DamageDraw();
 
 	DrawImage();
+	//static Primitive b(PrimitiveType::box);
+	//b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y, 0);
+	//b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x/4, tex[type].pos.y, 0);
+	//b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
+	//b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
+	//lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
 #ifdef _DEBUG
-	static Primitive b(PrimitiveType::box);
-	b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y, 0);
-	b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x/4, tex[type].pos.y, 0);
-	b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
-	b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x / 4, tex[type].pos.y + tex[type].size.y, 0);
-	lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
 
 	DrawRect();
 #endif
@@ -288,12 +288,6 @@ void Player::FallUpdate()
 }
 void Player::CheckFall()
 {
-	//if (worldPos.x >= StageManager::Get().GetStageSize().x ||
-	//	worldPos.x < 0.0f)
-	//{
-	//	return;
-	//}
-
 	Vec2f tmpSize = {
 		tex[type].size.x / 4,
 		tex[type].size.y
@@ -342,7 +336,7 @@ void Player::FirstAttackUpdate()
 }
 void Player::CheckFirstAttack()
 {
-	if (!attackFlag && Input::Get().IsTrigger(Key::A))
+	if (!attackFlag && Input::Get().IsTrigger(Key::D))
 	{
 		attackFlag = true;
 		attackCnt  = 0;
@@ -379,7 +373,7 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 
 		if (state != lastAttack)
 		{
-			if (Input::Get().IsTrigger(Key::A))
+			if (Input::Get().IsTrigger(Key::D))
 			{
 				attackCnt = 0;
 				stopFlag = false;
@@ -434,21 +428,25 @@ void Player::JumpAttackUpdate()
 	}
 	else
 	{
-		if (GetFootPos().y < StageManager::Get().GetGround())
+		if (!StageManager::Get().CheckMapChip(Vec2f(worldPos.x, worldPos.y + tex[type].size.y)) &&
+			!StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.y - 1.0f, worldPos.y + tex[type].size.y)))
 		{
 			ChangeState("Fall");
 		}
 	}
 
-	if (GetFootPos().y > StageManager::Get().GetGround())
+	int chipSizeY = StageManager::Get().GetChipSize().y;
+	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x, worldPos.y + tex[type].size.y - 1.0f)) ||
+		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.y - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
 	{
-		worldPos.y = GetFootPos().y - tex[type].size.y;
+		vel.y = 0.0f;
+		worldPos.y = int(worldPos.y) / chipSizeY * chipSizeY;
 		ChangeState("Neutral");
 	}
 }
 void Player::CheckJumpAttack()
 {
-	if (Input::Get().IsTrigger(Key::A))
+	if (Input::Get().IsTrigger(Key::D))
 	{
 		jumpFlag = false;
 		ChangeState("JumpAttack");
@@ -504,31 +502,6 @@ void Player::DamageUpdate()
 	{
 		worldPos.x += vel.x;
 	}
-
-	//if (GetFootPos().y < StageManager::Get().GetGround())
-	//{
-	//	worldPos.x += vel.x;
-	//}
-	//else
-	//{
-	//	worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
-	//	if ((++cnt) > 40)
-	//	{
-	//		cnt = 0;
-	//		jumpFlag = false;
-	//		dashFlag = false;
-	//		attackFlag = false;
-	//		if (cParam.hp > 0)
-	//		{
-	//			invincibleFlag = true;
-	//			ChangeState("Neutral");
-	//		}
-	//		else
-	//		{
-	//			ChangeState("Death");
-	//		}
-	//	}
-	//}
 }
 
 // Ž€–S
@@ -565,7 +538,7 @@ void Player::TransformUpdate()
 }
 void Player::CheckTransform()
 {
-	if (Input::Get().IsTrigger(Key::F))
+	if (Input::Get().IsTrigger(Key::A))
 	{
 		ChangeState("Change");
 	}

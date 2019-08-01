@@ -19,4 +19,7 @@ public:
 	void Update();
 private:
 	bool checkNext;
+	Texture img[2];
+	Texture guide;
+	float guideAlpha;
 };

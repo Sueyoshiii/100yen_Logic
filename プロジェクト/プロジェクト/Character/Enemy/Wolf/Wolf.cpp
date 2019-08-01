@@ -1,4 +1,5 @@
 #include "Wolf.h"
+#include <algorithm>
 
 namespace {
 	const unsigned int	HP_MAX      = 2;
@@ -69,40 +70,64 @@ void Wolf::Update()
 
 	func[state]();
 
-	if (!jumpFlag && state != "Damage")
+
+	float rightPosX = worldPos.x + tex[type].size.x - 1.0f;
+	float topPosY = worldPos.y;
+	float footPosY = worldPos.y + tex[type].size.y - 1.0f;
+
+	//if (state != "Attack")
+	//{
+	//	topPosY = worldPos.y + tex[type].size.y / 2.0f;
+	//}
+
+	// ¶
+	int chipSizeX = StageManager::Get().GetChipSize().x;
+	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x, topPosY)) ||
+		StageManager::Get().CheckMapChip(Vec2f(worldPos.x, footPosY)))
 	{
-		FallUpdate();
+		vel.x = 0;
+		worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX;
 	}
 
-	//int chipSizeX = StageManager::Get().GetChipSize().x;
+	// ‰E
+	if (StageManager::Get().CheckMapChip(Vec2f(rightPosX, topPosY)) ||
+		StageManager::Get().CheckMapChip(Vec2f(rightPosX, footPosY)))
+	{
+		vel.x = 0;
+		worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX;
+	}
 
-	//// ¶
-	//if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y)) ||
-	//	StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y - 1.0f)))
-	//{
-	//	vel.x = 0;
-	//	worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX + tmpSize.x;
-	//}
-
-	//// ‰E
-	//if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y)) ||
-	//	StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
-	//{
-	//	vel.x = 0;
-	//	worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX/* + tmpSize.x*/;
-	//}
+	worldPos.x = std::max(worldPos.x, 0.0f);
 
 	// °
+	if (state != "Attack")
+	{
+
+		if (!StageManager::Get().CheckMapChip(Vec2f(worldPos.x, footPosY + 1.0f)) &&
+			!StageManager::Get().CheckMapChip(Vec2f(rightPosX, footPosY + 1.0f)) &&
+			!jumpFlag &&
+			state != "Damage")
+		{
+			vel.y += StageManager::Get().GetGravity();
+			worldPos.y += vel.y;
+		}
+	}
 	int chipSizeY = StageManager::Get().GetChipSize().y;
-	if (StageManager::Get().CheckMapChip(Vec2f()) ||
-		StageManager::Get().CheckMapChip(Vec2f()))
+	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x, footPosY)) ||
+		StageManager::Get().CheckMapChip(Vec2f(rightPosX, footPosY)))
 	{
 		vel.y = 0;
-		worldPos.y = worldPos.y / chipSizeY * chipSizeY;
+		worldPos.y = int(worldPos.y) / chipSizeY * chipSizeY;
 	}
 
 	CheckHit();
 	CheckHitEffect();
+
+	// ŒŠ‚É—Ž‚¿‚½
+	if (worldPos.y + tex[type].size.y > lib.lock()->GetWinSize().y * 2)
+	{
+		deleteFlag = true;
+	}
 }
 
 // •`‰æ
@@ -116,9 +141,10 @@ void Wolf::Draw()
 	}
 
 	DrawImage();
+
 	//static Primitive b(PrimitiveType::box);
-	//b.pos[0] = Vec3f(tex[type].pos.x, tex[type].pos.y + tex[type].size.y / 2.0f, 0);
-	//b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y + tex[type].size.y / 2.0f, 0);
+	//b.pos[0] = Vec3f(tex[type].pos.x, tex[type].pos.y, 0);
+	//b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y, 0);
 	//b.pos[2] = Vec3f(tex[type].pos.x, tex[type].pos.y + tex[type].size.y, 0);
 	//b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y + tex[type].size.y, 0);
 	//lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
@@ -297,9 +323,9 @@ void Wolf::AttackUpdate()
 	worldPos.x += vel.x;
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	if (GetFootPos().y > StageManager::Get().GetGround())
+	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x, worldPos.y + tex[type].size.y)) ||
+		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - 1.0f, worldPos.y + tex[type].size.y)))
 	{
-		worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 		jumpFlag = false;
 		coolFlag = true;
 		coolTime = 0;
@@ -324,13 +350,15 @@ void Wolf::DamageUpdate()
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
 
-	if (GetFootPos().y < StageManager::Get().GetGround())
+	float footPosY = worldPos.y + tex[type].size.y - 1.0f;
+	float rightPosX = worldPos.x + tex[type].size.x - 1.0f;
+	if (!StageManager::Get().CheckMapChip(Vec2f(worldPos.x, footPosY + 1.0f)) &&
+		!StageManager::Get().CheckMapChip(Vec2f(rightPosX, footPosY + 1.0f)))
 	{
 		worldPos.x += vel.x;
 	}
 	else
 	{
-		worldPos.y = StageManager::Get().GetGround() - tex[type].size.y;
 		if ((++cnt) > STUN_TIME_MAX)
 		{
 			cnt = 0;

@@ -58,6 +58,7 @@
     <ClCompile Include="Stage\SecondRoom\SecondRoom.cpp" />
     <ClCompile Include="Stage\ThirdRoom\ThirdRoom.cpp" />
     <ClCompile Include="Character\CharaEffect\BloodSplash\BloodSplash.cpp" />
+    <ClCompile Include="Character\Enemy\BossWolf\BossWolf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Info\Info.h">
@@ -121,6 +122,7 @@
     <ClInclude Include="Stage\SecondRoom\SecondRoom.h" />
     <ClInclude Include="Stage\ThirdRoom\ThirdRoom.h" />
     <ClInclude Include="Character\CharaEffect\BloodSplash\BloodSplash.h" />
+    <ClInclude Include="Character\Enemy\BossWolf\BossWolf.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Info">

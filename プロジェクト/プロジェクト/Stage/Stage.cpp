@@ -241,7 +241,9 @@ bool Stage::CheckMapChip(const Vec2f& pos)
 	int x = pos.x / chipSize.x;
 
 	if (y >= back.layers[0].massNum.y ||
-		x >= back.layers[0].massNum.x)
+		x >= back.layers[0].massNum.x ||
+		y < 0 ||
+		x < 0)
 	{
 		return false;
 	}

@@ -152,7 +152,7 @@ void BossWolf::AttackUpdate()
 
 void BossWolf::CheckAttack()
 {
-	EffectManager::Get().CreateBossClaw(worldPos, tex[type].size, turnFlag);
+	EffectManager::Get().CreateBossClaw(tex[type].pos, tex[type].size, turnFlag);
 	ChangeState("Attack");
 }
 

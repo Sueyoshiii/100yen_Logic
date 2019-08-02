@@ -3,11 +3,13 @@
 Claw::Claw(const Vec2f& pos, const Vec2f& size, const bool turnFlag)
 {
 	type = CharacterType::EF_EM_BOSS_CLAW;
+	state = "first";
+	LoadData("data/chara/boss_effect.info");
 	LoadImage("img/Boss/boss_effect.png");
 
 	tex[type].size = size;
 	this->turnFlag = turnFlag;
-	float x = this->turnFlag ? pos.x - size.x / 2.0f : pos.x + size.x / 2.0f;
+	float x = this->turnFlag ? pos.x : pos.x;
 	tex[type].pos = Vec2f(x, pos.y);
 
 	attackCnt = 0;
@@ -39,5 +41,21 @@ void Claw::Draw()
 
 void Claw::Draw(std::weak_ptr<MyLib> lib)
 {
-	lib.lock()->Draw(tex[type], 1.0f, turnFlag);
+	this->lib = lib;
+
+	if (deleteFlag)
+	{
+		return;
+	}
+
+	AnimationUpdate();
+	DrawImage();
+
+#ifdef _DEBUG
+	DrawRect();
+#endif
+}
+
+void Claw::SetPos(const Vec2f& pos)
+{
 }

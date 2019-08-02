@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include "Wolf/Wolf.h"
+#include "BossWolf/BossWolf.h"
 
 // コンストラクタ
 EnemyManager::EnemyManager()
@@ -52,6 +53,11 @@ void EnemyManager::Summons(const Enemies& em, const Vec2f& pos, std::weak_ptr<My
 	if (em == Enemies::Wolf)
 	{
 		map[em] = std::make_shared<Wolf>(lib, pl, cam, pos);
+		list.emplace_back(map[em]);
+	}
+	else if (em == Enemies::BOSS_WOLF)
+	{
+		map[em] = std::make_shared<BossWolf>(lib, pl, cam, pos);
 		list.emplace_back(map[em]);
 	}
 }

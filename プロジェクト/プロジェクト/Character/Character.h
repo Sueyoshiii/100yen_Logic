@@ -18,6 +18,7 @@ enum class CharacterType
 	PL_WOLF,
 	// 敵
 	EM_WEAK_WOLF,
+	EM_BOSS_WOLF,
 	// エフェクト
 	EF_PL_NORMAL_SLASH,
 	EF_PL_WOLF_SLASH,

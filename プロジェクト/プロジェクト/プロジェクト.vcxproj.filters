@@ -58,6 +58,9 @@
     <ClCompile Include="Stage\SecondRoom\SecondRoom.cpp" />
     <ClCompile Include="Stage\ThirdRoom\ThirdRoom.cpp" />
     <ClCompile Include="Character\CharaEffect\BloodSplash\BloodSplash.cpp" />
+    <ClCompile Include="Okdio\Okdio.cpp">
+      <Filter>Okdio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Info\Info.h">
@@ -121,6 +124,9 @@
     <ClInclude Include="Stage\SecondRoom\SecondRoom.h" />
     <ClInclude Include="Stage\ThirdRoom\ThirdRoom.h" />
     <ClInclude Include="Character\CharaEffect\BloodSplash\BloodSplash.h" />
+    <ClInclude Include="Okdio\Okdio.h">
+      <Filter>Okdio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Info">
@@ -155,6 +161,9 @@
     </Filter>
     <Filter Include="Json">
       <UniqueIdentifier>{cdd487a7-849c-4ea1-a60a-007962ca918e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Okdio">
+      <UniqueIdentifier>{c301eb68-0a34-46ce-ae7d-b88ccf960c4e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

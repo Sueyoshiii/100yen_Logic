@@ -6,6 +6,7 @@ class Camera;
 class BackGround;
 class Player;
 class Stage;
+class Okdio;
 
 class GameMain :
 	public Scene
@@ -30,6 +31,8 @@ private:
 
 	// 登録されているオブジェクトの解放
 	void DeleteObject();
+
+	Okdio* playMusic;
 
 	// カメラ
 	std::shared_ptr<Camera> cam;

@@ -2,16 +2,21 @@
 #include "../Scene/Scene.h"
 #include "../Scene/Title.h"
 #include "../Scene/GameMain.h"
-//#include <Okdio.h>
+#include "../Okdio/Okdio.h"
 #include <Windows.h>
 
 
 Game::Game()
 {
+	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	okmonn::EnginStart();
 }
 
 Game::~Game()
 {
+	okmonn::EnginEnd();
+	CoUninitialize();
+	
 }
 
 Game& Game::Get()

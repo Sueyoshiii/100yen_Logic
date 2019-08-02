@@ -114,7 +114,7 @@
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\1601296\Documents\GitHub\Okdio\Okdio\lib\x64\Debug;..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\;C:\boost</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\GitHub\Okdio\Okdio\lib\x64\Debug;..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\;C:\boost</AdditionalLibraryDirectories>
       <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Manifest />
@@ -182,6 +182,7 @@
     <ClCompile Include="Info\Info.cpp" />
     <ClCompile Include="Json\JsonLoader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Okdio\Okdio.cpp" />
     <ClCompile Include="Scene\Clear.cpp" />
     <ClCompile Include="Scene\GameMain.cpp" />
     <ClCompile Include="Scene\Over.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="Character\Enemy\Wolf\Wolf.h" />
     <ClInclude Include="Info\Info.h" />
     <ClInclude Include="Json\JsonLoader.h" />
+    <ClInclude Include="Okdio\Okdio.h" />
     <ClInclude Include="Scene\Clear.h" />
     <ClInclude Include="Scene\GameMain.h" />
     <ClInclude Include="Scene\Over.h" />

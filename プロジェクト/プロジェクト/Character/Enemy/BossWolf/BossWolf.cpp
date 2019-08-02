@@ -1,4 +1,5 @@
 #include "BossWolf.h"
+#include "../../CharaEffect/EffectManager.h"
 #include <algorithm>
 
 namespace {
@@ -135,7 +136,7 @@ void BossWolf::NeutralUpdate()
 		}
 		else
 		{
-			ChangeState("Attack");
+			CheckAttack();
 		}
 	}
 }
@@ -147,6 +148,12 @@ void BossWolf::AttackUpdate()
 	{
 		ChangeState("Neutral");
 	}
+}
+
+void BossWolf::CheckAttack()
+{
+	EffectManager::Get().CreateBossClaw(worldPos, tex[type].size, turnFlag);
+	ChangeState("Attack");
 }
 
 // ƒWƒƒƒ“ƒv

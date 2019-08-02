@@ -14,7 +14,9 @@ FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 
 	nextRoomFlag = false;
 
+	//Load(back, "data/stage/StageBoss/StageBoss_Ground.json", "img/Stage/Mapchip_Ground.png");
 	Load(back, "data/stage/StageBoss/StageBoss_Grass.json", "img/Stage/Mapchip_Ground.png");
+	Load(front, "data/stage/StageBoss/StageBoss_Grass.json", "img/Stage/Mapchip_Ground.png");
 	//Load(front, "data/stage/StageDummy_Grass.json", "img/Stage/Mapchip_Grass.png");
 	//Load(back, "data/stage/Stage1/Stage1_Ground_test.json", "img/Stage/Mapchip_Ground.png");
 	//Load(front, "data/stage/Stage1/Stage1_Grass.json", "img/Stage/Mapchip_Grass.png");

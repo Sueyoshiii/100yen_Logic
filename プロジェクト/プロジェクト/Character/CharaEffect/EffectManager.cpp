@@ -3,6 +3,7 @@
 #include "Flower/Flower.h"
 #include "Slash/Slash.h"
 #include "BloodSplash/BloodSplash.h"
+#include "Claw/Claw.h"
 
 // コンストラクタ
 EffectManager::EffectManager()
@@ -67,6 +68,12 @@ void EffectManager::CreateBloodSplash(const Vec2f& pos, const Vec2f& size, const
 {
 	map[EffectType::BloodSplash] = std::make_shared<BloodSplash>(pos, size, turnFlag);
 	list.push_back(ListParameter(EffectType::BloodSplash, map[EffectType::BloodSplash]));
+}
+
+void EffectManager::CreateBossClaw(const Vec2f& pos, const Vec2f& size, const bool turnFlag)
+{
+	map[EffectType::BossClaw] = std::make_shared<Claw>(pos, size, turnFlag);
+	list.push_back(ListParameter(EffectType::BossClaw, map[EffectType::BossClaw]));
 }
 
 // 削除

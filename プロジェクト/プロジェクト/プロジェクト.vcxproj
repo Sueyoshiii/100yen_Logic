@@ -171,6 +171,7 @@
     <ClCompile Include="Character\Character.cpp" />
     <ClCompile Include="Character\CharaEffect\BloodSplash\BloodSplash.cpp" />
     <ClCompile Include="Character\CharaEffect\CharaEffect.cpp" />
+    <ClCompile Include="Character\CharaEffect\Claw\Claw.cpp" />
     <ClCompile Include="Character\CharaEffect\EffectManager.cpp" />
     <ClCompile Include="Character\CharaEffect\Flower\Flower.cpp" />
     <ClCompile Include="Character\CharaEffect\Slash\Slash.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Character\Character.h" />
     <ClInclude Include="Character\CharaEffect\BloodSplash\BloodSplash.h" />
     <ClInclude Include="Character\CharaEffect\CharaEffect.h" />
+    <ClInclude Include="Character\CharaEffect\Claw\Claw.h" />
     <ClInclude Include="Character\CharaEffect\EffectManager.h" />
     <ClInclude Include="Character\CharaEffect\Flower\Flower.h" />
     <ClInclude Include="Character\CharaEffect\Slash\Slash.h" />

@@ -14,6 +14,7 @@ public:
 private:
 	void NeutralUpdate();
 	void AttackUpdate();
+	void CheckAttack();
 	void JumpUpdate();
 	void DeadUpdate();
 

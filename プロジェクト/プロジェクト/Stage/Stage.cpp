@@ -249,7 +249,7 @@ bool Stage::CheckMapChip(const Vec2f& pos)
 	}
 
 	int data = back.layers[0].chips.at(y).at(x).data;
-	if (data != 0)
+	if (data != 0 && data != 53)
 	{
   		return true;
 	}

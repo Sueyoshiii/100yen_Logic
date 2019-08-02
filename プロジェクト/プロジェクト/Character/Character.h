@@ -22,7 +22,8 @@ enum class CharacterType
 	// エフェクト
 	EF_PL_NORMAL_SLASH,
 	EF_PL_WOLF_SLASH,
-	EF_BLOOD_SPLASH
+	EF_BLOOD_SPLASH,
+	EF_EM_BOSS_CLAW
 };
 
 // キャラクターのパラメータ

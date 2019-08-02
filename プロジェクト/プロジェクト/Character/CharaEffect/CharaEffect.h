@@ -7,7 +7,8 @@ enum class EffectType
 {
 	Flower,
 	Slashing,
-	BloodSplash
+	BloodSplash,
+	BossClaw
 };
 
 class CharaEffect :

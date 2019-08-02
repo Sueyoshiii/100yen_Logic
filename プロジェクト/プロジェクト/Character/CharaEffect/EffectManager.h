@@ -37,6 +37,9 @@ public:
 	// ŒŒ‚µ‚Ô‚«¶¬
 	void CreateBloodSplash(const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 
+	// ƒ{ƒXUŒ‚
+	void CreateBossClaw(const Vec2f& pos, const Vec2f& size, const bool turnFlag);
+
 	// íœ
 	void Delete();
 

@@ -12,11 +12,17 @@
 #include "../Stage/FirstRoom/FirstRoom.h"
 
 #include "../Json/JsonLoader.h"
+#include "../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
 
 // コンストラクタ
 GameMain::GameMain(std::weak_ptr<MyLib> lib)
 {
 	this->lib = lib;
+
+	okmonn::CreateObj(IID_PPV_ARGS(&playMusic));
+	playMusic->Load("data/sound/bgm/bgm_stage.wav");
+	playMusic->Play(true);
 
 	// 遷移用ボックスの設定
 	box = Primitive(PrimitiveType::box);
@@ -42,6 +48,7 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 // デストラクタ
 GameMain::~GameMain()
 {
+	playMusic->Release();
 	StageManager::Get().SetClearFlag(false);
 }
 

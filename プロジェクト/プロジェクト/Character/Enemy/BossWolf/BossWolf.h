@@ -21,4 +21,7 @@ private:
 
 	unsigned int cnt;
 	unsigned int attackCnt;
+
+	int stageLeft;
+	int stageRight;
 };

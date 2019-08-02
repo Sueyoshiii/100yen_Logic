@@ -44,7 +44,9 @@ BossWolf::BossWolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak
 	vel = Vec2f(cParam.speed, 0.0f);
 
 	turnFlag = false;
-	worldPos = Vec2f(lib.lock()->GetWinSize().x - tex[type].size.x, pos.y);
+	stageLeft = 0.0f;
+	stageRight = 896;
+	worldPos = Vec2f(stageRight, pos.y);
 
 	alpha = 1.0f;
 }
@@ -162,7 +164,9 @@ void BossWolf::JumpUpdate()
 		vel.y = 0.0f;
 		stopFlag = false;
 		turnFlag = !turnFlag;
-		worldPos.x = turnFlag ? 0.0f : lib.lock()->GetWinSize().x - tex[type].size.x;
+		stageLeft = StageManager::Get().GetChipSize().x * 2;
+		stageRight = StageManager::Get().GetStageSize().x - StageManager::Get().GetChipSize().x * 2 - tex[type].size.x;
+		worldPos.x = turnFlag ? stageLeft : stageRight;
 		ChangeState("Neutral");
 	}
 }

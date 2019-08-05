@@ -133,9 +133,9 @@ void BossWolf::Draw()
 
 	DrawImage();
 
+#ifdef _DEBUG
 	DrawRect();
 
-#ifdef _DEBUG
 	static Primitive b(PrimitiveType::box);
 	float topPosY = worldPos.y + tex[type].size.y / 3;
 	if (turnFlag)

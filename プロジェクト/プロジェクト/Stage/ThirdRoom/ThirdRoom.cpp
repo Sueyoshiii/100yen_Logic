@@ -4,11 +4,18 @@
 #include "../../Character/Enemy/EnemyManager.h"
 #include <iostream>
 
+#include "../../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
+
 ThirdRoom::ThirdRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
 {
 	this->lib = lib;
 	this->pl = pl;
 	this->cam = cam;
+
+	okmonn::CreateObj(IID_PPV_ARGS(&playBoss));
+	playBoss->Load("data/sound/bgm/bgm_boss.wav");
+	playBoss->Play(true);
 
 	nextRoomFlag = false;
 
@@ -27,6 +34,7 @@ ThirdRoom::ThirdRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 
 ThirdRoom::~ThirdRoom()
 {
+	playBoss->Stop();
 }
 
 void ThirdRoom::Update()

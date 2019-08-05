@@ -2,6 +2,10 @@
 #include "../../CharaEffect/EffectManager.h"
 #include <algorithm>
 
+#include "../../../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
+
+
 namespace {
 	const unsigned int	HP_MAX = 20;
 	const int			ATTACK_POW = 4;

@@ -688,3 +688,8 @@ void Player::SetPos(const Vec2f& pos)
 {
 	worldPos = pos;
 }
+
+void Player::SoundStop(void)
+{
+	walkSE->Stop();
+}

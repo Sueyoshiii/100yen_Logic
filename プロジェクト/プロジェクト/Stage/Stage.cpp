@@ -6,7 +6,12 @@
 #include <chrono>
 #include <fstream>
 
+#include "../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
+
 using namespace boost::property_tree;
+
+Okdio* Stage::playMusic = nullptr;
 
 // コンストラクタ
 Stage::Stage() :

@@ -32,8 +32,6 @@ private:
 	// 登録されているオブジェクトの解放
 	void DeleteObject();
 
-	Okdio* playMusic;
-
 	// カメラ
 	std::shared_ptr<Camera> cam;
 

@@ -4,6 +4,9 @@
 #include "../../Character/Enemy/EnemyManager.h"
 #include <iostream>
 
+#include "../../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
+
 SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
 {
 	this->lib = lib;
@@ -35,6 +38,7 @@ SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::
 
 SecondRoom::~SecondRoom()
 {
+	playMusic->Release();
 }
 
 void SecondRoom::Update()

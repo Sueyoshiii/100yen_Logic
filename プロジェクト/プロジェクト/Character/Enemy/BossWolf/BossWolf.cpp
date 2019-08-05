@@ -19,12 +19,13 @@ namespace {
 
 /*
 	memo
-	5秒ごとに攻撃
+	4秒ごとに攻撃
 	3回攻撃したら反対側へジャンプして移動する
 */
 
+// コンストラクタ
 BossWolf::BossWolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam, const Vec2f& pos) :
-	cnt(0), attackCnt(0), jumpedFlag(false)
+	cnt(0), attackCnt(0), jumpedFlag(false), stunCnt(0)
 {
 	this->lib = lib;
 	this->pl = pl;
@@ -47,17 +48,22 @@ BossWolf::BossWolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak
 	vel = Vec2f(cParam.speed, 0.0f);
 
 	turnFlag = false;
-	stageLeft = 0.0f;
+	stageLeft  = 0.0f;
 	stageRight = FIRST_POSITION_X;
 	worldPos = Vec2f(stageRight, pos.y);
 
 	alpha = 1.0f;
+
+	stunFlag = false;
+	hitCnt = 0;
 }
 
+// デストラクタ
 BossWolf::~BossWolf()
 {
 }
 
+// 更新
 void BossWolf::Update()
 {
 	func[state]();
@@ -99,10 +105,23 @@ void BossWolf::Update()
 		ChangeState("Death");
 	}
 
+	if (stunFlag)
+	{
+		alpha = (alpha > 0.0f) ? alpha -= 0.1f : 1.0f;
+		if (++stunCnt > 120)
+		{
+			hitCnt = 0;
+			stunCnt = 0;
+			stunFlag = false;
+			alpha = 1.0f;
+		}
+	}
+
 	CheckHit();
 	CheckHitEffect();
 }
 
+// 描画
 void BossWolf::Draw()
 {
 	if (!pl.lock()->GetHitFlag())
@@ -116,23 +135,25 @@ void BossWolf::Draw()
 
 	DrawRect();
 
-	//static Primitive b(PrimitiveType::box);
-	//float topPosY = worldPos.y + tex[type].size.y / 3;
-	//if (turnFlag)
-	//{
-	//	b.pos[0] = Vec3f(tex[type].pos.x, topPosY, 0);
-	//	b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, topPosY, 0);
-	//	b.pos[2] = Vec3f(tex[type].pos.x, tex[type].pos.y + tex[type].size.y, 0);
-	//	b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, tex[type].pos.y + tex[type].size.y, 0);
-	//}
-	//else
-	//{
-	//	b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, topPosY, 0);
-	//	b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x, topPosY, 0);
-	//	b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, tex[type].pos.y + tex[type].size.y, 0);
-	//	b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y + tex[type].size.y, 0);
-	//}
-	//lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
+#ifdef _DEBUG
+	static Primitive b(PrimitiveType::box);
+	float topPosY = worldPos.y + tex[type].size.y / 3;
+	if (turnFlag)
+	{
+		b.pos[0] = Vec3f(tex[type].pos.x, topPosY, 0);
+		b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, topPosY, 0);
+		b.pos[2] = Vec3f(tex[type].pos.x, tex[type].pos.y + tex[type].size.y, 0);
+		b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, tex[type].pos.y + tex[type].size.y, 0);
+	}
+	else
+	{
+		b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, topPosY, 0);
+		b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x, topPosY, 0);
+		b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, tex[type].pos.y + tex[type].size.y, 0);
+		b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y + tex[type].size.y, 0);
+	}
+	lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
+#endif
 }
 
 // 待機
@@ -161,7 +182,6 @@ void BossWolf::AttackUpdate()
 		ChangeState("Neutral");
 	}
 }
-
 void BossWolf::CheckAttack()
 {
 	EffectManager::Get().CreateBossClaw(tex[type].pos, tex[type].size, turnFlag);
@@ -207,7 +227,7 @@ void BossWolf::DeadUpdate()
 	}
 }
 
-// 結合
+// 関数結合
 void BossWolf::InitFunc()
 {
 	func["Neutral"] = std::bind(&BossWolf::NeutralUpdate, this);

@@ -105,4 +105,11 @@ protected:
 
 	// 削除フラグ
 	bool deleteFlag;
+
+	// 気絶フラグ
+	bool stunFlag;
+
+	// ヒット数
+	unsigned int hitCnt;
+private:
 };

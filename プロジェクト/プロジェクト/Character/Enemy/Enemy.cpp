@@ -34,7 +34,11 @@ void Enemy::CheckHit()
 				Vec2f dir = pl.lock()->GetPos() - GetPos();
 				if (p.type == HitType::Attack)
 				{
-					//pl.lock()->SetHitFlag(true);
+					if (state == "Damage")
+					{
+						break;
+					}
+
 					if (type != CharacterType::EM_BOSS_WOLF)
 					{
 						SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
@@ -47,12 +51,20 @@ void Enemy::CheckHit()
 					}
 					else
 					{
-						EffectManager::Get().CreateBloodSplash(pBox.pos, tex[type].size / 3, pl.lock()->GetTurnFlag());
-						SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
-						cParam.hp -= damage;
-						if (cParam.hp < 0)
+						if (!stunFlag)
 						{
-							ChangeState("Death");
+							if (++hitCnt > 3)
+							{
+								stunFlag = true;
+							}
+
+							EffectManager::Get().CreateBloodSplash(pBox.pos, tex[type].size / 3, pl.lock()->GetTurnFlag());
+							SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
+							cParam.hp -= damage;
+							if (cParam.hp < 0)
+							{
+								ChangeState("Death");
+							}
 						}
 					}
 				}
@@ -128,12 +140,20 @@ void Enemy::CheckHitEffect()
 						}
 						else
 						{
-							EffectManager::Get().CreateBloodSplash(efBox.pos, tex[type].size / 3, pl.lock()->GetTurnFlag());
-							SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
-							cParam.hp -= damage;
-							if (cParam.hp < 0)
+							if (!stunFlag)
 							{
-								ChangeState("Death");
+								if (++hitCnt > 3)
+								{
+									stunFlag = true;
+								}
+
+								EffectManager::Get().CreateBloodSplash(efBox.pos, tex[type].size / 3, pl.lock()->GetTurnFlag());
+								SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
+								cParam.hp -= damage;
+								if (cParam.hp < 0)
+								{
+									ChangeState("Death");
+								}
 							}
 						}
 

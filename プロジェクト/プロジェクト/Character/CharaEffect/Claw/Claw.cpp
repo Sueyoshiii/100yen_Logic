@@ -4,11 +4,11 @@ Claw::Claw(const Vec2f& pos, const Vec2f& size, const bool turnFlag) :
 	attackCnt(0)
 {
 	state = "first";
+	type = CharacterType::EF_EM_BOSS_CLAW;
 
 	func.clear();
 	func[state] = std::bind(&Claw::ClawUpdate, this);
 
-	type = CharacterType::EF_EM_BOSS_CLAW;
 	LoadData("data/chara/boss_effect.info");
 	LoadImage("img/Boss/boss_effect.png");
 
@@ -45,8 +45,8 @@ void Claw::Draw(std::weak_ptr<MyLib> lib)
 	AnimationUpdate();
 	DrawImage();
 
-	DrawRect();
 #ifdef _DEBUG
+	DrawRect();
 #endif
 }
 
@@ -54,6 +54,7 @@ void Claw::SetPos(const Vec2f& pos)
 {
 }
 
+// Ç–Ç¡Ç©Ç´çUåÇ
 void Claw::ClawUpdate()
 {
 	if (CheckAnimEnd())

@@ -70,6 +70,7 @@ void EffectManager::CreateBloodSplash(const Vec2f& pos, const Vec2f& size, const
 	list.push_back(ListParameter(EffectType::BloodSplash, map[EffectType::BloodSplash]));
 }
 
+// í‹ê∂ê¨
 void EffectManager::CreateBossClaw(const Vec2f& pos, const Vec2f& size, const bool turnFlag)
 {
 	map[EffectType::BossClaw] = std::make_shared<Claw>(pos, size, turnFlag);

@@ -111,4 +111,7 @@ private:
 
 	// Ž€–Sƒtƒ‰ƒO
 	bool deadEndFlag;
+
+	// hp‰æ‘œ
+	//std::vector<Texture> hpImg;
 };

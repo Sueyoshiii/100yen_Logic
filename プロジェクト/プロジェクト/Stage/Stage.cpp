@@ -203,7 +203,7 @@ void Stage::DrawMapData(std::weak_ptr<Camera> cam)
 void Stage::DrawBox()
 {
 	lib.lock()->Draw(box, Vec3f(), boxAlpha);
-	boxAlpha = std::min(std::max(boxAlpha, 0.0f), 1.0f);
+	boxAlpha = std::fmin(std::fmax(boxAlpha, 0.0f), 1.0f);
 	boxAlpha += nextRoomFlag ? 0.05f : -0.05f;
 }
 

@@ -12,6 +12,7 @@ Title::Title(std::weak_ptr<MyLib>lib) :
 
 	img[0].Load("img/Title/Title_Back.png");
 	img[0].size.y *= 2.0f;
+
 	img[1].Load("img/Title/Title_Board.png");
 	img[1].size.y *= 2.0f;
 	img[1].size /= 1.5f;
@@ -64,6 +65,7 @@ void Title::Update()
 	if (checkNext)
 	{
 		alpha -= 0.02f;
+		guideAlpha -= 0.02f;
 		if (alpha <= 0.0f)
 		{
 			Game::Get().ChangeScene(new GameMain(lib));
@@ -72,15 +74,14 @@ void Title::Update()
 	else
 	{
 		alpha += 0.02f;
-	}
-
-	static float alphaCnt = 0.02f;
-	if (alpha >= 1.0f)
-	{
-		if (guideAlpha > 1.0f || guideAlpha < 0.0f)
+		static float alphaCnt = 0.02f;
+		if (alpha >= 1.0f)
 		{
-			alphaCnt = -alphaCnt;
+			if (guideAlpha > 1.0f || guideAlpha < 0.0f)
+			{
+				alphaCnt = -alphaCnt;
+			}
+			guideAlpha += alphaCnt;
 		}
-		guideAlpha += alphaCnt;
 	}
 }

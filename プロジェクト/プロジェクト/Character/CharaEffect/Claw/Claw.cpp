@@ -10,7 +10,7 @@ Claw::Claw(const Vec2f& pos, const Vec2f& size, const bool turnFlag) :
 	func[state] = std::bind(&Claw::ClawUpdate, this);
 
 	LoadData("data/chara/boss_effect.info");
-	LoadImage("img/Boss/boss_effect.png");
+	LoadImg("img/Boss/boss_effect.png");
 
 	ChangeState(state);
 

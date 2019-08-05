@@ -33,11 +33,11 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 
 	type = CharacterType::PL_WOLF;
 	LoadData("data/chara/player_wolf.info");
-	LoadImage("img/Player/player_wolf.png");
+	LoadImg("img/Player/player_wolf.png");
 
 	type = CharacterType::PL_NORMAL;
 	LoadData("data/chara/player.info");
-	LoadImage("img/Player/player.png");
+	LoadImg("img/Player/player.png");
 
 	critical.Load("img/Player/damage_critical.png");
 	critical.size.y *= 2.0f;
@@ -58,6 +58,20 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	// hp, speed, attack, defense, dush, jump
 	cParam = CharacterParameter(HP_MAX, NORMAL_WALK_SPEED, NORMAL_ATTACK_POW, NORMAL_DEFENCE_POW, NORMAL_DASH_POW, NORMAL_JUMP_POW);
 	vel = Vec2f();
+
+	hpImg.resize(cParam.hp * 2);
+
+	std::string filePath = "img/Life/Heart_";
+	for (size_t i = 0; i < hpImg.size(); ++i)
+	{
+		std::string num = std::to_string(i / cParam.hp);
+		hpImg[i].Load(filePath + num + ".png");
+		hpImg[i].size.y *= 2.0f;
+		hpImg[i].pos = {
+			hpImg[i].pos.x + (i % cParam.hp) * hpImg[i].size.x + 20.0f,
+			hpImg[i].pos.y + 30.0f
+		};
+	}
 
 	knockBackRange = 4.0f;
 }
@@ -96,7 +110,7 @@ void Player::Update()
 		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tmpSize.x, worldPos.y + tex[type].size.y - 1.0f)))
 	{
 		vel.x = 0;
-		worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX + tmpSize.x;
+		worldPos.x = float(int(worldPos.x) / chipSizeX * chipSizeX + tmpSize.x);
 	}
 
 	// ‰E
@@ -104,7 +118,7 @@ void Player::Update()
 		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
 	{
 		vel.x = 0;
-		worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX/* + tmpSize.x*/;
+		worldPos.x = float(int(worldPos.x) / chipSizeX * chipSizeX)/* + tmpSize.x*/;
 	}
 
 	firstPos.y = worldPos.y;
@@ -123,6 +137,15 @@ void Player::Draw()
 	DamageDraw();
 
 	DrawImage();
+
+	// HP‰æ‘œ
+	if (state != "Death")
+	{
+		for (size_t i = 0; i < cParam.hp + HP_MAX; ++i)
+		{
+			lib.lock()->Draw(hpImg[i]);
+		}
+	}
 	//static Primitive b(PrimitiveType::box);
 	//b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 4, tex[type].pos.y, 0);
 	//b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x - tex[type].size.x/4, tex[type].pos.y, 0);
@@ -271,7 +294,7 @@ void Player::FallUpdate()
 		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
 	{
 		vel.y = 0.0f;
-		worldPos.y = int(worldPos.y) / chipSizeY * chipSizeY;
+		worldPos.y = float(int(worldPos.y) / chipSizeY * chipSizeY);
 		ChangeState("Neutral");
 	}
 
@@ -440,7 +463,7 @@ void Player::JumpAttackUpdate()
 		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.y - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
 	{
 		vel.y = 0.0f;
-		worldPos.y = int(worldPos.y) / chipSizeY * chipSizeY;
+		worldPos.y = float(int(worldPos.y) / chipSizeY * chipSizeY);
 		ChangeState("Neutral");
 	}
 }
@@ -474,7 +497,7 @@ void Player::DamageUpdate()
 		StageManager::Get().CheckMapChip(Vec2f(worldPos.x + tex[type].size.x - tmpSize.x - 1.0f, worldPos.y + tex[type].size.y - 1.0f)))
 	{
 		vel.y = 0.0f;
-		worldPos.y = int(worldPos.y) / chipSizeY * chipSizeY;
+		worldPos.y = float(int(worldPos.y) / chipSizeY * chipSizeY);
 		hitFlag = true;
 	}
 

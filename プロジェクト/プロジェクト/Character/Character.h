@@ -123,7 +123,7 @@ protected:
 	void LoadData(const std::string& filePath);
 
 	// キャラクター画像読み込み
-	void LoadImage(const std::string& filePath);
+	void LoadImg(const std::string& filePath);
 
 	// 画像描画
 	void DrawImage();

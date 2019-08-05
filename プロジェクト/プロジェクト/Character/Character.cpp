@@ -22,7 +22,7 @@ void Character::CorrectPosInStage()
 	float left  = StageManager::Get().GetRange().Left();
 	float right = StageManager::Get().GetRange().Right();
 
-	worldPos.x = std::max(worldPos.x, firstPos.x);
+	worldPos.x = std::fmax(worldPos.x, firstPos.x);
 	//worldPos.x = std::min(std::max(worldPos.x, left), right - tex.size.x);
 }
 
@@ -31,7 +31,7 @@ void Character::FallUpdate()
 {
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	worldPos.y = std::min(GetFootPos().y, StageManager::Get().GetGround() - tex[type].size.y);
+	worldPos.y = std::fmin(GetFootPos().y, StageManager::Get().GetGround() - tex[type].size.y);
 }
 
 // 状態遷移
@@ -71,7 +71,7 @@ void Character::LoadData(const std::string& filePath)
 }
 
 // キャラクター画像読み込み
-void Character::LoadImage(const std::string& filePath)
+void Character::LoadImg(const std::string& filePath)
 {
 	tex[type].Load(filePath);
 	tex[type].size    = info[type].lock()->at(state).rect[index].anim.size;

@@ -79,14 +79,14 @@ void Slash::TypeNormal()
 {
 	type = CharacterType::EF_PL_NORMAL_SLASH;
 	LoadData("data/chara/player_effect.info");
-	LoadImage("img/Player/player_effect.png");
+	LoadImg("img/Player/player_effect.png");
 }
 
 void Slash::TypeWolf()
 {
 	type = CharacterType::EF_PL_WOLF_SLASH;
 	LoadData("data/chara/player_wolf_effect.info");
-	LoadImage("img/Player/player_wolf_effect.png");
+	LoadImg("img/Player/player_wolf_effect.png");
 }
 
 // èâåÇ

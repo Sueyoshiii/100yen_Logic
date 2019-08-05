@@ -93,6 +93,11 @@ void StageManager::SetNextRoomFlag(const bool flag)
 	stage->SetNextRoomFlag(flag);
 }
 
+int StageManager::GetMapChip(const Vec2f& pos)
+{
+	return stage->GetMapChip(pos);
+}
+
 float StageManager::GetGround() const
 {
 	return GROUND;

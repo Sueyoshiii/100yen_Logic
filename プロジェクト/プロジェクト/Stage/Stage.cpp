@@ -273,6 +273,22 @@ float Stage::GetBoxAlpha() const
 	return boxAlpha;
 }
 
+int Stage::GetMapChip(const Vec2f& pos)
+{
+	int y = pos.y / chipSize.y;
+	int x = pos.x / chipSize.x;
+
+	if (y >= back.layers[0].massNum.y ||
+		x >= back.layers[0].massNum.x ||
+		y < 0 ||
+		x < 0)
+	{
+		return -1;
+	}
+
+	return back.layers[0].chips.at(y).at(x).data;
+}
+
 Vec2f Stage::GetStageSize() const
 {
 	return Vec2f(back.size.x/* * length*/, back.size.y);

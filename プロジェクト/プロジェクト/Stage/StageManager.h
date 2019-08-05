@@ -57,6 +57,8 @@ public:
 	void ResetRange();
 	void SetNextRoomFlag(const bool flag = true);
 
+	int GetMapChip(const Vec2f& pos);
+
 	float GetGround()const;
 	float GetGravity()const;
 

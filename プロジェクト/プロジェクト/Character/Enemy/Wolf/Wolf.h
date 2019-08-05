@@ -53,4 +53,6 @@ private:
 	unsigned int cnt;
 
 	bool coolFlag;
+
+	unsigned int neutralCnt;
 };

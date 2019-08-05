@@ -27,7 +27,7 @@ namespace {
 
 // コンストラクタ
 Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam, const Vec2f& pos) :
-	discovery(false), cnt(0), coolFlag(false), coolTime(0)
+	discovery(false), cnt(0), coolFlag(false), coolTime(0), neutralCnt(0)
 {
 	this->lib = lib;
 	this->pl  = pl;
@@ -91,16 +91,24 @@ void Wolf::Update()
 	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x, topPosY)) ||
 		StageManager::Get().CheckMapChip(Vec2f(worldPos.x, footPosY)))
 	{
-		vel.x = 0;
-		worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX;
+		worldPos.x = float(int(worldPos.x) / chipSizeX * chipSizeX);
+		if (state == "Walk")
+		{
+			oldState = state;
+			ChangeState("Neutral");
+		}
 	}
 
 	// 右
 	if (StageManager::Get().CheckMapChip(Vec2f(rightPosX, topPosY)) ||
 		StageManager::Get().CheckMapChip(Vec2f(rightPosX, footPosY)))
 	{
-		vel.x = 0;
-		worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX;
+		worldPos.x = float(int(worldPos.x) / chipSizeX * chipSizeX);
+		if (state == "Walk")
+		{
+			oldState = state;
+			ChangeState("Neutral");
+		}
 	}
 
 	worldPos.x = std::fmax(worldPos.x, 0.0f);
@@ -123,7 +131,7 @@ void Wolf::Update()
 		StageManager::Get().CheckMapChip(Vec2f(rightPosX, footPosY)))
 	{
 		vel.y = 0;
-		worldPos.y = int(worldPos.y) / chipSizeY * chipSizeY;
+		worldPos.y = float(int(worldPos.y) / chipSizeY * chipSizeY);
 	}
 
 	CheckHit();
@@ -147,14 +155,7 @@ void Wolf::Draw()
 	}
 
 	DrawImage();
-
-	//static Primitive b(PrimitiveType::box);
-	//b.pos[0] = Vec3f(tex[type].pos.x, tex[type].pos.y, 0);
-	//b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y, 0);
-	//b.pos[2] = Vec3f(tex[type].pos.x, tex[type].pos.y + tex[type].size.y, 0);
-	//b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y + tex[type].size.y, 0);
-	//lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
-
+	
 #ifdef _DEBUG
 	DrawRect();
 	if (CheckAlive())
@@ -167,7 +168,6 @@ void Wolf::Draw()
 // 待機
 void Wolf::NeutralUpdate()
 {
-	static unsigned int cnt = 0;
 	if (!CheckView())
 	{
 		if (!CheckAnimEnd())
@@ -175,13 +175,12 @@ void Wolf::NeutralUpdate()
 			return;
 		}
 
-		if (cnt >= WAIT_TIME_MAX)
+		if (++neutralCnt >= WAIT_TIME_MAX)
 		{
-			cnt = 0;
+			neutralCnt = 0;
 			turnFlag = !turnFlag;
 			CheckWalk();
 		}
-		++cnt;
 	}
 	else
 	{
@@ -201,6 +200,22 @@ void Wolf::WalkUpdate()
 	{
 		vel.x = turnFlag ? -cParam.speed : cParam.speed;
 		worldPos.x += vel.x;
+
+		float rightPosX = worldPos.x + tex[type].size.x;
+		float footPosY = worldPos.y + tex[type].size.y;
+
+		int chipSizeX = StageManager::Get().GetChipSize().x;
+		if (StageManager::Get().GetMapChip(Vec2f(rightPosX, footPosY)) == 0 ||
+			StageManager::Get().GetMapChip(Vec2f(worldPos.x - 1.0f, footPosY)) == 0)
+		{
+			worldPos.x = float(int(worldPos.x) / chipSizeX * chipSizeX);
+			if (state == "Walk")
+			{
+				oldState = state;
+				ChangeState("Neutral");
+				return;
+			}
+		}
 
 		float size = tex[type].size.x * 2.0f;
 		if (fulcrum.x - size >= worldPos.x ||
@@ -400,7 +415,7 @@ void Wolf::InitFunc()
 	func.clear();
 
 	func["Neutral"] = std::bind(&Wolf::NeutralUpdate, this);
-	func["walk"]    = std::bind(&Wolf::WalkUpdate, this);
+	func["Walk"]    = std::bind(&Wolf::WalkUpdate, this);
 	func["Howling"] = std::bind(&Wolf::HowlingUpdate, this);
 	func["Threat"]  = std::bind(&Wolf::ThreatUpdate, this);
 	func["Run"]     = std::bind(&Wolf::RunUpdate, this);

@@ -58,7 +58,14 @@ void Enemy::CheckHit()
 								stunFlag = true;
 							}
 
-							EffectManager::Get().CreateBloodSplash(pBox.pos, tex[type].size / 3, pl.lock()->GetTurnFlag());
+							auto& pos = pBox.pos;
+							pos.y -= 50;
+							if (turnFlag)
+							{
+								pos.x -= tex[type].size.x / 3;
+							}
+
+							EffectManager::Get().CreateBloodSplash(pos, tex[type].size / 3, pl.lock()->GetTurnFlag());
 							SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 							cParam.hp -= damage;
 							if (cParam.hp < 0)
@@ -147,7 +154,14 @@ void Enemy::CheckHitEffect()
 									stunFlag = true;
 								}
 
-								EffectManager::Get().CreateBloodSplash(efBox.pos, tex[type].size / 3, pl.lock()->GetTurnFlag());
+								auto& pos = efBox.pos;
+								pos.y -= 50;
+								if (turnFlag)
+								{
+									pos.x -= tex[type].size.x / 3;
+								}
+
+								EffectManager::Get().CreateBloodSplash(pos, tex[type].size / 3, pl.lock()->GetTurnFlag());
 								SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
 								cParam.hp -= damage;
 								if (cParam.hp < 0)

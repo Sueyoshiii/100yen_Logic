@@ -111,6 +111,8 @@ public:
 	// ボックスのアルファ値を取得
 	float GetBoxAlpha()const;
 
+	int GetMapChip(const Vec2f& pos);
+
 	// ステージサイズ取得
 	Vec2f GetStageSize()const;
 

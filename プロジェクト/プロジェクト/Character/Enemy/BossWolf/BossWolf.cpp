@@ -7,7 +7,7 @@
 
 
 namespace {
-	const unsigned int	HP_MAX = 20;
+	const unsigned int	HP_MAX = 40;
 	const int			ATTACK_POW = 4;
 	const int			DEFENCE_POW = 2;
 	const float			JUMP_POW = -100.0f;
@@ -137,9 +137,9 @@ void BossWolf::Draw()
 
 	DrawImage();
 
+#ifdef _DEBUG
 	DrawRect();
 
-#ifdef _DEBUG
 	static Primitive b(PrimitiveType::box);
 	float topPosY = worldPos.y + tex[type].size.y / 3;
 	if (turnFlag)

@@ -14,19 +14,14 @@ FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 
 	nextRoomFlag = false;
 
-	//Load(back, "data/stage/StageBoss/StageBoss_Ground.json", "img/Stage/Mapchip_Ground.png");
-	Load(back, "data/stage/StageBoss/StageBoss_Grass.json", "img/Stage/Mapchip_Ground.png");
-	Load(front, "data/stage/StageBoss/StageBoss_Grass.json", "img/Stage/Mapchip_Ground.png");
-	//Load(front, "data/stage/StageDummy_Grass.json", "img/Stage/Mapchip_Grass.png");
-	//Load(back, "data/stage/Stage1/Stage1_Ground_test.json", "img/Stage/Mapchip_Ground.png");
-	//Load(front, "data/stage/Stage1/Stage1_Grass.json", "img/Stage/Mapchip_Grass.png");
+	Load(back, "data/stage/Stage1/Stage1_Ground.json", "img/Stage/Mapchip_Ground.png");
+	Load(front, "data/stage/Stage1/Stage1_Grass.json", "img/Stage/Mapchip_Grass.png");
 
 	box.pos[0] = Vec3f();
 	box.pos[1] = Vec3f(float(lib.lock()->GetWinSize().x), 0.0f, 0.0f);
 	box.pos[2] = Vec3f(0.0f, float(lib.lock()->GetWinSize().y * 2), 0.0f);
 	box.pos[3] = Vec3f(float(lib.lock()->GetWinSize().x), float(lib.lock()->GetWinSize().y * 2), 0.0f);
 
-	EnemyManager::Get().Summons(Enemies::BOSS_WOLF, Vec2f(50.0f, -500.0f), lib, pl, cam);
 	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
 	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
 	

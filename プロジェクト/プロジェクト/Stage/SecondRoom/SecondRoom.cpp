@@ -20,15 +20,9 @@ SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::
 	box.pos[2] = Vec3f(0.0f, float(lib.lock()->GetWinSize().y * 2), 0.0f);
 	box.pos[3] = Vec3f(float(lib.lock()->GetWinSize().x), float(lib.lock()->GetWinSize().y * 2), 0.0f);
 
-	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(100.0f, 0.0f), lib, pl, cam);
-	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(300.0f, 0.0f), lib, pl, cam);
-	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(500.0f, 0.0f), lib, pl, cam);
-	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(700.0f, 0.0f), lib, pl, cam);
-	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(900.0f, 0.0f), lib, pl, cam);
-	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1200.0f, 0.0f), lib, pl, cam);
-	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1400.0f, 0.0f), lib, pl, cam);
-	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1600.0f, 0.0f), lib, pl, cam);
-	//EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1800.0f, 0.0f), lib, pl, cam);
+	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(500.0f, 0.0f), lib, pl, cam);
+	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(900.0f, 0.0f), lib, pl, cam);
+	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1400.0f, 0.0f), lib, pl, cam);
 
 	length = 3;
 }

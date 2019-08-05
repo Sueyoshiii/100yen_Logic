@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "../CharaEffect/EffectManager.h"
 #include <iostream>
+#include "../../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
 
 namespace {
 	const unsigned int HP_MAX = 10;
@@ -31,13 +33,20 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 	this->lib = lib;
 	this->cam = cam;
 
+	okmonn::CreateObj(IID_PPV_ARGS(&walkSE));
+	okmonn::CreateObj(IID_PPV_ARGS(&attackSE));
+	okmonn::CreateObj(IID_PPV_ARGS(&damageSE));
+	walkSE->Load("data/sound/se/general/walk.wav");
+	attackSE->Load("data/sound/se/player/sword_gesture1-1.wav");
+	damageSE->Load("data/sound/se/general/damage.wav");
+
 	type = CharacterType::PL_WOLF;
 	LoadData("data/chara/player_wolf.info");
-	LoadImage("img/Player/player_wolf.png");
+	LoadImg("img/Player/player_wolf.png");
 
 	type = CharacterType::PL_NORMAL;
 	LoadData("data/chara/player.info");
-	LoadImage("img/Player/player.png");
+	LoadImg("img/Player/player.png");
 
 	critical.Load("img/Player/damage_critical.png");
 	critical.size.y *= 2.0f;
@@ -65,6 +74,7 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 // デストラクタ
 Player::~Player()
 {
+	//walkSE->Release();
 }
 
 // 更新
@@ -176,6 +186,11 @@ void Player::WalkUpdate()
 	CheckFirstAttack();
 
 	CheckTransform();
+
+	if (state != "Walk")
+	{
+		walkSE->Stop();
+	}
 }
 void Player::CheckWalk()
 {
@@ -188,6 +203,11 @@ void Player::CheckWalk()
 	{
 		vel.x = cParam.speed;
 		ChangeState("Walk");
+	}
+
+	if (state == "Walk")
+	{
+		walkSE->Play(true);
 	}
 }
 
@@ -341,6 +361,7 @@ void Player::CheckFirstAttack()
 		attackFlag = true;
 		attackCnt  = 0;
 		ChangeState("Attack1");
+		attackSE->Play();
 		EffectManager::Get().CreateSlash(state, type, tex[type].pos, tex[type].size, turnFlag);
 	}
 }
@@ -368,6 +389,10 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 {
 	if (CheckAnimEnd())
 	{
+		while (attackSE->IsPlayEnd() == false)
+		{
+			// 同期取ってます(音ズレの訪れ対策)
+		}
 		stopFlag = true;
 		std::string lastAttack = type == CharacterType::PL_NORMAL ? "Attack3" : "Attack4";
 
@@ -384,6 +409,7 @@ void Player::CheckNextAttack(const unsigned int attackInterval)
 				std::string next = "Attack" + std::to_string(++num);
 
 				ChangeState(next);
+				attackSE->Play();
 				EffectManager::Get().CreateSlash(next, type, tex[type].pos, tex[type].size, turnFlag);
 			}
 			CheckDash();

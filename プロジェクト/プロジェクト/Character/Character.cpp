@@ -1,5 +1,8 @@
 #include "Character.h"
 
+#include "../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
+
 // コンストラクタ
 Character::Character() :
 	state("Neutral"), oldState(state), worldPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
@@ -7,6 +10,7 @@ Character::Character() :
 	invincibleFlag(false), cParam(CharacterParameter()), knockBackRange(0.0f),
 	jumpFlag(false)
 {
+	okmonn::CreateObj(IID_PPV_ARGS(&playMusic));
 }
 
 // デストラクタ
@@ -22,7 +26,7 @@ void Character::CorrectPosInStage()
 	float left  = StageManager::Get().GetRange().Left();
 	float right = StageManager::Get().GetRange().Right();
 
-	worldPos.x = std::max(worldPos.x, firstPos.x);
+	worldPos.x = std::fmax(worldPos.x, firstPos.x);
 	//worldPos.x = std::min(std::max(worldPos.x, left), right - tex.size.x);
 }
 
@@ -31,7 +35,7 @@ void Character::FallUpdate()
 {
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
-	worldPos.y = std::min(GetFootPos().y, StageManager::Get().GetGround() - tex[type].size.y);
+	worldPos.y = std::fmin(GetFootPos().y, StageManager::Get().GetGround() - tex[type].size.y);
 }
 
 // 状態遷移
@@ -71,7 +75,7 @@ void Character::LoadData(const std::string& filePath)
 }
 
 // キャラクター画像読み込み
-void Character::LoadImage(const std::string& filePath)
+void Character::LoadImg(const std::string& filePath)
 {
 	tex[type].Load(filePath);
 	tex[type].size    = info[type].lock()->at(state).rect[index].anim.size;
@@ -85,9 +89,9 @@ void Character::DrawImage()
 		tex[type].divSize.x * index,
 		info[type].lock()->at(state).rect[index].anim.pos.y
 	};
+	//if (range.GetLeft() < worldPos.x && worldPos.x < range.GetRight())
 
 	//auto range = cam.lock()->GetRange();
-	//if (range.GetLeft() < worldPos.x && worldPos.x < range.GetRight())
 	//{
 	//}
 	lib.lock()->Draw(tex[type], alpha, turnFlag);

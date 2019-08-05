@@ -36,7 +36,7 @@ void ThirdRoom::Update()
 {
 	Vec2f plPos = pl.lock()->GetWorldPos();
 	float right = StageManager::Get().GetRange().Right() - pl.lock()->GetSize().x;
-	pl.lock()->SetPos(Vec2f(std::min(plPos.x, right), plPos.y));
+	pl.lock()->SetPos(Vec2f(std::fmin(plPos.x, right), plPos.y));
 
 	EnemyManager::Get().Update();
 

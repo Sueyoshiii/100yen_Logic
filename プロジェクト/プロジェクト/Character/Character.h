@@ -11,6 +11,8 @@
 #include <functional>
 #include <algorithm>
 
+class Okdio;
+
 enum class CharacterType
 {
 	// プレイヤー
@@ -122,7 +124,7 @@ protected:
 	void LoadData(const std::string& filePath);
 
 	// キャラクター画像読み込み
-	void LoadImage(const std::string& filePath);
+	void LoadImg(const std::string& filePath);
 
 	// 画像描画
 	void DrawImage();
@@ -210,6 +212,9 @@ protected:
 
 	// 初期座標
 	Vec2f firstPos;
+
+	Okdio* playMusic;
+
 private:
 	// 矩形
 	std::unordered_map<std::string, std::vector<std::vector<Primitive>>> box;

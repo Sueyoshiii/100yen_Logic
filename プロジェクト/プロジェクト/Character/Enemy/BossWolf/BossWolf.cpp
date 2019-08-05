@@ -30,7 +30,7 @@ BossWolf::BossWolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak
 	type = CharacterType::EM_BOSS_WOLF;
 
 	LoadData("data/chara/boss.info");
-	LoadImage("img/Boss/boss.png");
+	LoadImg("img/Boss/boss.png");
 
 	InitFunc();
 	ChangeState("Neutral");
@@ -174,7 +174,7 @@ void BossWolf::DeadUpdate()
 	{
 		stopFlag = true;
 
-		alpha = std::max(alpha -= 0.02f, 0.0f);
+		alpha = std::fmax(alpha -= 0.02f, 0.0f);
 
 		if (alpha <= 0.0f)
 		{

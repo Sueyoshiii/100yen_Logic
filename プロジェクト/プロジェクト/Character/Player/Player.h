@@ -1,5 +1,6 @@
 #pragma once
 #include "../Character.h"
+#include <wrl.h>
 
 class Camera;
 
@@ -111,4 +112,13 @@ private:
 
 	// 死亡フラグ
 	bool deadEndFlag;
+
+	// 歩行音
+	Microsoft::WRL::ComPtr<Okdio>walkSE;
+
+	// 攻撃音
+	Microsoft::WRL::ComPtr<Okdio>attackSE;
+
+	// 非ダメージ音
+	Microsoft::WRL::ComPtr<Okdio>damageSE;
 };

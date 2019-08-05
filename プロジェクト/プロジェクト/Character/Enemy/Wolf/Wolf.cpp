@@ -33,7 +33,7 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	type = CharacterType::EM_WEAK_WOLF;
 
 	LoadData("data/chara/enemy_1.info");
-	LoadImage("img/Enemy/Enemy_1.png");
+	LoadImg("img/Enemy/Enemy_1.png");
 
 	InitFunc();
 	ChangeState("Neutral");
@@ -97,7 +97,7 @@ void Wolf::Update()
 		worldPos.x = int(worldPos.x) / chipSizeX * chipSizeX;
 	}
 
-	worldPos.x = std::max(worldPos.x, 0.0f);
+	worldPos.x = std::fmax(worldPos.x, 0.0f);
 
 	// °
 	if (state != "Attack")

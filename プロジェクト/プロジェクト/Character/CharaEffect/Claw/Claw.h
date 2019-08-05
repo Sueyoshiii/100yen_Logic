@@ -16,5 +16,7 @@ public:
 	void Draw(std::weak_ptr<MyLib> lib);
 	void SetPos(const Vec2f& pos);
 private:
+	void ClawUpdate();
+
 	unsigned int attackCnt;
 };

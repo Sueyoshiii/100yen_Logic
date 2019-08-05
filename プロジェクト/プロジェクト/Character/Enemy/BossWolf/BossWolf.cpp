@@ -12,7 +12,9 @@ namespace {
 	const float ATTACK_RANGE_MIN = 0.0f;
 
 	const unsigned int ATTACK_CNT_MAX = 3;
-	const unsigned int ATTACK_COOL_TIME_MAX = 5 * 60;
+	const unsigned int ATTACK_COOL_TIME_MAX = 4 * 60;
+
+	const int FIRST_POSITION_X = 896;
 }
 
 /*
@@ -22,7 +24,7 @@ namespace {
 */
 
 BossWolf::BossWolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam, const Vec2f& pos) :
-	cnt(0), attackCnt(0)
+	cnt(0), attackCnt(0), jumpedFlag(false)
 {
 	this->lib = lib;
 	this->pl = pl;
@@ -46,7 +48,7 @@ BossWolf::BossWolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak
 
 	turnFlag = false;
 	stageLeft = 0.0f;
-	stageRight = 896;
+	stageRight = FIRST_POSITION_X;
 	worldPos = Vec2f(stageRight, pos.y);
 
 	alpha = 1.0f;
@@ -83,6 +85,11 @@ void BossWolf::Update()
 		if (StageManager::Get().CheckMapChip(Vec2f(leftPosX, footPosY)) ||
 			StageManager::Get().CheckMapChip(Vec2f(rightPosX, footPosY)))
 		{
+			if (jumpedFlag)
+			{
+				jumpedFlag = false;
+				cam.lock()->SetVibrationFlag(true, 7.0f);
+			}
 			vel.y = 0;
 			worldPos.y = int(worldPos.y) / chipSizeY * chipSizeY - 60;
 		}
@@ -91,6 +98,9 @@ void BossWolf::Update()
 	{
 		ChangeState("Death");
 	}
+
+	CheckHit();
+	CheckHitEffect();
 }
 
 void BossWolf::Draw()
@@ -104,23 +114,25 @@ void BossWolf::Draw()
 
 	DrawImage();
 
-	static Primitive b(PrimitiveType::box);
-	float topPosY = worldPos.y + tex[type].size.y / 3;
-	if (turnFlag)
-	{
-		b.pos[0] = Vec3f(tex[type].pos.x, topPosY, 0);
-		b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, topPosY, 0);
-		b.pos[2] = Vec3f(tex[type].pos.x, tex[type].pos.y + tex[type].size.y, 0);
-		b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, tex[type].pos.y + tex[type].size.y, 0);
-	}
-	else
-	{
-		b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, topPosY, 0);
-		b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x, topPosY, 0);
-		b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, tex[type].pos.y + tex[type].size.y, 0);
-		b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y + tex[type].size.y, 0);
-	}
-	lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
+	DrawRect();
+
+	//static Primitive b(PrimitiveType::box);
+	//float topPosY = worldPos.y + tex[type].size.y / 3;
+	//if (turnFlag)
+	//{
+	//	b.pos[0] = Vec3f(tex[type].pos.x, topPosY, 0);
+	//	b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, topPosY, 0);
+	//	b.pos[2] = Vec3f(tex[type].pos.x, tex[type].pos.y + tex[type].size.y, 0);
+	//	b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, tex[type].pos.y + tex[type].size.y, 0);
+	//}
+	//else
+	//{
+	//	b.pos[0] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, topPosY, 0);
+	//	b.pos[1] = Vec3f(tex[type].pos.x + tex[type].size.x, topPosY, 0);
+	//	b.pos[2] = Vec3f(tex[type].pos.x + tex[type].size.x / 2.0f, tex[type].pos.y + tex[type].size.y, 0);
+	//	b.pos[3] = Vec3f(tex[type].pos.x + tex[type].size.x, tex[type].pos.y + tex[type].size.y, 0);
+	//}
+	//lib.lock()->Draw(b, Vec3f(1.0f, 0.0f, 0.0f), 0.5f);
 }
 
 // ‘Ò‹@
@@ -129,7 +141,7 @@ void BossWolf::NeutralUpdate()
 	if (++cnt >= ATTACK_COOL_TIME_MAX)
 	{
 		cnt = 0;
-		if (++attackCnt >= ATTACK_CNT_MAX)
+		if (++attackCnt > ATTACK_CNT_MAX)
 		{
 			attackCnt = 0;
 			ChangeState("Jump");
@@ -169,6 +181,7 @@ void BossWolf::JumpUpdate()
 	if (worldPos.y + tex[type].size.y * 2 < 0.0f)
 	{
 		vel.y = 0.0f;
+		jumpedFlag = true;
 		stopFlag = false;
 		turnFlag = !turnFlag;
 		stageLeft = StageManager::Get().GetChipSize().x * 2;

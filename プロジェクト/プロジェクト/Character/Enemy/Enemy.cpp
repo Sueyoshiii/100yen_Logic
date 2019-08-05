@@ -35,13 +35,26 @@ void Enemy::CheckHit()
 				if (p.type == HitType::Attack)
 				{
 					//pl.lock()->SetHitFlag(true);
-					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
-					KnockBack(-dir);
-					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
-					ChangeState("Damage");
-					EffectManager::Get().CreateBloodSplash(tex[type].pos, tex[type].size, pl.lock()->GetTurnFlag());
-					EffectManager::Get().CreateFlower(tex[type].pos, pl);
-					cam.lock()->SetVibrationFlag(true);
+					if (type != CharacterType::EM_BOSS_WOLF)
+					{
+						SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
+						KnockBack(-dir);
+						SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
+						ChangeState("Damage");
+						EffectManager::Get().CreateBloodSplash(tex[type].pos, tex[type].size, pl.lock()->GetTurnFlag());
+						EffectManager::Get().CreateFlower(tex[type].pos, pl);
+						cam.lock()->SetVibrationFlag(true, 5.0f);
+					}
+					else
+					{
+						EffectManager::Get().CreateBloodSplash(pBox.pos, tex[type].size / 3, pl.lock()->GetTurnFlag());
+						SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
+						cParam.hp -= damage;
+						if (cParam.hp < 0)
+						{
+							ChangeState("Death");
+						}
+					}
 				}
 				else
 				{
@@ -60,7 +73,7 @@ void Enemy::CheckHit()
 						pl.lock()->KnockBack(dir);
 						pl.lock()->SetDamage(cParam.attackPow, pl.lock()->GetParam().defensePow);
 						pl.lock()->ChangeState("Damage");
-						cam.lock()->SetVibrationFlag(true);
+						cam.lock()->SetVibrationFlag(true, 5.0f);
 					}
 				}
 				break;
@@ -83,34 +96,92 @@ void Enemy::CheckHitEffect()
 			continue;
 		}
 
-		for (auto& ef : (*itr).ptr->GetRect())
+		if ((*itr).type == EffectType::Slashing)
 		{
-			for (auto& em : GetRect())
+			for (auto& ef : (*itr).ptr->GetRect())
 			{
-				// 敵のダメージ矩形と判定
-				if (em.type == HitType::Attack)
+				for (auto& em : GetRect())
 				{
-					continue;
+					// 敵のダメージ矩形と判定
+					if (em.type == HitType::Attack)
+					{
+						continue;
+					}
+
+					// 矩形情報
+					Box efBox = Box(ef.rect.pos, ef.rect.size);
+					Box emBox = Box(em.rect.pos, em.rect.size);
+
+					if (CheckColBox(efBox, emBox))
+					{
+						if (type != CharacterType::EM_BOSS_WOLF)
+						{
+							//pl.lock()->SetHitFlag(true);
+							Vec2f dir = pl.lock()->GetPos() - GetPos();
+							SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
+							KnockBack(-dir);
+							SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
+							ChangeState("Damage");
+							EffectManager::Get().CreateBloodSplash(tex[type].pos, tex[type].size, pl.lock()->GetTurnFlag());
+							EffectManager::Get().CreateFlower(tex[type].pos, pl);
+							cam.lock()->SetVibrationFlag(true, 5.0f);
+						}
+						else
+						{
+							EffectManager::Get().CreateBloodSplash(efBox.pos, tex[type].size / 3, pl.lock()->GetTurnFlag());
+							SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
+							cParam.hp -= damage;
+							if (cParam.hp < 0)
+							{
+								ChangeState("Death");
+							}
+						}
+
+						break;
+					}
 				}
-
-				// 矩形情報
-				Box efBox = Box(ef.rect.pos, ef.rect.size);
-				Box emBox = Box(em.rect.pos, em.rect.size);
-
-				//if (CheckColBox(ef.rect.pos, ef.rect.size, em.rect.pos, em.rect.size))
-				if (CheckColBox(efBox, emBox))
+			}
+		}
+		else if ((*itr).type == EffectType::BossClaw)
+		{
+			for (auto& ef : (*itr).ptr->GetRect())
+			{
+				for (auto& p : pl.lock()->GetRect())
 				{
-					//pl.lock()->SetHitFlag(true);
-					Vec2f dir = pl.lock()->GetPos() - GetPos();
-					SetTurnFlag(pl.lock()->GetTurnFlag() ? false : true);
-					KnockBack(-dir);
-					SetDamage(pl.lock()->GetParam().attackPow, cParam.defensePow);
-					ChangeState("Damage");
-					EffectManager::Get().CreateBloodSplash(tex[type].pos, tex[type].size, pl.lock()->GetTurnFlag());
-					EffectManager::Get().CreateFlower(tex[type].pos, pl);
-					cam.lock()->SetVibrationFlag(true);
+					if (p.type == HitType::Attack)
+					{
+						continue;
+					}
 
-					break;
+					// 矩形情報
+					Box efBox = Box(ef.rect.pos, ef.rect.size);
+					Box pBox = Box(p.rect.pos, p.rect.size);
+
+					if (CheckColBox(efBox, pBox))
+					{
+						if (!pl.lock()->GetInvincibleFlag() && state != "Damage")
+						{
+							Vec2f pCenter = pl.lock()->GetPos() + pl.lock()->GetSize() / 2.0f;
+							Vec2f eCenter = GetPos() + GetSize() / 2.0f;
+							Vec2f dir = pCenter - eCenter;
+							bool nextTurn = turnFlag;
+							if (dir.x < 0)
+							{
+								nextTurn = false;
+							}
+							else if (dir.x > 0)
+							{
+								nextTurn = true;
+							}
+							pl.lock()->SetHitFlag(true);
+							pl.lock()->SetTurnFlag(nextTurn);
+							pl.lock()->KnockBack(dir);
+							pl.lock()->SetDamage(cParam.attackPow, pl.lock()->GetParam().defensePow);
+							pl.lock()->ChangeState("Damage");
+							cam.lock()->SetVibrationFlag(true, 5.0f);
+						}
+						break;
+					}
 				}
 			}
 		}

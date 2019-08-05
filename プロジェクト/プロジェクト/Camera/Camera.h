@@ -47,7 +47,7 @@ public:
 	void SetFocus(std::weak_ptr<Player> pl);
 
 	// U“®ƒtƒ‰ƒO‚ğİ’è
-	void SetVibrationFlag(const bool flag);
+	void SetVibrationFlag(const bool flag, const float fulcrumRange);
 
 	// À•W‚Ìİ’è
 	void SetPos(const Vec2f& pos);
@@ -72,4 +72,5 @@ private:
 	float speed;
 
 	unsigned int vibrationCnt;
+	float fulcrumRange;
 };

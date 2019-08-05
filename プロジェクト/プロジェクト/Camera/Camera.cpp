@@ -10,7 +10,7 @@ namespace {
 // コンストラクタ
 Camera::Camera(std::weak_ptr<MyLib> lib) :
 	lib(lib), size(Vec2f(float(lib.lock()->GetWinSize().x), float(lib.lock()->GetWinSize().y))),
-	vibrationFlag(false), speed(5.0f), vibrationCnt(0)
+	vibrationFlag(false), speed(5.0f), vibrationCnt(0), fulcrumRange(5.0f)
 {
 }
 
@@ -32,8 +32,8 @@ void Camera::Update()
 		else
 		{
 			pos.x += speed;
-			if (fulcrum.x + FULCRUM_RANGE <= pos.x ||
-				fulcrum.x - FULCRUM_RANGE >= pos.x)
+			if (fulcrum.x + fulcrumRange <= pos.x ||
+				fulcrum.x - fulcrumRange >= pos.x)
 			{
 				speed = -speed;
 				++vibrationCnt;
@@ -74,8 +74,9 @@ void Camera::SetFocus(std::weak_ptr<Player> pl)
 }
 
 // 振動フラグを設定
-void Camera::SetVibrationFlag(const bool flag)
+void Camera::SetVibrationFlag(const bool flag, const float fulcrumRange)
 {
+	this->fulcrumRange = fulcrumRange;
 	vibrationFlag = flag;
 	fulcrum = pos;
 }

@@ -25,4 +25,6 @@ private:
 
 	int stageLeft;
 	int stageRight;
+
+	bool jumpedFlag;
 };

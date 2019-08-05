@@ -85,7 +85,7 @@ void Wolf::Update()
 	if (StageManager::Get().CheckMapChip(Vec2f(worldPos.x, topPosY)) ||
 		StageManager::Get().CheckMapChip(Vec2f(worldPos.x, footPosY)))
 	{
-		worldPos.x = float(int(worldPos.x) / chipSizeX * chipSizeX);
+		worldPos.x = float(int(worldPos.x) / chipSizeX * chipSizeX) + chipSizeX;
 		if (state == "Walk")
 		{
 			oldState = state;

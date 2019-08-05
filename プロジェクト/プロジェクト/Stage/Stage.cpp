@@ -167,9 +167,9 @@ int Stage::Load(StageData& stage, const std::string& jsonFilePath, const std::st
 		map += "\n";
 	}
 
-	std::ofstream outText("mapchip.txt");
-	outText << map;
-	outText.close();
+	//std::ofstream outText("mapchip.txt");
+	//outText << map;
+	//outText.close();
 
 	return 0;
 }

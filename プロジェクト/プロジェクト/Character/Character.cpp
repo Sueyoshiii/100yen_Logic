@@ -1,5 +1,8 @@
 #include "Character.h"
 
+#include "../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
+
 // コンストラクタ
 Character::Character() :
 	state("Neutral"), oldState(state), worldPos(Vec2f()), vel(Vec2f()), alpha(1.0f),
@@ -7,6 +10,7 @@ Character::Character() :
 	invincibleFlag(false), cParam(CharacterParameter()), knockBackRange(0.0f),
 	jumpFlag(false)
 {
+	okmonn::CreateObj(IID_PPV_ARGS(&playMusic));
 }
 
 // デストラクタ
@@ -85,9 +89,9 @@ void Character::DrawImage()
 		tex[type].divSize.x * index,
 		info[type].lock()->at(state).rect[index].anim.pos.y
 	};
+	//if (range.GetLeft() < worldPos.x && worldPos.x < range.GetRight())
 
 	//auto range = cam.lock()->GetRange();
-	//if (range.GetLeft() < worldPos.x && worldPos.x < range.GetRight())
 	//{
 	//}
 	lib.lock()->Draw(tex[type], alpha, turnFlag);

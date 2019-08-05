@@ -3,7 +3,7 @@
 #include <algorithm>
 
 namespace {
-	const unsigned int	HP_MAX = 30;
+	const unsigned int	HP_MAX = 40;
 	const int			ATTACK_POW = 4;
 	const int			DEFENCE_POW = 2;
 	const float			JUMP_POW = -100.0f;

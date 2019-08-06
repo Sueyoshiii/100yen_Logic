@@ -5,7 +5,6 @@
 #include "../../../Okdio/Okdio.h"
 #pragma comment (lib, "Okdio.lib")
 
-
 namespace {
 	const unsigned int	HP_MAX = 40;
 	const int			ATTACK_POW = 4;
@@ -34,6 +33,11 @@ BossWolf::BossWolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak
 	this->lib = lib;
 	this->pl = pl;
 	this->cam = cam;
+
+	okmonn::CreateObj(IID_PPV_ARGS(&damageSE));
+	okmonn::CreateObj(IID_PPV_ARGS(&landingSE));
+	damageSE->Load("data/sound/se/general/damage.wav");
+	landingSE->Load("data/sound/se/boss/boss_landing.wav");
 
 	type = CharacterType::EM_BOSS_WOLF;
 
@@ -65,6 +69,7 @@ BossWolf::BossWolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak
 // デストラクタ
 BossWolf::~BossWolf()
 {
+	landingSE->Release();
 }
 
 // 更新
@@ -111,6 +116,8 @@ void BossWolf::Update()
 
 	if (stunFlag)
 	{
+		damageSE->Play(false);
+
 		alpha = (alpha > 0.0f) ? alpha -= 0.1f : 1.0f;
 		if (++stunCnt > 120)
 		{
@@ -211,6 +218,9 @@ void BossWolf::JumpUpdate()
 		stageLeft = StageManager::Get().GetChipSize().x * 2;
 		stageRight = StageManager::Get().GetStageSize().x - StageManager::Get().GetChipSize().x * 2 - tex[type].size.x;
 		worldPos.x = turnFlag ? stageLeft : stageRight;
+
+		landingSE->Play(false);
+
 		ChangeState("Neutral");
 	}
 }

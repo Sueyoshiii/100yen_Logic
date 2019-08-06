@@ -3,6 +3,8 @@
 #include <MyLib.h>
 #include <wrl.h>
 
+class Okdio;
+
 class Title :
 	public Scene
 {
@@ -22,4 +24,5 @@ private:
 	Texture img[2];
 	Texture guide;
 	float guideAlpha;
+	Okdio* playMusic;
 };

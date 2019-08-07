@@ -34,7 +34,6 @@ ThirdRoom::ThirdRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 
 ThirdRoom::~ThirdRoom()
 {
-	playBoss->Stop();
 }
 
 void ThirdRoom::Update()
@@ -47,6 +46,7 @@ void ThirdRoom::Update()
 
 	if (EnemyManager::Get().GetEnemyNum() <= 0)
 	{
+		//playBoss->Stop();
 		StageManager::Get().SetClearFlag(true);
 	}
 }

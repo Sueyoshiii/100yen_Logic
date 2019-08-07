@@ -53,5 +53,6 @@ void SecondRoom::DrawFront()
 
 Stage* SecondRoom::GetNextRoom()
 {
+	pl.lock()->SoundStop();
 	return new ThirdRoom(lib, pl, cam);
 }

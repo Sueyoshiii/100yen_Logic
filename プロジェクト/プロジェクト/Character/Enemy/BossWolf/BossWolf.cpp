@@ -34,10 +34,10 @@ BossWolf::BossWolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak
 	this->pl = pl;
 	this->cam = cam;
 
-	okmonn::CreateObj(IID_PPV_ARGS(&damageSE));
 	okmonn::CreateObj(IID_PPV_ARGS(&landingSE));
-	damageSE->Load("data/sound/se/general/damage.wav");
+	okmonn::CreateObj(IID_PPV_ARGS(&attackSE));
 	landingSE->Load("data/sound/se/boss/boss_landing.wav");
+	attackSE->Load("data/sound/se/boss/boss_punch.wav");
 
 	type = CharacterType::EM_BOSS_WOLF;
 
@@ -70,6 +70,7 @@ BossWolf::BossWolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak
 BossWolf::~BossWolf()
 {
 	landingSE->Release();
+	attackSE->Release();
 }
 
 // XV
@@ -103,6 +104,9 @@ void BossWolf::Update()
 			if (jumpedFlag)
 			{
 				jumpedFlag = false;
+
+				landingSE->Play(false);
+
 				cam.lock()->SetVibrationFlag(true, 7.0f);
 			}
 			vel.y = 0;
@@ -116,7 +120,6 @@ void BossWolf::Update()
 
 	if (stunFlag)
 	{
-		damageSE->Play(false);
 
 		alpha = (alpha > 0.0f) ? alpha -= 0.1f : 1.0f;
 		if (++stunCnt > 120)
@@ -176,11 +179,13 @@ void BossWolf::NeutralUpdate()
 		if (++attackCnt > ATTACK_CNT_MAX)
 		{
 			attackCnt = 0;
+
 			ChangeState("Jump");
 		}
 		else
 		{
 			CheckAttack();
+			attackSE->Play();
 		}
 	}
 }
@@ -218,8 +223,6 @@ void BossWolf::JumpUpdate()
 		stageLeft = StageManager::Get().GetChipSize().x * 2;
 		stageRight = StageManager::Get().GetStageSize().x - StageManager::Get().GetChipSize().x * 2 - tex[type].size.x;
 		worldPos.x = turnFlag ? stageLeft : stageRight;
-
-		landingSE->Play(false);
 
 		ChangeState("Neutral");
 	}

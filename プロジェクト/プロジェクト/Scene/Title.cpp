@@ -63,6 +63,7 @@ void Title::Update()
 	{
 		if (Input::Get().IsTrigger(Key(button)))
 		{
+			playMusic->Play(false);
 			checkNext = true;
 		}
 	}
@@ -70,7 +71,6 @@ void Title::Update()
 	alpha = std::fmin(alpha, 1.0f);
 	if (checkNext)
 	{
-		playMusic->Play(false);
 		alpha -= 0.02f;
 		guideAlpha -= 0.02f;
 		if (alpha <= 0.0f)

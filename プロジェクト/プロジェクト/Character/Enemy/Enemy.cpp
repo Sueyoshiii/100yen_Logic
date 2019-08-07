@@ -1,10 +1,15 @@
 #include "Enemy.h"
 #include "../CharaEffect/EffectManager.h"
 #include <iostream>
+#include "../../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
+
 
 Enemy::Enemy() :
 	viewLine(Primitive(PrimitiveType::line)), deleteFlag(false)
 {
+	okmonn::CreateObj(IID_PPV_ARGS(&damageSE));
+	damageSE->Load("data/sound/se/general/damage.wav");
 }
 
 Enemy::~Enemy()
@@ -152,6 +157,7 @@ void Enemy::CheckHitEffect()
 								if (++hitCnt > 3)
 								{
 									stunFlag = true;
+									damageSE->Play(false);
 								}
 
 								auto& pos = efBox.pos;

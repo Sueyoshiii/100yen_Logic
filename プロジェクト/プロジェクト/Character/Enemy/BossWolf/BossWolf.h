@@ -30,4 +30,5 @@ private:
 	bool jumpedFlag;
 
 	Okdio* landingSE;
+	Okdio* attackSE;
 };

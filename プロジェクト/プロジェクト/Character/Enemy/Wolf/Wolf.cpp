@@ -373,8 +373,8 @@ void Wolf::DamageUpdate()
 
 	float footPosY = worldPos.y + tex[type].size.y - 1.0f;
 	float rightPosX = worldPos.x + tex[type].size.x - 1.0f;
-	if (!StageManager::Get().CheckMapChip(Vec2f(worldPos.x, footPosY + 1.0f)) &&
-		!StageManager::Get().CheckMapChip(Vec2f(rightPosX, footPosY + 1.0f)))
+	if (StageManager::Get().GetMapChip(Vec2f(worldPos.x, footPosY + 1.0f)) == 0 &&
+		StageManager::Get().GetMapChip(Vec2f(rightPosX, footPosY + 1.0f)) == 0)
 	{
 		worldPos.x += vel.x;
 	}

@@ -88,7 +88,6 @@ Player::Player(std::weak_ptr<MyLib> lib, std::weak_ptr<Camera> cam) :
 // デストラクタ
 Player::~Player()
 {
-	//walkSE->Release();
 }
 
 // 更新
@@ -681,4 +680,9 @@ void Player::SetHitFlag(const bool flag)
 void Player::SetPos(const Vec2f& pos)
 {
 	worldPos = pos;
+}
+
+void Player::SoundStop(void)
+{
+	walkSE->Stop();
 }

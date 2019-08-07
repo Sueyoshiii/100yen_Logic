@@ -3,6 +3,9 @@
 #include "../Game/Game.h"
 #include <algorithm>
 
+#include "../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
+
 // コンストラクタ
 Over::Over(std::weak_ptr<MyLib> lib) :
 	checkNext(false)

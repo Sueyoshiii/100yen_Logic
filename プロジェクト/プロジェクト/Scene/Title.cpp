@@ -4,11 +4,17 @@
 #include "../Json/JsonLoader.h"
 #include <crtdbg.h>
 
+#include "../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
+
 // コンストラクタ
 Title::Title(std::weak_ptr<MyLib>lib) :
 	checkNext(false)
 {
 	this->lib = lib;
+
+	okmonn::CreateObj(IID_PPV_ARGS(&playMusic));
+	playMusic->Load("data/sound/se/general/button.wav");
 
 	img[0].Load("img/Title/Title_Back.png");
 	img[0].size.y *= 2.0f;
@@ -38,7 +44,7 @@ Title::Title(std::weak_ptr<MyLib>lib) :
 // デストラクタ
 Title::~Title()
 {
-	//okdio->Release();
+	playMusic->Release();
 }
 // 描画
 void Title::Draw()
@@ -57,6 +63,7 @@ void Title::Update()
 	{
 		if (Input::Get().IsTrigger(Key(button)))
 		{
+			playMusic->Play(false);
 			checkNext = true;
 		}
 	}

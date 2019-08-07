@@ -1,6 +1,5 @@
 #pragma once
 #include "../Character.h"
-#include <wrl.h>
 
 class Camera;
 
@@ -34,6 +33,8 @@ public:
 
 	// 座標を設定
 	void SetPos(const Vec2f& pos);
+
+	void SoundStop(void);
 private:
 	// 状態と関数をバインド
 	void InitFunc();
@@ -121,8 +122,5 @@ private:
 
 	// 攻撃音
 	Microsoft::WRL::ComPtr<Okdio>attackSE;
-
-	// 非ダメージ音
-	Microsoft::WRL::ComPtr<Okdio>damageSE;
 
 };

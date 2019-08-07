@@ -28,4 +28,7 @@ private:
 	int stageRight;
 
 	bool jumpedFlag;
+
+	Okdio* landingSE;
+	Okdio* attackSE;
 };

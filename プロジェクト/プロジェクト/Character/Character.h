@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <functional>
 #include <algorithm>
+#include <wrl.h>
 
 class Okdio;
 
@@ -215,6 +216,9 @@ protected:
 	Vec2f firstPos;
 
 	Okdio* playMusic;
+
+	// 非ダメージ音
+	Microsoft::WRL::ComPtr<Okdio>damageSE;
 
 private:
 	// 矩形

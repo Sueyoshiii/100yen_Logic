@@ -53,6 +53,7 @@ void Character::ChangeState(const std::string& state)
 	if (this->state == "Damage")
 	{
 		cParam.hp -= damage;
+		damageSE->Play();
 	}
 
 	if (box.find(this->state) == box.end() || type != oldType)

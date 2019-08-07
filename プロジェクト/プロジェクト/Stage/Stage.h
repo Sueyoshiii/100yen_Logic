@@ -6,6 +6,9 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <wrl.h>
+
+class Okdio;
 
 enum class Dir
 {
@@ -155,6 +158,9 @@ protected:
 	int length;
 
 	Vec2 chipSize;
+
+	// ‰¹ŠyÄ¶
+	static Okdio* playMusic;
 private:
 	// •¶š—ñ‚ğ”’l‚É•ÏŠ·
 	template<typename T>

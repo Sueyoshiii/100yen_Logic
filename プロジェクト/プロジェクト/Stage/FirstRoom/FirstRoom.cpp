@@ -3,14 +3,19 @@
 #include "../../Character/Player/Player.h"
 #include "../../Character/Enemy/EnemyManager.h"
 #include "../../Scene/GameMain.h"
-//#include <Okdio.h>
-//#pragma comment(lib, "Okdio.lib")
+
+#include "../../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
 
 FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
 {
 	this->lib = lib;
 	this->pl = pl;
 	this->cam = cam;
+
+	okmonn::CreateObj(IID_PPV_ARGS(&playMusic));
+	playMusic->Load("data/sound/bgm/bgm_stage.wav");
+	playMusic->Play(true);
 
 	nextRoomFlag = false;
 
@@ -24,10 +29,6 @@ FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(600.0f, 0.0f), lib, pl, cam);
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1400.0f, 0.0f), lib, pl, cam);
-	
-	//okmonn::CreateObj(IID_PPV_ARGS(&bgm));
-	//bgm->Load("data/sound/bgm_stage.wav");
-	//bgm->Play(true);
 
 	length = 3;
 }
@@ -54,5 +55,7 @@ void FirstRoom::DrawFront()
 
 Stage* FirstRoom::GetNextRoom()
 {
+	//pl.lock()->ChangeState("Neutral");
+	pl.lock()->SoundStop();
 	return new SecondRoom(lib, pl, cam);
 }

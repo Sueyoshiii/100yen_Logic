@@ -1,6 +1,8 @@
 #pragma once
 #include "Scene.h"
 
+class Okdio;
+
 class Over :
 	public Scene
 {

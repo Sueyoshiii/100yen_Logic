@@ -19,5 +19,4 @@ public:
 	Stage* GetNextRoom();
 private:
 	std::weak_ptr<Player> pl;
-	Okdio* bgm;
 };

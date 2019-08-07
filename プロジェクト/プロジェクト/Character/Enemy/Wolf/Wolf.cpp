@@ -1,6 +1,9 @@
 #include "Wolf.h"
 #include <algorithm>
 
+#include "../../../Okdio/Okdio.h"
+#pragma comment (lib, "Okdio.lib")
+
 namespace {
 	const unsigned int	HP_MAX      = 2;
 	const float			WALK_SPEED  = 2.0f;
@@ -29,6 +32,9 @@ Wolf::Wolf(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Cam
 	this->lib = lib;
 	this->pl  = pl;
 	this->cam = cam;
+
+	okmonn::CreateObj(IID_PPV_ARGS(&damageSE));
+	damageSE->Load("data/sound/se/general/damage.wav");
 
 	type = CharacterType::EM_WEAK_WOLF;
 

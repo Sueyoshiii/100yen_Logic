@@ -27,7 +27,6 @@ public:
 
 	// 終了フラグ取得
 	bool IsPlayEnd(void) const;
-
 private:
 	// コンストラクタ
 	Okdio();

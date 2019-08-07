@@ -1,8 +1,10 @@
 #include "Claw.h"
 
-Claw::Claw(const Vec2f& pos, const Vec2f& size, const bool turnFlag) :
+Claw::Claw(std::weak_ptr<Camera> cam, const Vec2f& pos, const Vec2f& size, const bool turnFlag) :
 	attackCnt(0)
 {
+	camera = cam;
+
 	state = "first";
 	type = CharacterType::EF_EM_BOSS_CLAW;
 
@@ -16,8 +18,10 @@ Claw::Claw(const Vec2f& pos, const Vec2f& size, const bool turnFlag) :
 
 	tex[type].size = size;
 	this->turnFlag = turnFlag;
-	float x = this->turnFlag ? pos.x : pos.x;
-	tex[type].pos = Vec2f(x, pos.y);
+	float x = this->turnFlag ? pos.x : pos.x + tex[type].size.x / 2.0f;
+	//float x = this->turnFlag ? pos.x : pos.x;
+	//tex[type].pos = Vec2f(x, pos.y);
+	worldPos = Vec2f(x, pos.y);
 }
 
 Claw::~Claw()
@@ -41,6 +45,8 @@ void Claw::Draw(std::weak_ptr<MyLib> lib)
 	{
 		return;
 	}
+
+	tex[type].pos = camera.lock()->Correction(worldPos);
 
 	AnimationUpdate();
 	DrawImage();

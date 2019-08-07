@@ -158,7 +158,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\GitHub\Okdio\Okdio\lib\x64\Release;..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\;C:\boost</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\1601296\Documents\GitHub\Okdio\Okdio\lib\x64\Release;..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\;C:\boost</AdditionalLibraryDirectories>
       <AdditionalOptions>..\..\..\dx12Lib\Lib\Lib\lib\$(PlatformTarget)\$(Configuration)\Lib.res %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Manifest>

@@ -371,15 +371,19 @@ void Wolf::DamageUpdate()
 	vel.y += StageManager::Get().GetGravity();
 	worldPos.y += vel.y;
 
+	static Vec2f oldPos = Vec2f();
 	float footPosY = worldPos.y + tex[type].size.y - 1.0f;
 	float rightPosX = worldPos.x + tex[type].size.x - 1.0f;
 	if (StageManager::Get().GetMapChip(Vec2f(worldPos.x, footPosY + 1.0f)) == 0 &&
 		StageManager::Get().GetMapChip(Vec2f(rightPosX, footPosY + 1.0f)) == 0)
 	{
 		worldPos.x += vel.x;
+		oldPos.x = worldPos.x;
 	}
 	else
 	{
+		vel.x = 0.0f;
+		worldPos.x = oldPos.x;
 		if ((++cnt) > STUN_TIME_MAX)
 		{
 			cnt = 0;

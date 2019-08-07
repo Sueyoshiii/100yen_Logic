@@ -176,7 +176,7 @@ void BossWolf::NeutralUpdate()
 	if (++cnt >= ATTACK_COOL_TIME_MAX)
 	{
 		cnt = 0;
-		if (++attackCnt > ATTACK_CNT_MAX)
+		if (attackCnt > ATTACK_CNT_MAX)
 		{
 			attackCnt = 0;
 
@@ -184,8 +184,17 @@ void BossWolf::NeutralUpdate()
 		}
 		else
 		{
-			CheckAttack();
-			attackSE->Play();
+			Vec2f centerPos = worldPos + tex[type].size / 2.0f;
+			Vec2f plCenterPos = pl.lock()->GetWorldPos() + pl.lock()->GetSize() / 2.0f;
+
+			float distance = fabs(centerPos.x - plCenterPos.x);
+
+			if (distance < tex[type].size.x)
+			{
+				CheckAttack();
+				++attackCnt;
+				attackSE->Play();
+			}
 		}
 	}
 }
@@ -200,7 +209,7 @@ void BossWolf::AttackUpdate()
 }
 void BossWolf::CheckAttack()
 {
-	EffectManager::Get().CreateBossClaw(tex[type].pos, tex[type].size, turnFlag);
+	EffectManager::Get().CreateBossClaw(cam, tex[type].pos, tex[type].size, turnFlag);
 	ChangeState("Attack");
 }
 

@@ -71,9 +71,9 @@ void EffectManager::CreateBloodSplash(const Vec2f& pos, const Vec2f& size, const
 }
 
 // í‹ê∂ê¨
-void EffectManager::CreateBossClaw(const Vec2f& pos, const Vec2f& size, const bool turnFlag)
+void EffectManager::CreateBossClaw(std::weak_ptr<Camera> cam, const Vec2f& pos, const Vec2f& size, const bool turnFlag)
 {
-	map[EffectType::BossClaw] = std::make_shared<Claw>(pos, size, turnFlag);
+	map[EffectType::BossClaw] = std::make_shared<Claw>(cam, pos, size, turnFlag);
 	list.push_back(ListParameter(EffectType::BossClaw, map[EffectType::BossClaw]));
 }
 

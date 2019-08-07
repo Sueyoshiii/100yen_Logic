@@ -38,7 +38,7 @@ public:
 	void CreateBloodSplash(const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 
 	// É{ÉXçUåÇ
-	void CreateBossClaw(const Vec2f& pos, const Vec2f& size, const bool turnFlag);
+	void CreateBossClaw(std::weak_ptr<Camera> cam, const Vec2f& pos, const Vec2f& size, const bool turnFlag);
 
 	// çÌèú
 	void Delete();

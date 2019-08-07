@@ -266,8 +266,8 @@ bool Enemy::CheckView()
 // ‹éŒ`“¯m‚ÌÕ“Ë”»’è
 bool Enemy::CheckColBox(const Box& box1, const Box& box2)
 {
-	if (fabs(box1.centor.x - box2.centor.x) < fabs(box1.half.x + box2.half.x) &&
-		fabs(box1.centor.y - box2.centor.y) < fabs(box1.half.y + box2.half.y))
+	if (fabs(box1.centor.x - box2.centor.x) <= fabs(box1.half.x + box2.half.x) &&
+		fabs(box1.centor.y - box2.centor.y) <= fabs(box1.half.y + box2.half.y))
 	{
 		return true;
 	}

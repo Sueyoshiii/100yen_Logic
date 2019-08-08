@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "../Okdio/Okdio.h"
+#include "../SoundManager.h"
 #pragma comment (lib, "Okdio.lib")
 
 // コンストラクタ
@@ -21,6 +22,9 @@ Over::Over(std::weak_ptr<MyLib> lib) :
 	};
 
 	alpha = 0.0f;
+
+	SoundManager::Get().Stop(0);
+	SoundManager::Get().Stop(1);
 }
 
 // デストラクタ

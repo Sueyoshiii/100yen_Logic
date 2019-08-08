@@ -12,6 +12,7 @@
 #include "../Stage/FirstRoom/FirstRoom.h"
 
 #include "../Json/JsonLoader.h"
+#include "../SoundManager.h"
 
 // コンストラクタ
 GameMain::GameMain(std::weak_ptr<MyLib> lib)
@@ -43,6 +44,7 @@ GameMain::GameMain(std::weak_ptr<MyLib> lib)
 GameMain::~GameMain()
 {
 	StageManager::Get().SetClearFlag(false);
+	SoundManager::Get().Release();
 }
 
 // 描画

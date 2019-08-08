@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "../../Okdio/Okdio.h"
+#include "../../SoundManager.h"
 #pragma comment (lib, "Okdio.lib")
 
 SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
@@ -32,7 +33,7 @@ SecondRoom::SecondRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::
 
 SecondRoom::~SecondRoom()
 {
-	playMusic->Release();
+	SoundManager::Get().Stop(0);
 }
 
 void SecondRoom::Update()

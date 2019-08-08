@@ -3,19 +3,13 @@
 #include "../../Character/Player/Player.h"
 #include "../../Character/Enemy/EnemyManager.h"
 #include "../../Scene/GameMain.h"
-
-#include "../../Okdio/Okdio.h"
-#pragma comment (lib, "Okdio.lib")
+#include "../../SoundManager.h"
 
 FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::weak_ptr<Camera> cam)
 {
 	this->lib = lib;
 	this->pl = pl;
 	this->cam = cam;
-
-	okmonn::CreateObj(IID_PPV_ARGS(&playMusic));
-	playMusic->Load("data/sound/bgm/bgm_stage.wav");
-	playMusic->Play(true);
 
 	nextRoomFlag = false;
 
@@ -31,6 +25,8 @@ FirstRoom::FirstRoom(std::weak_ptr<MyLib> lib, std::weak_ptr<Player> pl, std::we
 	EnemyManager::Get().Summons(Enemies::Wolf, Vec2f(1400.0f, 0.0f), lib, pl, cam);
 
 	length = 3;
+
+	SoundManager::Get().Play(0);
 }
 
 FirstRoom::~FirstRoom()

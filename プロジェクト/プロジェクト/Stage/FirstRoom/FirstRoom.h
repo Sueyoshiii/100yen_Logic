@@ -2,7 +2,6 @@
 #include "../Stage.h"
 
 class Player;
-class Okdio;
 
 class FirstRoom :
 	public Stage

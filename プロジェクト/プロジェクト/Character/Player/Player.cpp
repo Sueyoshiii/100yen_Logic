@@ -522,6 +522,7 @@ void Player::DamageUpdate()
 
 	if (hitFlag)
 	{
+		walkSE->Stop();
 		if ((++cnt) > 40)
 		{
 			cnt = 0;

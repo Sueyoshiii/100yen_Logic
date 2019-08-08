@@ -189,6 +189,7 @@
     <ClCompile Include="Scene\GameMain.cpp" />
     <ClCompile Include="Scene\Over.cpp" />
     <ClCompile Include="Scene\Title.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Stage\FirstRoom\FirstRoom.cpp" />
     <ClCompile Include="Stage\SecondRoom\SecondRoom.cpp" />
     <ClCompile Include="Stage\Stage.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Scene\Over.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\Title.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Stage\FirstRoom\FirstRoom.h" />
     <ClInclude Include="Stage\SecondRoom\SecondRoom.h" />
     <ClInclude Include="Stage\Stage.h" />

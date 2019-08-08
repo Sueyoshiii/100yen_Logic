@@ -3,6 +3,7 @@
 #include "../Scene/Title.h"
 #include "../Scene/GameMain.h"
 #include "../Okdio/Okdio.h"
+#include "../SoundManager.h"
 #include <Windows.h>
 
 
@@ -16,7 +17,6 @@ Game::~Game()
 {
 	okmonn::EnginEnd();
 	CoUninitialize();
-	
 }
 
 Game& Game::Get()
@@ -66,6 +66,7 @@ void Game::Draw()
 void Game::Finish(void)
 {
 	scene.reset();
+	
 	//okmonn::EnginEnd();
 	//CoUninitialize();
 }

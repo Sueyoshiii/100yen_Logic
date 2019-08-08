@@ -17,6 +17,4 @@ public:
 
 private:
 	std::weak_ptr<Player> pl;
-
-	Microsoft::WRL::ComPtr<Okdio> playBoss;
 };

@@ -5,6 +5,7 @@
 #include <crtdbg.h>
 
 #include "../Okdio/Okdio.h"
+#include "../SoundManager.h"
 #pragma comment (lib, "Okdio.lib")
 
 // コンストラクタ
@@ -39,6 +40,8 @@ Title::Title(std::weak_ptr<MyLib>lib) :
 
 	alpha = 0.0f;
 	guideAlpha = 0.0f;
+
+	SoundManager::Get().Create();
 }
 
 // デストラクタ
